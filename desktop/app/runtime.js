@@ -14,7 +14,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');

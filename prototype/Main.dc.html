@@ -372,8 +372,8 @@ button{font-family:Outfit,system-ui,sans-serif}
                 <span style="font-size: 20px; font-weight: 800">{{w.drinks}}</span>
               </div>
               <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
-                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">On plan</span>
-                <span style="font-size: 20px; font-weight: 800">{{w.onPlan}}</span>
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Calories</span>
+                <span style="font-size: 20px; font-weight: 800">{{w.kcal}}</span>
               </div>
             </div>
             <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">{{w.line}}</div>
@@ -625,7 +625,10 @@ button{font-family:Outfit,system-ui,sans-serif}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1.5 17h-7z"></path><path d="M7.5 8h9"></path></svg>
             </div>
             <div style="display: flex; flex-direction: column; gap: 1px">
-              <div style="font-size: 16px; font-weight: 600">{{nounCap}}</div>
+              <button onClick="{{openPlanDrink}}" aria-label="{{planDrinkAria}}" style="margin: -10px 0 -10px -6px; min-height: 44px; padding: 0 6px; border: none; border-radius: 12px; background: none; color: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer">
+                {{planNoun}}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A9AA0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+              </button>
               <sc-if value="{{bigPlan}}" hint-placeholder-val="{{false}}">
                 <div style="display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #FF8A3D">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
@@ -1306,17 +1309,6 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </div>
 
-      <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
-        <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3-1-5 1-8z"></path></svg>
-        </span>
-        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
-          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Calories from drinks</span>
-          <span style="font-size: 24px; font-weight: 800">{{sumKcal}}</span>
-        </span>
-        <span style="font-size: 13px; color: #9A9AA0; text-align: right; max-width: 120px">Estimate from your drink sizes</span>
-      </div>
-
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
           <div style="font-size: 15px; font-weight: 600">Estimated blood alcohol</div>
@@ -1345,6 +1337,17 @@ button{font-family:Outfit,system-ui,sans-serif}
         <sc-if value="{{bacNeedsProfile}}" hint-placeholder-val="{{false}}">
           <button onClick="{{goProfileFromSummary}}" style="min-height: 44px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer">Using an average body. Add your weight in Profile for a better estimate</button>
         </sc-if>
+      </div>
+
+      <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3-1-5 1-8z"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Calories from drinks</span>
+          <span style="font-size: 24px; font-weight: 800">{{sumKcal}}</span>
+        </span>
+        <span style="font-size: 13px; color: #9A9AA0; text-align: right; max-width: 120px">Estimate from your drink sizes</span>
       </div>
 
       <div style="flex-shrink: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
@@ -1754,6 +1757,33 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </sc-for>
         </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{planDrinkOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 14; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closePlanDrink}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="What are you drinking tonight?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 30px; display: flex; flex-direction: column; gap: 12px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="font-size: 20px; font-weight: 800">What are you drinking tonight?</div>
+          <button onClick="{{closePlanDrink}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+        </div>
+        <div role="radiogroup" aria-label="Drink" style="background: #353538; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column">
+          <sc-for list="{{planDrinkOptions}}" as="o" hint-placeholder-count="5">
+            <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="min-height: 58px; border: none; border-top: 1px solid {{o.divider}}; background: none; padding: 8px 16px; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+              <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 16px; font-weight: 700">{{o.label}}</span>
+                <span style="font-size: 13px; color: #9A9AA0">{{o.size}}</span>
+              </span>
+              <sc-if value="{{o.on}}" hint-placeholder-val="{{false}}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size: 13px; color: #9A9AA0; line-height: 1.45">You can still switch drinks during the night with the arrow next to + Drink.</div>
       </div>
     </div>
   </sc-if>
@@ -2195,8 +2225,8 @@ class Component extends DCLogic {
         range: short(ws) + ' – ' + short(we),
         nights: st.count,
         drinks: st.drinks,
-        onPlan: st.onPlan + ' of ' + st.count,
-        line: 'About ' + (Math.round(st.drinks / st.count * 10) / 10) + ' drinks a night · ' + st.water + ' water · ' + volText(st.alc) + ' alcohol · ' + kcalText(st.kcal),
+        kcal: Math.round(st.kcal).toLocaleString('en-GB'),
+        line: 'About ' + (Math.round(st.drinks / st.count * 10) / 10) + ' drinks a night · ' + st.water + ' water · ' + volText(st.alc) + ' alcohol · ' + st.onPlan + ' of ' + st.count + ' on plan',
         chips: g.idxs.slice().reverse().map((i) => {
           const n = s.nights[i];
           const d = toD(n.date);
@@ -2608,6 +2638,23 @@ class Component extends DCLogic {
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
       acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'overview' }),
       chips: chips,
+      planNoun: cur.many.charAt(0).toUpperCase() + cur.many.slice(1),
+      planDrinkAria: 'Drink for tonight: ' + cur.label + '. Change',
+      planDrinkOpen: !!s.planDrinkOpen,
+      openPlanDrink: () => this.setState({ planDrinkOpen: true }),
+      closePlanDrink: () => this.setState({ planDrinkOpen: false }),
+      planDrinkOptions: dtDefs.map((d, i) => {
+        const z = sizeOf(d.k);
+        return {
+          label: d.label,
+          size: volText(z.ml) + ' · ' + z.abv + '% · ' + volText(z.ml * z.abv / 100) + ' alcohol each',
+          on: d.k === cur.k,
+          checked: d.k === cur.k ? 'true' : 'false',
+          divider: i === 0 ? 'transparent' : '#4A4A4E',
+          // Picking a drink also adds it to your drink types, so the + Drink switcher has it.
+          pick: () => this.setState({ currentType: d.k, drinkSel: sel.indexOf(d.k) === -1 ? sel.concat([d.k]) : sel, planDrinkOpen: false })
+        };
+      }),
       greeting: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long' }) + ' ' + (nowDate.getHours() < 5 ? 'night' : nowDate.getHours() < 12 ? 'morning' : nowDate.getHours() < 17 ? 'afternoon' : nowDate.getHours() < 22 ? 'evening' : 'night') : 'Friday evening',
       lockDate: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Friday 20 November',
       hasNights: s.nights.length > 0,
