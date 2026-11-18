@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pacey logo: tilted glass</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#9A9AA0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 400px; height: 400px; background: #1A1A1C; display: flex; align-items: center; justify-content: center">
+  <svg width="260" height="260" viewBox="0 0 200 200" role="img" aria-label="Pacey logo, a tilted cocktail glass with two bubbles">
+    <circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle>
+    <circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle>
+    <g transform="rotate(-22 110 105)">
+      <path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round"></path>
+      <path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path>
+      <path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></path>
+      <path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></path>
+    </g>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":400,"height":400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
