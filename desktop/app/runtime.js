@@ -179,6 +179,10 @@
     else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
   };
 
+  window.paceyRequestNotify = function () {
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  };
+
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
   const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, realtime: !DEMO, savedState: DEMO ? null : load() });

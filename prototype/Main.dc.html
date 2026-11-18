@@ -102,7 +102,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
         </button>
         <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px">
-          <div style="font-size: 14px; font-weight: 600; color: #9A9AA0">Question {{qNum}} of 3</div>
+          <div style="font-size: 14px; font-weight: 600; color: #9A9AA0">Question {{qNum}} of {{qTotal}}</div>
           <div style="height: 8px; border-radius: 4px; background: #353538; overflow: hidden">
             <div style="height: 8px; width: {{quizW}}; border-radius: 4px; background: linear-gradient(90deg, #6EE7C1, #5CC8F5); transition: width 0.3s ease"></div>
           </div>
@@ -120,6 +120,10 @@ button{font-family:Outfit,system-ui,sans-serif}
           </button>
         </sc-for>
       </div>
+      <sc-if value="{{qMulti}}" hint-placeholder-val="{{false}}">
+        <div style="flex-grow: 1"></div>
+        <button onClick="{{quizDone}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">{{quizDoneLabel}}</button>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -211,6 +215,66 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="flex-grow: 1"></div>
       <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Use this plan</button>
       <button onClick="{{retakeQuiz}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Change my answers</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTryIt}}" hint-placeholder-val="{{false}}">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 60px 24px 28px; display: flex; flex-direction: column; gap: 16px">
+      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">Practice run · nothing is saved</div>
+      <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Try it <span style="color: #6EE7C1">out</span></div>
+      <div role="status" style="font-size: 17px; color: #FFFFFF; font-weight: 600; line-height: 1.4; min-height: 48px">{{tryStep}}</div>
+
+      <div style="background: #262628; border-radius: 26px; padding: 16px 20px; display: flex; align-items: center; gap: 22px">
+        <div style="position: relative; width: 80px; height: 100px; flex-shrink: 0">
+          <div style="position: absolute; inset: 3px; clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); background: #2F2F32">
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{tryFill}}; background: #6EE7C1; transition: height 0.4s ease"></div>
+          </div>
+          <svg width="80" height="100" viewBox="0 0 80 100" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M3 3L13.5 97H66.5L77 3"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 44px; font-weight: 800; line-height: 1">{{tryDrinks}}</div>
+          <div style="font-size: 15px; font-weight: 600; color: #9A9AA0">of {{plan}} {{nounMany}}</div>
+          <div style="font-size: 14px; color: #5CC8F5; font-weight: 700">{{tryWater}} water</div>
+        </div>
+      </div>
+
+      <sc-if value="{{tryHasDrink}}" hint-placeholder-val="{{false}}">
+        <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 14px; font-weight: 600; color: #9A9AA0">Your next drink fits your plan in</div>
+          <div style="font-size: 30px; font-weight: 800; line-height: 1">{{interval}} min</div>
+          <div style="height: 8px; border-radius: 4px; background: #353538; overflow: hidden"><div style="height: 8px; width: 6%; border-radius: 4px; background: linear-gradient(90deg, #6EE7C1, #5CC8F5)"></div></div>
+        </div>
+      </sc-if>
+
+      <div style="flex-grow: 1"></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <button onClick="{{tryAddWater}}" style="height: 62px; border-radius: 31px; border: {{tryWaterRing}}; background: #262628; color: #5CC8F5; font-size: 18px; font-weight: 700; cursor: pointer">+ Water</button>
+        <button onClick="{{tryAddDrink}}" style="height: 62px; border-radius: 31px; border: {{tryDrinkRing}}; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">+ {{btnNoun}}</button>
+      </div>
+      <button onClick="{{finishTry}}" style="height: 56px; flex-shrink: 0; border-radius: 28px; border: none; background: {{tryNextBg}}; color: {{tryNextFg}}; font-size: 17px; font-weight: 700; cursor: pointer">{{tryNextLabel}}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isNotify}}" hint-placeholder-val="{{false}}">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 72px 24px 28px; display: flex; flex-direction: column; gap: 18px">
+      <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 21h4"></path></svg></div>
+      <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Gentle <span style="color: #6EE7C1">nudges</span></div>
+      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Pacey can remind you during a night out, so you don't have to keep checking the app. For example:</div>
+      <div aria-hidden="true" style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{notifyExamples}}" as="ne" hint-placeholder-count="3">
+          <div style="border-radius: 20px; background: #262628; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px">
+            <span style="width: 34px; height: 34px; border-radius: 9px; background: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path></g></svg></span>
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 15px; font-weight: 700; color: #FFFFFF">{{ne.t}}</span>
+              <span style="font-size: 14px; color: #B8B8BE">{{ne.b}}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size: 14px; color: #9A9AA0">You can turn each reminder on or off in Settings.</div>
+      <div style="flex-grow: 1"></div>
+      <button onClick="{{allowNotify}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Allow notifications</button>
+      <button onClick="{{skipNotify}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Not now</button>
     </div>
   </sc-if>
 
@@ -327,13 +391,42 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">{{nightsIntro}}</div>
 
+      <sc-if value="{{noNights}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 10px">
+          <div aria-hidden="true" style="opacity: 0.45; display: flex; flex-direction: column; gap: 10px; pointer-events: none">
+            <div style="background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+              <div style="font-size: 15px; font-weight: 600">Drinks per week</div>
+              <div style="font-size: 14px; font-weight: 700">Week of 9 Nov · 6 drinks over 2 nights</div>
+              <svg width="100%" height="100" viewBox="0 0 300 100" preserveAspectRatio="none">
+                <path d="M37 60 L112 20 L187 70 L262 40 L262 100 L37 100 Z" fill="#2A9E7A" fill-opacity="0.16"></path>
+                <path d="M37 60 L112 20 L187 70 L262 40" fill="none" stroke="#2A9E7A" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+              </svg>
+            </div>
+            <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
+              <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; flex-shrink: 0"></span>
+              <span style="display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 16px; font-weight: 600">Saturday 14 November</span>
+                <span style="font-size: 14px; color: #9A9AA0">Stuck to your plan · 3 of 4 drinks</span>
+                <span style="font-size: 13px; color: #9A9AA0">21:05 to 00:40 · 199 kcal</span>
+              </span>
+            </div>
+          </div>
+          <div style="position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); padding: 8px 14px; border-radius: 16px; background: #353538; color: #FFFFFF; font-size: 14px; font-weight: 700; white-space: nowrap">Example · your first night will show up here</div>
+        </div>
+      </sc-if>
+
       <sc-if value="{{showWeeks}}" hint-placeholder-val="{{false}}">
         <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
             <div style="font-size: 15px; font-weight: 600">Drinks per week</div>
             <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{weekChart.caption}}</div>
-            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
-              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{weekChart.maxLabel}}</span>
+            <div style="display: flex; gap: 6px">
+            <div aria-hidden="true" style="position: relative; width: 22px; height: 128px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #9A9AA0; text-align: right">
+              <span style="position: absolute; right: 0; top: 1px">{{weekChart.maxLabel}}</span>
+              <span style="position: absolute; right: 0; top: {{weekChart.midTop}}">{{weekChart.midLabel}}</span>
+              <span style="position: absolute; right: 0; top: 113px">0</span>
+            </div>
+            <div style="position: relative; flex: 1 1 0; min-width: 0; height: 128px; border-bottom: 1px solid #4A4A4E">
               <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
                 <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
                 <path d="{{weekChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
@@ -349,7 +442,8 @@ button{font-family:Outfit,system-ui,sans-serif}
                 </sc-for>
               </div>
             </div>
-            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+            </div>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px; padding-left: 28px">
               <sc-for list="{{weekChart.points}}" as="pt" hint-placeholder-count="6">
                 <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
               </sc-for>
@@ -394,8 +488,13 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
             <div style="font-size: 15px; font-weight: 600">Drinks per month</div>
             <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{monthChart.caption}}</div>
-            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
-              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{monthChart.maxLabel}}</span>
+            <div style="display: flex; gap: 6px">
+            <div aria-hidden="true" style="position: relative; width: 22px; height: 128px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #9A9AA0; text-align: right">
+              <span style="position: absolute; right: 0; top: 1px">{{monthChart.maxLabel}}</span>
+              <span style="position: absolute; right: 0; top: {{monthChart.midTop}}">{{monthChart.midLabel}}</span>
+              <span style="position: absolute; right: 0; top: 113px">0</span>
+            </div>
+            <div style="position: relative; flex: 1 1 0; min-width: 0; height: 128px; border-bottom: 1px solid #4A4A4E">
               <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
                 <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
                 <path d="{{monthChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
@@ -411,7 +510,8 @@ button{font-family:Outfit,system-ui,sans-serif}
                 </sc-for>
               </div>
             </div>
-            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+            </div>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px; padding-left: 28px">
               <sc-for list="{{monthChart.points}}" as="pt" hint-placeholder-count="6">
                 <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
               </sc-for>
@@ -533,8 +633,13 @@ button{font-family:Outfit,system-ui,sans-serif}
               <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #2A9E7A"></span>On plan</span>
               <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #E0682A"></span>Over plan</span>
             </div>
-            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
-              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{allChart.maxLabel}}</span>
+            <div style="display: flex; gap: 6px">
+            <div aria-hidden="true" style="position: relative; width: 22px; height: 128px; flex-shrink: 0; font-size: 11px; font-weight: 600; color: #9A9AA0; text-align: right">
+              <span style="position: absolute; right: 0; top: 1px">{{allChart.maxLabel}}</span>
+              <span style="position: absolute; right: 0; top: {{allChart.midTop}}">{{allChart.midLabel}}</span>
+              <span style="position: absolute; right: 0; top: 113px">0</span>
+            </div>
+            <div style="position: relative; flex: 1 1 0; min-width: 0; height: 128px; border-bottom: 1px solid #4A4A4E">
               <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
                 <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
                 <path d="{{allChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
@@ -550,7 +655,8 @@ button{font-family:Outfit,system-ui,sans-serif}
                 </sc-for>
               </div>
             </div>
-            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+            </div>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px; padding-left: 28px">
               <sc-for list="{{allChart.points}}" as="pt" hint-placeholder-count="6">
                 <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
               </sc-for>
@@ -1691,6 +1797,21 @@ button{font-family:Outfit,system-ui,sans-serif}
     <button onClick="{{skipSetup}}" style="position: absolute; top: 12px; right: 12px; z-index: 30; height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px dashed #FFC56B; background: rgba(26, 26, 28, 0.9); color: #FFC56B; font-size: 13px; font-weight: 700; cursor: pointer">Skip setup · prototype only</button>
   </sc-if>
 
+  <sc-if value="{{showTips}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 13; background: rgba(0, 0, 0, 0.55)">
+      <div role="dialog" aria-label="{{tipAria}}" style="position: absolute; left: 24px; right: 24px; top: {{tipTop}}; background: #FFFFFF; color: #1A1A1C; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45)">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <span style="font-size: 13px; font-weight: 700; color: #2A9E7A">Tip {{tipStep}} of 3</span>
+          <button onClick="{{endTips}}" style="min-height: 44px; margin: -12px -8px -12px 0; padding: 0 8px; border: none; background: none; color: #6A6A70; font-size: 14px; font-weight: 600; cursor: pointer">Skip tips</button>
+        </div>
+        <div style="font-size: 19px; font-weight: 800; line-height: 1.2">{{tipTitle}}</div>
+        <div style="font-size: 15px; color: #3A3A40; line-height: 1.45">{{tipBody}}</div>
+        <button onClick="{{nextTip}}" style="align-self: flex-end; height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #1A1A1C; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{tipNext}}</button>
+        <span aria-hidden="true" style="position: absolute; left: {{tipArrowLeft}}; bottom: -9px; width: 18px; height: 18px; background: #FFFFFF; transform: rotate(45deg)"></span>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2284,6 +2405,8 @@ class Component extends DCLogic {
       return {
         caption: n ? items[pick].detail : '',
         maxLabel: Math.round(max).toLocaleString('en-GB') + (unit || ''),
+        midLabel: Math.round(max / 2) > 0 && Math.round(max / 2) < max ? Math.round(max / 2) : '',
+        midTop: (yOf(Math.round(max / 2)) - 7).toFixed(1) + 'px',
         line: line,
         area: area,
         cross: n ? 'M' + (xOf(pick) * 300).toFixed(1) + ' 8 L' + (xOf(pick) * 300).toFixed(1) + ' 128' : '',
@@ -2562,11 +2685,22 @@ class Component extends DCLogic {
       { plain: 'On a usual night, how', accent: 'many drinks?', hint: 'A rough guess is fine.', options: [
         ['1 to 2', 'A couple over the evening'], ['3 to 4', 'A few through the night'], ['5 to 6', 'A fair few'], ['7 or more', 'A big night']] },
       { plain: 'What matters most', accent: 'on a night out?', hint: 'Pick the one that fits you best.', options: [
-        ['Staying sharp', 'I want to feel fully in control'], ['Feeling fine tomorrow', 'A good night without the rough morning'], ['Just keeping track', 'I want to see my pace']] }
+        ['Staying sharp', 'I want to feel fully in control'], ['Feeling fine tomorrow', 'A good night without the rough morning'], ['Just keeping track', 'I want to see my pace']] },
+      { plain: 'What do you', accent: 'usually drink?', hint: 'Pick as many as you like. You can change this any time.', multi: true,
+        options: dtDefs.map((d) => [d.label, d.size]) }
     ];
     const q = questions[s.qIdx];
-    const ans = s.answers;
-    const qOptions = q.options.map((o, i) => ({
+    const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
+    const quizSel = s.quizDrinks || [];
+    const finishQuiz = (extra) => this.setState(Object.assign({ screen: s.account ? 'result' : 'account', accountStep: 'choose' }, extra));
+    const qOptions = q.multi ? q.options.map((o, i) => {
+      const k = dtDefs[i].k;
+      const on = quizSel.indexOf(k) !== -1;
+      return {
+        label: o[0], sub: o[1], ring: on ? '#6EE7C1' : '#262628',
+        pick: () => this.setState({ quizDrinks: on ? quizSel.filter((x) => x !== k) : quizSel.concat([k]) })
+      };
+    }) : q.options.map((o, i) => ({
       label: o[0],
       sub: o[1],
       ring: ans[s.qIdx] === i ? '#6EE7C1' : '#262628',
@@ -2627,6 +2761,49 @@ class Component extends DCLogic {
       legalSheetOpen: !!s.legalSheet,
       isOverview: s.screen === 'overview',
       qNum: s.qIdx + 1,
+      qTotal: questions.length,
+      qMulti: !!q.multi,
+      quizDoneLabel: quizSel.length ? 'Continue' : 'Skip for now',
+      quizDone: () => finishQuiz(quizSel.length ? { drinkSel: dtDefs.filter((d) => quizSel.indexOf(d.k) !== -1).map((d) => d.k), currentType: dtDefs.find((d) => quizSel.indexOf(d.k) !== -1).k } : {}),
+      // Practice run
+      isTryIt: s.screen === 'tryit',
+      tryDrinks: s.tryDrinks || 0,
+      tryWater: s.tryWater || 0,
+      tryHasDrink: (s.tryDrinks || 0) > 0,
+      tryFill: Math.min(100, Math.round((s.tryDrinks || 0) / s.plan * 100)) + '%',
+      tryStep: !(s.tryDrinks) ? 'Tap + ' + cur.btn + ' to log a drink. Watch your glass fill.' : !(s.tryWater) ? 'Pacey times your next one. Now tap + Water: a water between drinks keeps you on pace.' : 'That\'s all it takes. During a real night, Need help? is always one tap away.',
+      tryDrinkRing: !(s.tryDrinks) ? '3px solid #FFFFFF' : 'none',
+      tryWaterRing: (s.tryDrinks && !s.tryWater) ? '3px solid #5CC8F5' : 'none',
+      tryAddDrink: () => { this.setState({ tryDrinks: (s.tryDrinks || 0) + 1 }); this.playAnim(cur.k, 'Practice ' + cur.btn.toLowerCase() + ' logged', 'This is how logging feels'); },
+      tryAddWater: () => { this.setState({ tryWater: (s.tryWater || 0) + 1 }); this.playAnim('water', 'Water logged', 'Nice. That\'s the habit'); },
+      tryNextLabel: (s.tryDrinks && s.tryWater) ? 'Continue' : 'Skip practice',
+      tryNextBg: (s.tryDrinks && s.tryWater) ? '#6EE7C1' : 'transparent',
+      tryNextFg: (s.tryDrinks && s.tryWater) ? '#1A1A1C' : '#9A9AA0',
+      finishTry: () => this.setState({ screen: 'notify', anim: null }),
+      // Notification screen
+      isNotify: s.screen === 'notify',
+      notifyExamples: [
+        { t: 'Water time', b: 'A glass of water now keeps the night feeling good.' },
+        { t: 'Your next drink fits your plan now', b: 'No rush. Whenever you\'re ready.' },
+        { t: 'Heading home soon?', b: 'You planned to be home by ' + pad(s.homeH) + ':' + pad(s.homeMi * 5) + '.' }
+      ],
+      allowNotify: () => {
+        if (typeof window !== 'undefined' && typeof window.paceyRequestNotify === 'function') window.paceyRequestNotify();
+        this.setState({ notifyAllowed: true, screen: 'home', tipStep: 1 });
+      },
+      skipNotify: () => this.setState({ notifyAllowed: false, screen: 'home', tipStep: 1 }),
+      // First-visit tips on Home
+      showTips: s.screen === 'home' && !s.active && (s.tipStep || 0) > 0,
+      tipStep: s.tipStep || 0,
+      tipTitle: ['', 'This is tonight\'s plan', 'Tap here when you head out', 'Everything else lives down here'][s.tipStep || 0],
+      tipBody: ['', 'Set how many drinks, when you\'ll be home and how you\'ll get there. Tap the drink name to change what you\'re drinking.', 'Start my night turns on your pace timer and reminders. During the night, Need help? sits at the top of the screen.', 'Tonight is where you log drinks. Nights shows your history and graphs. Settings has your plan, drink sizes and reminders.'][s.tipStep || 0],
+      tipAria: 'Tip ' + (s.tipStep || 0) + ' of 3',
+      tipTop: ['0px', '200px', '470px', '540px'][s.tipStep || 0],
+      tipArrowLeft: ['0px', '40%', '50%', '33%'][s.tipStep || 0],
+      tipNext: (s.tipStep || 0) < 3 ? 'Next' : 'Got it',
+      nextTip: () => this.setState({ tipStep: (s.tipStep || 0) < 3 ? (s.tipStep || 0) + 1 : 0 }),
+      endTips: () => this.setState({ tipStep: 0 }),
+      noNights: s.nights.length === 0,
       quizW: Math.round(((s.qIdx + 1) / questions.length) * 100) + '%',
       qPlain: q.plain,
       qAccent: q.accent,
@@ -2636,9 +2813,9 @@ class Component extends DCLogic {
       levelLabel: level,
       resultMessage: resultMessage,
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
-      acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'overview' }),
+      acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }),
       chips: chips,
-      planNoun: cur.many.charAt(0).toUpperCase() + cur.many.slice(1),
+      planNoun: cur.label,
       planDrinkAria: 'Drink for tonight: ' + cur.label + '. Change',
       planDrinkOpen: !!s.planDrinkOpen,
       openPlanDrink: () => this.setState({ planDrinkOpen: true }),
@@ -2674,7 +2851,7 @@ class Component extends DCLogic {
       showWeeks: nv === 'weeks',
       showMonths: nv === 'months',
       showNightList: nv === 'nights',
-      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a point on the graph, or a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : nv === 'all' ? 'Everything since your first night. Tap a point to see that night.' : 'Tap a night to see its summary.',
+      nightsIntro: s.nights.length === 0 ? 'No nights yet. Here\'s what this page will look like after your first night.' : nv === 'weeks' ? 'Each week at a glance. Tap a point on the graph, or a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : nv === 'all' ? 'Everything since your first night. Tap a point to see that night.' : 'Tap a night to see its summary.',
       weekCards: weekCards,
       weekChart: weekChart,
       monthChart: monthChart,
@@ -2809,7 +2986,7 @@ class Component extends DCLogic {
       animWater: !!s.anim && s.anim.type === 'water',
       animTitle: s.anim ? s.anim.title : '',
       animSub: s.anim ? s.anim.sub : '',
-      showDevSkip: this.props.devSkip !== false && ['age', 'quiz', 'account', 'result', 'overview'].indexOf(s.screen) !== -1,
+      showDevSkip: this.props.devSkip !== false && ['age', 'quiz', 'account', 'result', 'overview', 'tryit', 'notify'].indexOf(s.screen) !== -1,
       skipSetup: () => this.setState({ screen: 'home', plan: 4, usualPlan: 4, avgDrinks: 4, termsAcceptedAt: s.termsAcceptedAt || Date.now(), account: s.account || { method: 'apple', label: 'Signed in with Apple (skipped)' } }),
       alcLabel: volText(totals(s.entries).alc),
       volLabel: volText(totals(s.entries).vol),
@@ -2835,6 +3012,7 @@ class Component extends DCLogic {
       drinkTypes: drinkTypes,
       nounCap: nounMany.charAt(0).toUpperCase() + nounMany.slice(1),
       nounMany: nounMany,
+      interval: interval,
       btnNoun: cur.btn,
       curOne: cur.one,
       typeMenuItems: typeMenuItems,
