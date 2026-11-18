@@ -16,6 +16,8 @@ a{color:#9A9AA0}a:hover{color:#FFFFFF}
 button{font-family:Outfit,system-ui,sans-serif}
 .wheel{scrollbar-width:none;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0.15),#000 40%,#000 60%,rgba(0,0,0,0.15));mask-image:linear-gradient(to bottom,rgba(0,0,0,0.15),#000 40%,#000 60%,rgba(0,0,0,0.15))}
 .wheel::-webkit-scrollbar{display:none}
+.chips{scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
 .pc-anim{animation:pcFade .2s ease-out both}
 .pc-card{animation:pcPop .38s cubic-bezier(.2,1.4,.4,1) both}
 .pc-anim svg *{transform-box:fill-box}
@@ -699,10 +701,18 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; margin-top: -6px">
-        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Quick start</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Quick start</span>
+          <sc-if value="{{showRecommend}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">First night? Start with {{recommendName}}</span>
+          </sc-if>
+        </div>
+        <div class="chips" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -24px; padding: 2px 24px">
           <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
-            <button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{c.bg}}; color: {{c.fg}}; font-size: 15px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+            <button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" aria-label="{{c.aria}}" style="height: 44px; flex-shrink: 0; padding: 0 16px 0 12px; border-radius: 22px; border: none; background: {{c.bg}}; box-shadow: inset 0 0 0 {{c.ring}}; color: {{c.fg}}; display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; white-space: nowrap; cursor: pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+              {{c.label}}
+            </button>
           </sc-for>
         </div>
       </div>
@@ -920,7 +930,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; align-items: center; gap: 12px">
           <span style="width: 44px; height: 44px; border-radius: 14px; background: #FFC56B; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; font-weight: 800">{{usualN}}</span>
           <span style="display: flex; flex-direction: column; gap: 2px">
-            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your usual plan</span>
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your night out plan</span>
             <span style="font-size: 16px; font-weight: 700">{{usualSummary}}</span>
           </span>
         </div>
@@ -2208,9 +2218,10 @@ class Component extends DCLogic {
     const chipCap = s.avgDrinks || 4;
     const quick = s.quick || {};
     const presetDefs = [
-      ['quiet', 'Quiet', { n: 2, h: 0, mi: 0, ride: 0 }],
-      ['steady', 'Steady', { n: 3, h: 1, mi: 0, ride: 0 }],
-      ['usual', 'Usual', { n: usualPlan, h: 1, mi: 6, ride: 0 }]
+      // Named after the kind of night, so new people know which to pick.
+      ['quiet', 'Dinner & drinks', { n: 2, h: 23, mi: 6, ride: 0 }, 'M7 3v7M5 3v4a2 2 0 0 0 4 0V3M7 10v11M17 3c-1.6 1.2-2.5 3.4-2.5 6.2 0 2.2 1 3.8 2.5 3.8V21'],
+      ['steady', 'Night out', { n: usualPlan, h: 1, mi: 6, ride: 0 }, 'M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'],
+      ['usual', 'Big occasion', { n: usualPlan, h: 2, mi: 6, ride: 0 }, 'M12 3l2.6 5.6 6 .7-4.5 4 1.3 6L12 16.4l-5.4 2.9 1.3-6-4.5-4 6-.7z']
     ];
     const presetOf = (k) => {
       const d = presetDefs.find((p) => p[0] === k);
@@ -2222,8 +2233,13 @@ class Component extends DCLogic {
     const chips = presetDefs.map((d) => {
       const p = presetOf(d[0]);
       const on = s.plan === p.n && s.homeH === p.h && s.homeMi === p.mi && s.rideIdx === p.ride;
+      // First night only: the Night out preset (your suggested limit) is the recommended one.
+      const rec = s.nights.length === 0 && d[0] === 'steady';
       return {
         label: d[1] + ' · ' + p.n,
+        icon: d[3],
+        aria: d[1] + ', ' + p.n + ' drinks, home by ' + pad(p.h) + ':' + pad(p.mi * 5) + (rec ? '. Recommended for your first night' : ''),
+        ring: rec && !on ? '2px #6EE7C1' : '0 transparent',
         pressed: on ? 'true' : 'false',
         bg: on ? '#6EE7C1' : '#262628',
         fg: on ? '#1A1A1C' : '#FFFFFF',
@@ -2283,7 +2299,7 @@ class Component extends DCLogic {
       };
     });
     const doneCount = checklist.filter((c) => c.on).length;
-    const usualP = presetOf('usual');
+    const usualP = presetOf('steady');
     const usualNoun = usualP.n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany;
     // One tip from history: does water in the first hour line up with staying on plan?
     const startMin = START;
@@ -2830,6 +2846,8 @@ class Component extends DCLogic {
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
       acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }),
       chips: chips,
+      showRecommend: s.nights.length === 0,
+      recommendName: presetDefs[1][1],
       planNoun: cur.label,
       planIcon: DRINK_ICON[cur.k] || DRINK_ICON.mixed,
       planDrinkAria: 'Drink for tonight: ' + cur.label + '. Change',
