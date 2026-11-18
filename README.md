@@ -4,21 +4,29 @@ A safety drinking app that helps people pace their drinking during one night out
 
 ## Run it on your laptop
 
-Pacey runs as a real app in a phone-shaped window, with real time and your data saved between launches. You need [Node.js](https://nodejs.org) (LTS). Then in a terminal:
+Pacey runs as a real app in a phone-shaped window, with real time and your data saved between launches. You need [Node.js](https://nodejs.org) (LTS).
 
-```bash
-cd desktop
-```
+### Quickest: from the Pacey folder
 
-```bash
-npm install
-```
+Open a terminal in this folder (the one with this README) and run:
 
 ```bash
 npm start
 ```
 
-See [`desktop/README.md`](desktop/README.md) for testing mode and more.
+The first time it sets itself up (about a minute), then the Pacey window opens.
+
+### Type `pacey` anywhere
+
+Run this once, in this folder:
+
+```bash
+npm install -g .
+```
+
+From then on, typing `pacey` in any terminal opens the app. Use `pacey --dev` for the testing buttons (Skip setup and Lock). On a Mac, if it says permission denied, run it with `sudo` in front.
+
+See [`desktop/README.md`](desktop/README.md) for more.
 
 ## The prototype
 

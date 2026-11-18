@@ -2,34 +2,25 @@
 
 Runs Pacey as a real app in a phone-shaped window: real time, your nights saved between launches, and notifications from your computer.
 
-## First time
-
-1. Install **Node.js** (the LTS version) from https://nodejs.org if you don't have it.
-2. In a terminal, go into this folder and install:
-
-```bash
-cd desktop
-```
-
-```bash
-npm install
-```
-
 ## Open the app
+
+From the main Pacey folder (one level up from here):
 
 ```bash
 npm start
 ```
 
-A phone-sized Pacey window opens. Close the window to quit.
+Or type `pacey` in any terminal after a one-time `npm install -g .` in the main Pacey folder. The first launch sets itself up, which takes about a minute.
+
+You can also run it from this folder with `npm install` once, then `npm start`.
 
 ## Testing mode
 
 ```bash
-npm run dev
+pacey --dev
 ```
 
-The same app, plus the testing buttons: **Skip setup** during first launch and **Lock** (top left during a night) to preview the lock screen widgets and Live Activity.
+Shows the testing buttons: **Skip setup** during first launch and **Lock** (top left during a night) to preview the lock screen widgets and Live Activity.
 
 ## How it works
 

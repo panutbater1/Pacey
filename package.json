@@ -1,0 +1,13 @@
+{
+  "name": "pacey",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pacey: pace your drinking during one night out",
+  "bin": {
+    "pacey": "bin/pacey.js"
+  },
+  "scripts": {
+    "start": "node bin/pacey.js",
+    "dev": "node bin/pacey.js --dev"
+  }
+}
