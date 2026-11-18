@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node build.js",
     "start": "node build.js && electron .",
-    "dev": "node build.js && electron . --dev"
+    "dev": "node build.js && electron . --dev",
+    "demo": "node build.js && electron . --demo"
   },
   "dependencies": {
     "react": "18.3.1",

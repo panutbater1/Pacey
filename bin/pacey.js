@@ -3,6 +3,7 @@
 //   npm start            (from the Pacey folder)
 //   pacey                (anywhere, after a one-time `npm install -g .` in the Pacey folder)
 //   pacey --dev          (with the testing buttons)
+//   pacey --demo         (sample nights and sped-up time, nothing saved)
 const { spawn, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
