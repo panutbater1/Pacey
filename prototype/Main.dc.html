@@ -728,7 +728,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; justify-content: space-between; align-items: center">
           <div style="display: flex; align-items: center; gap: 12px">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1.5 17h-7z"></path><path d="M7.5 8h9"></path></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{planIcon}}"></path></svg>
             </div>
             <div style="display: flex; flex-direction: column; gap: 1px">
               <button onClick="{{openPlanDrink}}" aria-label="{{planDrinkAria}}" style="margin: -10px 0 -10px -6px; min-height: 44px; padding: 0 6px; border: none; border-radius: 12px; background: none; color: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer">
@@ -1382,10 +1382,8 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{planLine}}</div>
         <div style="display: flex; flex-wrap: wrap; gap: 8px">
           <sc-for list="{{planDots}}" as="d" hint-placeholder-count="4">
-            <span style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
-              <sc-if value="{{d.done}}" hint-placeholder-val="{{true}}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
-              </sc-if>
+            <span role="img" aria-label="{{d.aria}}" style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; box-shadow: inset 0 0 0 {{d.ring}}; color: {{d.fg}}; display: flex; align-items: center; justify-content: center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg>
             </span>
           </sc-for>
         </div>
@@ -2662,9 +2660,26 @@ class Component extends DCLogic {
         aria: 'Estimated blood alcohol peaked around ' + fmt(peakT) + ' at ' + f2(peak * 0.8) + ' to ' + f2(peak * 1.2) + ' percent'
       };
     })();
+    // Line icons for each drink type (24 x 24), used on Home and in night summaries.
+    const DRINK_ICON = {
+      shot: 'M7 6h10l-1.5 13h-7zM7.6 11h8.8',
+      wine: 'M7 3h10c0 5.5-2.2 8.5-5 8.5S7 8.5 7 3zM12 11.5V20M8 20.5h8',
+      beer: 'M5 6h10v14H5zM15 9.5h2.5A1.5 1.5 0 0 1 19 11v4.5a1.5 1.5 0 0 1-1.5 1.5H15M5 9.5h10',
+      cocktail: 'M4 4h16l-8 9zM12 13v7M8 20.5h8M7 6.5h10',
+      mixed: 'M10 2.5h4v4l2 3V21H8V9.5l2-3zM8 13h8'
+    };
+    const vDrinkList = vEntries.filter((e) => e.kind === 'drink').sort((a, b) => a.t - b.t);
     const planDots = [];
     for (let i = 0; i < Math.max(view.plan, vDrinks); i += 1) {
-      planDots.push({ done: i < vDrinks, bg: i >= vDrinks ? '#353538' : i < view.plan ? '#2FAE86' : '#FF8A3D' });
+      const had = i < vDrinks;
+      const kind = had ? (vDrinkList[i].type || sel[0]) : null;
+      planDots.push({
+        icon: DRINK_ICON[had ? kind : ((vDrinkList[0] && vDrinkList[0].type) || sel[0])] || DRINK_ICON.mixed,
+        bg: had ? (i < view.plan ? '#2FAE86' : '#FF8A3D') : 'transparent',
+        fg: had ? '#1A1A1C' : '#4A4A4E',
+        ring: had ? '0 transparent' : '2px #353538',
+        aria: had ? 'Drink ' + (i + 1) + ': ' + ((dtDefs.find((d) => d.k === kind) || {}).btn || 'Drink') + (i < view.plan ? '' : ', over plan') : 'Planned drink not had'
+      });
     }
 
     const stuck = vDrinks <= view.plan;
@@ -2816,6 +2831,7 @@ class Component extends DCLogic {
       acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }),
       chips: chips,
       planNoun: cur.label,
+      planIcon: DRINK_ICON[cur.k] || DRINK_ICON.mixed,
       planDrinkAria: 'Drink for tonight: ' + cur.label + '. Change',
       planDrinkOpen: !!s.planDrinkOpen,
       openPlanDrink: () => this.setState({ planDrinkOpen: true }),
