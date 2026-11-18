@@ -8,11 +8,13 @@
   const build = window.PACEY_BUILD;
   const params = new URLSearchParams(window.location.search);
   const DEV = params.get('dev') === '1';
+  // Demo mode: the prototype's sample nights and sped-up clock, nothing saved.
+  const DEMO = params.get('demo') === '1';
   const STORAGE_KEY = 'pacey.state.v1';
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -162,7 +164,7 @@
   }
 
   class DCLogic extends React.Component {
-    componentDidUpdate() { save(this.state); }
+    componentDidUpdate() { if (!DEMO) save(this.state); }
     render() {
       const vals = this.renderVals();
       return h(Fragment, null, ...renderNodes(TREE, vals));
@@ -177,9 +179,13 @@
     else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
   };
 
+  window.paceyRequestNotify = function () {
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  };
+
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
-  const props = Object.assign({}, build.defaults, { devSkip: DEV, realtime: true, savedState: load() });
+  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, realtime: !DEMO, savedState: DEMO ? null : load() });
   ReactDOM.createRoot(document.getElementById('screen')).render(h(Component, props));
 
   window.paceyReset = function () {
