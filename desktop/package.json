@@ -1,0 +1,19 @@
+{
+  "name": "pacey-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pacey on your laptop, in a phone-sized window",
+  "main": "main.js",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node build.js && electron .",
+    "dev": "node build.js && electron . --dev"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "electron": "33.2.1"
+  }
+}

@@ -441,7 +441,7 @@ button{font-family:Outfit,system-ui,sans-serif}
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; overflow: hidden">
 
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">Friday evening</div>
+        <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{greeting}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Going out <span style="color: #6EE7C1">tonight?</span></div>
       </div>
 
@@ -673,7 +673,9 @@ button{font-family:Outfit,system-ui,sans-serif}
         </span>
       </div>
 
+      <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
       <button onClick="{{showMorningAfter}}" style="flex-shrink: 0; min-height: 44px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer">Look back at your last night</button>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1414,7 +1416,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   <sc-if value="{{isLock}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 25; background: linear-gradient(170deg, #20323A 0%, #1A1A1C 55%, #14231F 100%); display: flex; flex-direction: column; align-items: center; padding: 64px 16px 28px; box-sizing: border-box; gap: 10px">
       <svg width="18" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
-      <div style="font-size: 18px; font-weight: 600; color: #E6E6EA">Friday 20 November</div>
+      <div style="font-size: 18px; font-weight: 600; color: #E6E6EA">{{lockDate}}</div>
       <div style="font-size: 92px; font-weight: 700; line-height: 1; letter-spacing: -2px; color: #F2F2F5">{{clockLabel}}</div>
 
       <div style="width: 100%; display: flex; gap: 10px; justify-content: center; margin-top: 6px">
@@ -1626,7 +1628,7 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.state = { screen: 'age', helpFrom: 'home', plan: 4, homeH: 1, homeMi: 6, rideIdx: 0, picker: null, entries: [], tick: 0, endTick: 0, active: false, name: '', friend: '', reminders: true, qIdx: 0, answers: [null, null, null], viewIdx: 0, summaryFrom: 'home',
-      nights: [
+      nights: props.realtime ? [] : [
         { title: 'Saturday 14 November', date: '2026-11-14', day: 'Saturday', plan: 4, endTick: 215, entries: [
           { kind: 'drink', t: 1275 }, { kind: 'water', t: 1300 }, { kind: 'drink', t: 1345 }, { kind: 'water', t: 1400 }, { kind: 'drink', t: 1420 }] },
         { title: 'Thursday 12 November', date: '2026-11-12', day: 'Thursday', plan: 3, endTick: 170, entries: [
@@ -1640,6 +1642,7 @@ class Component extends DCLogic {
         { title: 'Saturday 24 October', date: '2026-10-24', day: 'Saturday', plan: 4, endTick: 240, entries: [
           { kind: 'drink', t: 1270 }, { kind: 'drink', t: 1310 }, { kind: 'drink', t: 1350 }, { kind: 'water', t: 1370 }, { kind: 'drink', t: 1400 }, { kind: 'drink', t: 1440 }] }
       ] };
+    if (props.savedState) Object.assign(this.state, props.savedState);
 
     // Scroll wheels (like the iOS time picker). Refs stay stable so re-renders never reset the scroll.
     this.ROW = 40;
@@ -1692,6 +1695,7 @@ class Component extends DCLogic {
     if (why && over > 0) pick = [pick[0], 'You said: "' + why + '". ' + pick[1]];
     const id = Date.now();
     this.setState({ banner: { id: id, title: pick[0], body: pick[1] } });
+    if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(pick[0], pick[1]);
     clearTimeout(this.bannerTimer);
     this.bannerTimer = setTimeout(() => {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
@@ -1713,7 +1717,12 @@ class Component extends DCLogic {
   componentDidMount() {
     // Prototype clock: one real second is one minute of the night.
     this.timer = setInterval(() => {
-      if (this.state.active) this.setState({ tick: this.state.tick + 1 });
+      if (this.props.realtime) {
+        // Real app: minutes since the night started, and a refresh each minute for the clock.
+        const tick = this.state.active && this.state.startedAtMs ? Math.floor((Date.now() - this.state.startedAtMs) / 60000) : this.state.tick;
+        const minute = Math.floor(Date.now() / 60000);
+        if (tick !== this.state.tick || minute !== this.lastMinute) { this.lastMinute = minute; this.setState({ tick: tick }); }
+      } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
     }, 1000);
   }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
@@ -1721,7 +1730,13 @@ class Component extends DCLogic {
     const s = this.state;
     const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
     const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, weight and body type you add in Profile."}, {"h": "Weight and body type", "b": "These are optional. If you add them, they are used only on your phone to work out the blood alcohol estimate in your night summary. You can turn this off below."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: [YOUR CONTACT EMAIL]"}];
-    const START = 21 * 60 + 5;
+    // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
+    const RT = !!this.props.realtime;
+    const nowDate = new Date();
+    const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
+    const START = RT ? (s.active ? (s.startMin != null ? s.startMin : nowMin) : nowMin) : 21 * 60 + 5;
+    const EMPTY_NIGHT = { title: 'No nights yet', day: '', date: nowDate.toISOString().slice(0, 10), plan: 4, endTick: 0, entries: [], start: START };
+    const startOf = (n) => (n && n.start != null ? n.start : 21 * 60 + 5);
     const rides = ['Taxi', 'Rideshare', 'Public transport', 'Lift from a friend', 'Walking'];
     const pad = (n) => String(n).padStart(2, '0');
     // Drink types: the person can pick several; one of them is the current drink in Drink mode.
@@ -1825,8 +1840,9 @@ class Component extends DCLogic {
     const minItems = Array.from({ length: 12 }, (_, i) => pad(i * 5)).map(wheelItem('min', pt ? s.qMi : s.homeMi));
     const rideItems = rides.map(wheelItem('ride', pt ? s.qRide : s.rideIdx));
     const now = START + s.tick;
-    const view = s.nights[s.viewIdx] || s.nights[0];
-    const end = START + view.endTick;
+    const view = s.nights[s.viewIdx] || s.nights[0] || EMPTY_NIGHT;
+    const VSTART = startOf(view);
+    const end = VSTART + view.endTick;
     const vEntries = view.entries;
     const vDrinks = vEntries.filter((e) => e.kind === 'drink').length;
     const vWaters = vEntries.filter((e) => e.kind === 'water').length;
@@ -1839,7 +1855,7 @@ class Component extends DCLogic {
       return {
         title: n.title,
         sub: nightSub(n),
-        time: fmt(START) + ' to ' + fmt(START + n.endTick),
+        time: fmt(startOf(n)) + ' to ' + fmt(startOf(n) + n.endTick),
         stuck: ok,
         notStuck: !ok,
         open: () => this.setState({ screen: 'summary', viewIdx: i, summaryFrom: 'history' })
@@ -1929,7 +1945,7 @@ class Component extends DCLogic {
     const usualNoun = usualP.n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany;
     // One tip from history: does water in the first hour line up with staying on plan?
     const startMin = START;
-    const earlyWater = (n) => n.entries.some((e) => e.kind === 'water' && e.t - startMin <= 60);
+    const earlyWater = (n) => n.entries.some((e) => e.kind === 'water' && e.t - startOf(n) <= 60);
     const nDrinks = (n) => n.entries.filter((e) => e.kind === 'drink').length;
     const okNight = (n) => nDrinks(n) <= n.plan;
     const withEarly = s.nights.filter(earlyWater);
@@ -2029,9 +2045,10 @@ class Component extends DCLogic {
       pick: () => this.setState({ nightsView: t[0] })
     }));
 
-    const lastNight = s.nights[0];
+    const lastNight = s.nights[0] || EMPTY_NIGHT;
+    const LSTART = startOf(lastNight);
     const setLast = (patch) => this.setState({ nights: [Object.assign({}, lastNight, patch)].concat(s.nights.slice(1)) });
-    const lateAdd = (kind) => () => setLast({ entries: lastNight.entries.concat([{ kind: kind, t: START + lastNight.endTick, late: true }]) });
+    const lateAdd = (kind) => () => setLast({ entries: lastNight.entries.concat([{ kind: kind, t: LSTART + lastNight.endTick, late: true }]) });
     const lateRemove = (kind) => () => {
       const copy = lastNight.entries.slice();
       for (let i = copy.length - 1; i >= 0; i -= 1) {
@@ -2105,7 +2122,7 @@ class Component extends DCLogic {
     const tonightCounts = drinks.length + (drinks.length === 1 ? ' drink' : ' drinks') + ' · ' + waters.length + ' water';
 
     const hours = [];
-    for (let h = Math.floor(START / 60) * 60; h <= end && hours.length < 8; h += 60) {
+    for (let h = Math.floor(VSTART / 60) * 60; h <= end && hours.length < 8; h += 60) {
       const inHour = vEntries.filter((e) => e.t >= h && e.t < h + 60);
       const d = inHour.filter((e) => e.kind === 'drink').length;
       const w = inHour.filter((e) => e.kind === 'water').length;
@@ -2210,11 +2227,11 @@ class Component extends DCLogic {
       const pts = [];
       let level = 0;
       let peak = 0;
-      let peakT = START;
-      for (let t = START; t <= end + 0.001; t += STEP) {
+      let peakT = VSTART;
+      for (let t = VSTART; t <= end + 0.001; t += STEP) {
         level = Math.max(0, level - 0.015 * STEP / 60);
         doses.forEach((d) => { if (d.t > t - STEP && d.t <= t) level += d.pct; });
-        if (t === START) doses.forEach((d) => { if (d.t < START) level += d.pct; });
+        if (t === VSTART) doses.forEach((d) => { if (d.t < VSTART) level += d.pct; });
         if (level > peak) { peak = level; peakT = t; }
         pts.push(level);
       }
@@ -2244,7 +2261,7 @@ class Component extends DCLogic {
     }
 
     const stuck = vDrinks <= view.plan;
-    const pace = vDrinks / Math.max(1, (end - START) / 60);
+    const pace = vDrinks / Math.max(1, (end - VSTART) / 60);
     const drinkTimes = vEntries.filter((e) => e.kind === 'drink' && !e.late).map((e) => e.t).sort((a, b) => a - b);
     const gapLabel = drinkTimes.length < 2
       ? '–'
@@ -2337,6 +2354,9 @@ class Component extends DCLogic {
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
       acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'overview' }),
       chips: chips,
+      greeting: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long' }) + ' ' + (nowDate.getHours() < 5 ? 'night' : nowDate.getHours() < 12 ? 'morning' : nowDate.getHours() < 17 ? 'afternoon' : nowDate.getHours() < 22 ? 'evening' : 'night') : 'Friday evening',
+      lockDate: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Friday 20 November',
+      hasNights: s.nights.length > 0,
       checklist: checklist,
       checkCount: doneCount + ' of ' + checkDefs.length + ' done',
       checkCountColor: doneCount === checkDefs.length ? '#6EE7C1' : '#9A9AA0',
@@ -2345,7 +2365,7 @@ class Component extends DCLogic {
       setReason: (e) => this.setState({ reason: e.target.value }),
       usualN: usualP.n,
       usualSummary: usualP.n + ' ' + usualNoun + ' · home by ' + pad(usualP.h) + ':' + pad(usualP.mi * 5) + ' · ' + rides[usualP.ride],
-      startUsual: () => this.setState({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false }),
+      startUsual: () => this.setState({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, startedAtMs: Date.now(), startMin: nowMin }),
       historyTip: historyTip,
       showMorningAfter: () => this.setState({ morningAfter: true }),
       doneMorningAfter: () => this.setState({ morningAfter: false }),
@@ -2353,7 +2373,7 @@ class Component extends DCLogic {
       showWeeks: nv === 'weeks',
       showMonths: nv === 'months',
       showNightList: nv === 'nights',
-      nightsIntro: nv === 'weeks' ? 'Each week at a glance. Tap a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : 'Tap a night to see its summary.',
+      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : 'Tap a night to see its summary.',
       weekCards: weekCards,
       monthCards: monthCards,
       quickRows: quickRows,
@@ -2376,7 +2396,7 @@ class Component extends DCLogic {
       startLabel: fmt(START),
       showBrand: !(s.screen === 'drink' && s.active),
       drinkTabLabel: s.active || !s.morningAfter ? 'Tonight' : 'Last night',
-      lnTime: fmt(START) + ' to ' + fmt(START + lastNight.endTick),
+      lnTime: fmt(LSTART) + ' to ' + fmt(LSTART + lastNight.endTick),
       lnDrinks: lastNight.entries.filter((e) => e.kind === 'drink').length,
       lnWater: lastNight.entries.filter((e) => e.kind === 'water').length,
       feelOptions: feelOptions,
@@ -2393,8 +2413,8 @@ class Component extends DCLogic {
       planLine: 'Your plan · ' + vDrinks + ' of ' + view.plan + ' drinks',
       sumDrinks: vDrinks,
       sumWater: vWaters,
-      lastTitle: s.nights[0].title,
-      lastSub: nightSub(s.nights[0]),
+      lastTitle: lastNight.title,
+      lastSub: nightSub(lastNight),
       openLast: () => this.setState({ screen: 'summary', viewIdx: 0, summaryFrom: 'home' }),
       historyTabC: s.screen === 'history' ? '#6EE7C1' : '#9A9AA0',
       historyCurrent: s.screen === 'history' ? 'page' : 'false',
@@ -2484,7 +2504,7 @@ class Component extends DCLogic {
       bacLine: bac.line,
       bacArea: bac.area,
       bacAria: bac.aria,
-      bacStart: fmt(START),
+      bacStart: fmt(VSTART),
       bacEnd: fmt(end),
       bacClear: bac.clear,
       bacNeedsProfile: !s.weightKg && useBody,
@@ -2519,7 +2539,7 @@ class Component extends DCLogic {
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
       friendLabel: s.friend.trim() || 'Not set',
       durationLabel: durationLabel,
-      timeRange: fmt(START) + ' – ' + fmt(end),
+      timeRange: fmt(VSTART) + ' – ' + fmt(end),
       pickerOpen: !!s.picker,
       pickerTitle: (s.picker === 'ride' ? 'Getting home' : 'Home by') + (s.pickerTarget ? ' · ' + s.pickerTarget.charAt(0).toUpperCase() + s.pickerTarget.slice(1) : ''),
       closePicker: () => {
@@ -2572,7 +2592,7 @@ class Component extends DCLogic {
       logChevron: s.logOpen ? '90deg' : '0deg',
       toggleTonightLog: () => this.setState({ logOpen: !s.logOpen }),
       canUndo: s.entries.length > 0,
-      dateLine: view.day + ' · ' + fmt(START) + ' to ' + fmt(end),
+      dateLine: view.day + ' · ' + fmt(VSTART) + ' to ' + fmt(end),
       stuck: stuck,
       notStuck: !stuck,
       summaryMessage: summaryMessage,
@@ -2598,7 +2618,7 @@ class Component extends DCLogic {
       ridePillC: s.picker === 'ride' ? '#6EE7C1' : '#FFFFFF',
       toggleHomePicker: () => this.setState({ picker: s.picker === 'home' ? null : 'home', pickerTarget: null }),
       toggleRidePicker: () => this.setState({ picker: s.picker === 'ride' ? null : 'ride', pickerTarget: null }),
-      startNight: () => this.setState({ screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false }),
+      startNight: () => this.setState({ screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, startedAtMs: Date.now(), startMin: nowMin }),
       addDrink: () => {
         // Water first: once the plan is reached, offer a water before logging another drink.
         if (s.waterFirstOn !== false && drinks.length >= s.plan) this.setState({ waterFirst: true, typeMenu: false });
@@ -2633,7 +2653,7 @@ class Component extends DCLogic {
           title: new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
           date: [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-'),
           day: new Date().toLocaleDateString('en-GB', { weekday: 'long' }),
-          plan: s.plan, entries: s.entries, endTick: s.tick }].concat(s.nights),
+          plan: s.plan, entries: s.entries, endTick: s.tick, start: START }].concat(s.nights),
         morningAfter: true
       }),
       done: () => this.setState({ screen: s.summaryFrom }),

@@ -2,6 +2,32 @@
 
 A safety drinking app that helps people pace their drinking during one night out, so they have fun without getting too drunk.
 
+## Run it on your laptop
+
+Pacey runs as a real app in a phone-shaped window, with real time and your data saved between launches. You need [Node.js](https://nodejs.org) (LTS).
+
+### Quickest: from the Pacey folder
+
+Open a terminal in this folder (the one with this README) and run:
+
+```bash
+npm start
+```
+
+The first time it sets itself up (about a minute), then the Pacey window opens.
+
+### Type `pacey` anywhere
+
+Run this once, in this folder:
+
+```bash
+npm install -g .
+```
+
+From then on, typing `pacey` in any terminal opens the app. Use `pacey --dev` for the testing buttons (Skip setup and Lock). On a Mac, if it says permission denied, run it with `sudo` in front.
+
+See [`desktop/README.md`](desktop/README.md) for more.
+
 ## The prototype
 
 `prototype/Main.dc.html` is the full clickable prototype: one 390 × 844 phone screen that holds the whole app flow. It's written in the Claude Design canvas format, so it opens in the Claude artifact viewer rather than as a plain web page. `prototype/canvas.json` is the canvas layout that goes with it.
