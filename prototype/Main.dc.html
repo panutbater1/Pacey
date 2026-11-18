@@ -16,6 +16,8 @@ a{color:#9A9AA0}a:hover{color:#FFFFFF}
 button{font-family:Outfit,system-ui,sans-serif}
 .wheel{scrollbar-width:none;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0.15),#000 40%,#000 60%,rgba(0,0,0,0.15));mask-image:linear-gradient(to bottom,rgba(0,0,0,0.15),#000 40%,#000 60%,rgba(0,0,0,0.15))}
 .wheel::-webkit-scrollbar{display:none}
+.chips{scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
 .pc-anim{animation:pcFade .2s ease-out both}
 .pc-card{animation:pcPop .38s cubic-bezier(.2,1.4,.4,1) both}
 .pc-anim svg *{transform-box:fill-box}
@@ -45,7 +47,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 @media (prefers-reduced-motion: reduce){.pc-anim,.pc-anim *{animation:none !important}}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<div data-pacey-root="1" style="width: 390px; height: 844px; box-sizing: border-box; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
   <sc-if value="{{showTabs}}" hint-placeholder-val="{{false}}">
     <div style="flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; justify-content: space-between; align-items: center">
@@ -699,10 +701,21 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; margin-top: -6px">
-        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Quick start</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Quick start</span>
+          <sc-if value="{{showRecommend}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">First night? Start with {{recommendName}}</span>
+          </sc-if>
+          <sc-if value="{{showHoldHint}}" hint-placeholder-val="{{true}}">
+            <span style="font-size: 13px; font-weight: 600; color: #7A7A80">Hold one to preview</span>
+          </sc-if>
+        </div>
+        <div class="chips" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -24px; padding: 2px 24px">
           <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
-            <button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{c.bg}}; color: {{c.fg}}; font-size: 15px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+            <button onClick="{{c.pick}}" onPointerDown="{{c.down}}" onPointerUp="{{c.up}}" onPointerLeave="{{c.up}}" onPointerCancel="{{c.up}}" onContextMenu="{{c.menu}}" aria-pressed="{{c.pressed}}" aria-label="{{c.aria}}" style="-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; height: 44px; flex-shrink: 0; padding: 0 16px 0 12px; border-radius: 22px; border: none; background: {{c.bg}}; box-shadow: inset 0 0 0 {{c.ring}}; color: {{c.fg}}; display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; white-space: nowrap; cursor: pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+              {{c.label}}
+            </button>
           </sc-for>
         </div>
       </div>
@@ -728,7 +741,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; justify-content: space-between; align-items: center">
           <div style="display: flex; align-items: center; gap: 12px">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1.5 17h-7z"></path><path d="M7.5 8h9"></path></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{planIcon}}"></path></svg>
             </div>
             <div style="display: flex; flex-direction: column; gap: 1px">
               <button onClick="{{openPlanDrink}}" aria-label="{{planDrinkAria}}" style="margin: -10px 0 -10px -6px; min-height: 44px; padding: 0 6px; border: none; border-radius: 12px; background: none; color: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer">
@@ -920,7 +933,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; align-items: center; gap: 12px">
           <span style="width: 44px; height: 44px; border-radius: 14px; background: #FFC56B; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; font-weight: 800">{{usualN}}</span>
           <span style="display: flex; flex-direction: column; gap: 2px">
-            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your usual plan</span>
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your night out plan</span>
             <span style="font-size: 16px; font-weight: 700">{{usualSummary}}</span>
           </span>
         </div>
@@ -1001,8 +1014,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <button onClick="{{openLastFromTonight}}" style="height: 44px; flex-shrink: 0; padding: 0 18px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Full summary</button>
       </div>
 
-      <button onClick="{{tabHome}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Plan my night</button>
-      <button onClick="{{doneMorningAfter}}" style="flex-shrink: 0; min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Done checking in · get ready for next time</button>
+      <button onClick="{{doneMorningAfter}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Plan my night</button>
     </div>
   </sc-if>
 
@@ -1382,10 +1394,8 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{planLine}}</div>
         <div style="display: flex; flex-wrap: wrap; gap: 8px">
           <sc-for list="{{planDots}}" as="d" hint-placeholder-count="4">
-            <span style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
-              <sc-if value="{{d.done}}" hint-placeholder-val="{{true}}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
-              </sc-if>
+            <span role="img" aria-label="{{d.aria}}" style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; box-shadow: inset 0 0 0 {{d.ring}}; color: {{d.fg}}; display: flex; align-items: center; justify-content: center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg>
             </span>
           </sc-for>
         </div>
@@ -1812,6 +1822,38 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{previewOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15">
+      <button aria-label="Close" onClick="{{closePreview}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.55); cursor: pointer"></button>
+      <button onClick="{{closePreview}}" aria-hidden="true" tabindex="-1" style="position: absolute; left: {{previewChipX}}; top: {{previewChipY}}; height: 44px; padding: 0 16px 0 12px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; white-space: nowrap; transform: scale(1.06); box-shadow: 0 0 0 6px rgba(110, 231, 193, 0.25); cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{previewIcon}}"></path></svg>
+        {{previewChipLabel}}
+      </button>
+      <div style="position: absolute; left: {{previewArrowX}}; top: {{previewArrowY}}; width: 18px; height: 18px; background: #262628; transform: rotate(45deg)"></div>
+      <div role="dialog" aria-label="{{previewName}} plan" style="position: absolute; left: 20px; right: 20px; top: {{previewCardY}}; box-sizing: border-box; background: #262628; border-radius: 24px; padding: 16px 18px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55); display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 44px; height: 44px; border-radius: 14px; background: {{previewAccent}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; flex-shrink: 0">{{previewN}}</span>
+          <span style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 20px; font-weight: 800">{{previewName}}</span>
+            <span style="font-size: 13px; font-weight: 700; color: {{previewNoteColor}}">{{previewNote}}</span>
+          </span>
+        </div>
+        <div style="display: flex; flex-direction: column">
+          <sc-for list="{{previewRows}}" as="r" hint-placeholder-count="4">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; border-top: 1px solid #353538; font-size: 15px">
+              <span style="color: #9A9AA0; font-weight: 600">{{r.k}}</span>
+              <span style="font-weight: 700; text-align: right">{{r.v}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <button onClick="{{previewEdit}}" style="height: 46px; border-radius: 23px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Edit</button>
+          <button onClick="{{previewUse}}" style="height: 46px; border-radius: 23px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 15px; font-weight: 700; cursor: pointer">Use this plan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2058,7 +2100,7 @@ class Component extends DCLogic {
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
     }, 1000);
   }
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
   renderVals() {
     const s = this.state;
     const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
@@ -2210,9 +2252,10 @@ class Component extends DCLogic {
     const chipCap = s.avgDrinks || 4;
     const quick = s.quick || {};
     const presetDefs = [
-      ['quiet', 'Quiet', { n: 2, h: 0, mi: 0, ride: 0 }],
-      ['steady', 'Steady', { n: 3, h: 1, mi: 0, ride: 0 }],
-      ['usual', 'Usual', { n: usualPlan, h: 1, mi: 6, ride: 0 }]
+      // Named after the kind of night, so new people know which to pick.
+      ['quiet', 'Dinner & drinks', { n: 2, h: 23, mi: 6, ride: 0 }, 'M7 3v7M5 3v4a2 2 0 0 0 4 0V3M7 10v11M17 3c-1.6 1.2-2.5 3.4-2.5 6.2 0 2.2 1 3.8 2.5 3.8V21'],
+      ['steady', 'Night out', { n: usualPlan, h: 1, mi: 6, ride: 0 }, 'M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'],
+      ['usual', 'Big occasion', { n: usualPlan, h: 2, mi: 6, ride: 0 }, 'M12 3l2.6 5.6 6 .7-4.5 4 1.3 6L12 16.4l-5.4 2.9 1.3-6-4.5-4 6-.7z']
     ];
     const presetOf = (k) => {
       const d = presetDefs.find((p) => p[0] === k);
@@ -2221,17 +2264,65 @@ class Component extends DCLogic {
       return p;
     };
     const setPreset = (k, patch) => this.setState({ quick: Object.assign({}, quick, { [k]: Object.assign({}, presetOf(k), patch) }) });
+    // Where the held chip sits on the phone screen, so the preview can point at it.
+    const measureChip = (el) => {
+      try {
+        const row = el.parentElement;
+        // Bring a chip that is half off the edge fully into view first.
+        if (el.offsetLeft - 24 < row.scrollLeft) row.scrollLeft = el.offsetLeft - 24;
+        else if (el.offsetLeft + el.offsetWidth + 24 > row.scrollLeft + row.clientWidth) row.scrollLeft = el.offsetLeft + el.offsetWidth + 24 - row.clientWidth;
+        const root = el.closest('[data-pacey-root]');
+        const r = el.getBoundingClientRect();
+        const R = root.getBoundingClientRect();
+        const k = R.width / root.offsetWidth || 1; // the canvas may show the phone scaled
+        return { x: (r.left - R.left) / k, y: (r.top - R.top) / k, w: r.width / k, h: r.height / k };
+      } catch (err) {
+        return { x: 24, y: 262, w: 140, h: 44 };
+      }
+    };
     const chips = presetDefs.map((d) => {
       const p = presetOf(d[0]);
       const on = s.plan === p.n && s.homeH === p.h && s.homeMi === p.mi && s.rideIdx === p.ride;
+      // First night only: the Night out preset (your suggested limit) is the recommended one.
+      const rec = s.nights.length === 0 && d[0] === 'steady';
       return {
         label: d[1] + ' · ' + p.n,
+        icon: d[3],
+        aria: d[1] + ', ' + p.n + ' drinks, home by ' + pad(p.h) + ':' + pad(p.mi * 5) + (rec ? '. Recommended for your first night' : ''),
+        ring: rec && !on ? '2px #6EE7C1' : '0 transparent',
         pressed: on ? 'true' : 'false',
         bg: on ? '#6EE7C1' : '#262628',
         fg: on ? '#1A1A1C' : '#FFFFFF',
-        pick: () => this.setState({ plan: p.n, homeH: p.h, homeMi: p.mi, rideIdx: p.ride })
+        // Tap fills in the plan. Press and hold (or right-click) opens a preview first.
+        pick: () => {
+          if (this.held) { this.held = false; return; }
+          this.setState({ plan: p.n, homeH: p.h, homeMi: p.mi, rideIdx: p.ride });
+        },
+        down: (e) => {
+          clearTimeout(this.holdTimer);
+          this.held = false;
+          const el = e && e.currentTarget;
+          this.holdTimer = setTimeout(() => { this.held = true; this.setState({ preview: d[0], previewAt: measureChip(el) }); }, 450);
+        },
+        up: () => clearTimeout(this.holdTimer),
+        menu: (e) => {
+          if (e && e.preventDefault) e.preventDefault();
+          clearTimeout(this.holdTimer);
+          this.held = true;
+          if (s.preview !== d[0]) this.setState({ preview: d[0], previewAt: measureChip(e && e.currentTarget) });
+        }
       };
     });
+    // The press-and-hold preview of one quick start.
+    const pvDef = s.preview ? presetDefs.find((d) => d[0] === s.preview) : null;
+    const pv = pvDef ? presetOf(pvDef[0]) : null;
+    let pvHome = pv ? pv.h * 60 + pv.mi * 5 : 0;
+    if (pv && pvHome <= START) pvHome += 24 * 60;
+    const pvEvery = pv ? Math.max(30, Math.round((pvHome - START) / pv.n)) : 0;
+    const pvAt = s.previewAt || { x: 24, y: 262, w: 140, h: 44 };
+    const pvMid = Math.max(44, Math.min(390 - 62, pvAt.x + pvAt.w / 2 - 9));
+    const pvRec = !!pvDef && s.nights.length === 0 && pvDef[0] === 'steady';
+    const nounFor = (n) => n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany;
     const quickRows = presetDefs.map((d) => {
       const p = presetOf(d[0]);
       const t = pad(p.h) + ':' + pad(p.mi * 5);
@@ -2285,7 +2376,7 @@ class Component extends DCLogic {
       };
     });
     const doneCount = checklist.filter((c) => c.on).length;
-    const usualP = presetOf('usual');
+    const usualP = presetOf('steady');
     const usualNoun = usualP.n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany;
     // One tip from history: does water in the first hour line up with staying on plan?
     const startMin = START;
@@ -2662,9 +2753,26 @@ class Component extends DCLogic {
         aria: 'Estimated blood alcohol peaked around ' + fmt(peakT) + ' at ' + f2(peak * 0.8) + ' to ' + f2(peak * 1.2) + ' percent'
       };
     })();
+    // Line icons for each drink type (24 x 24), used on Home and in night summaries.
+    const DRINK_ICON = {
+      shot: 'M7 6h10l-1.5 13h-7zM7.6 11h8.8',
+      wine: 'M7 3h10c0 5.5-2.2 8.5-5 8.5S7 8.5 7 3zM12 11.5V20M8 20.5h8',
+      beer: 'M5 6h10v14H5zM15 9.5h2.5A1.5 1.5 0 0 1 19 11v4.5a1.5 1.5 0 0 1-1.5 1.5H15M5 9.5h10',
+      cocktail: 'M4 4h16l-8 9zM12 13v7M8 20.5h8M7 6.5h10',
+      mixed: 'M10 2.5h4v4l2 3V21H8V9.5l2-3zM8 13h8'
+    };
+    const vDrinkList = vEntries.filter((e) => e.kind === 'drink').sort((a, b) => a.t - b.t);
     const planDots = [];
     for (let i = 0; i < Math.max(view.plan, vDrinks); i += 1) {
-      planDots.push({ done: i < vDrinks, bg: i >= vDrinks ? '#353538' : i < view.plan ? '#2FAE86' : '#FF8A3D' });
+      const had = i < vDrinks;
+      const kind = had ? (vDrinkList[i].type || sel[0]) : null;
+      planDots.push({
+        icon: DRINK_ICON[had ? kind : ((vDrinkList[0] && vDrinkList[0].type) || sel[0])] || DRINK_ICON.mixed,
+        bg: had ? (i < view.plan ? '#2FAE86' : '#FF8A3D') : 'transparent',
+        fg: had ? '#1A1A1C' : '#4A4A4E',
+        ring: had ? '0 transparent' : '2px #353538',
+        aria: had ? 'Drink ' + (i + 1) + ': ' + ((dtDefs.find((d) => d.k === kind) || {}).btn || 'Drink') + (i < view.plan ? '' : ', over plan') : 'Planned drink not had'
+      });
     }
 
     const stuck = vDrinks <= view.plan;
@@ -2815,7 +2923,33 @@ class Component extends DCLogic {
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
       acceptPlan: () => this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }),
       chips: chips,
+      showRecommend: s.nights.length === 0,
+      recommendName: presetDefs[1][1],
+      showHoldHint: s.nights.length > 0,
+      previewOpen: !!pv,
+      previewName: pvDef ? pvDef[1] : '',
+      previewN: pv ? pv.n : '',
+      previewChipLabel: pvDef && pv ? pvDef[1] + ' · ' + pv.n : '',
+      previewChipX: pvAt.x + 'px',
+      previewChipY: pvAt.y + 'px',
+      previewArrowX: pvMid + 'px',
+      previewArrowY: (pvAt.y + pvAt.h + 10) + 'px',
+      previewCardY: (pvAt.y + pvAt.h + 18) + 'px',
+      previewIcon: pvDef ? pvDef[3] : '',
+      previewAccent: pvDef ? { quiet: '#5CC8F5', steady: '#6EE7C1', usual: '#FFC56B' }[pvDef[0]] : '#6EE7C1',
+      previewNote: pvRec ? 'Recommended for your first night' : 'Your quick start',
+      previewNoteColor: pvRec ? '#6EE7C1' : '#9A9AA0',
+      previewRows: pv ? [
+        { k: 'Drinks', v: pv.n + ' ' + nounFor(pv.n) },
+        { k: 'If you start now', v: 'a drink every ~' + (pvEvery >= 90 ? Math.floor(pvEvery / 60) + ' h ' + (pvEvery % 60) + ' min' : pvEvery + ' min') },
+        { k: 'Home by', v: pad(pv.h) + ':' + pad(pv.mi * 5) },
+        { k: 'Getting home', v: rides[pv.ride] }
+      ] : [],
+      closePreview: () => this.setState({ preview: null, previewAt: null }),
+      previewEdit: () => this.setState({ preview: null, screen: 'settings', settingsPage: 'quick' }),
+      previewUse: () => this.setState(pv ? { preview: null, plan: pv.n, homeH: pv.h, homeMi: pv.mi, rideIdx: pv.ride } : { preview: null }),
       planNoun: cur.label,
+      planIcon: DRINK_ICON[cur.k] || DRINK_ICON.mixed,
       planDrinkAria: 'Drink for tonight: ' + cur.label + '. Change',
       planDrinkOpen: !!s.planDrinkOpen,
       openPlanDrink: () => this.setState({ planDrinkOpen: true }),

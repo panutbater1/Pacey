@@ -14,7 +14,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'preview', 'previewAt'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -104,7 +104,8 @@
 
   const ATTR = {
     class: 'className', for: 'htmlFor', onclick: 'onClick', onchange: 'onChange', onscroll: 'onScroll',
-    oninput: 'onInput', autocomplete: 'autoComplete', tabindex: 'tabIndex', readonly: 'readOnly', maxlength: 'maxLength'
+    oninput: 'onInput', onpointerdown: 'onPointerDown', onpointerup: 'onPointerUp',
+    onpointerleave: 'onPointerLeave', onpointercancel: 'onPointerCancel', oncontextmenu: 'onContextMenu', autocomplete: 'autoComplete', tabindex: 'tabIndex', readonly: 'readOnly', maxlength: 'maxLength'
   };
 
   function renderNodes(list, scope) {
