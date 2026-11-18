@@ -320,14 +320,34 @@ button{font-family:Outfit,system-ui,sans-serif}
   <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
-      <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 24px; background: #262628">
+      <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
-          <button onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 40px; border-radius: 20px; border: none; background: {{t.bg}}; color: {{t.fg}}; font-size: 15px; font-weight: 700; cursor: pointer">{{t.label}}</button>
+          <button onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 40px; padding: 0; border-radius: 20px; border: none; background: {{t.bg}}; color: {{t.fg}}; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer">{{t.label}}</button>
         </sc-for>
       </div>
       <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">{{nightsIntro}}</div>
 
       <sc-if value="{{showWeeks}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 15px; font-weight: 600">Drinks per week</div>
+            <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{weekChart.caption}}</div>
+            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
+              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{weekChart.maxLabel}}</span>
+              <sc-for list="{{weekChart.bars}}" as="b" hint-placeholder-count="6">
+                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
+                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
+                </button>
+              </sc-for>
+            </div>
+            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
+              <sc-for list="{{weekChart.bars}}" as="b" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
         <sc-for list="{{weekCards}}" as="w" hint-placeholder-count="2">
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
             <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
@@ -362,6 +382,26 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <sc-if value="{{showMonths}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 15px; font-weight: 600">Drinks per month</div>
+            <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{monthChart.caption}}</div>
+            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
+              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{monthChart.maxLabel}}</span>
+              <sc-for list="{{monthChart.bars}}" as="b" hint-placeholder-count="6">
+                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
+                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
+                </button>
+              </sc-for>
+            </div>
+            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
+              <sc-for list="{{monthChart.bars}}" as="b" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
         <sc-for list="{{monthCards}}" as="m" hint-placeholder-count="1">
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
             <span style="font-size: 20px; font-weight: 800">{{m.title}}</span>
@@ -410,6 +450,144 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </div>
         </sc-for>
+      </sc-if>
+
+      <sc-if value="{{showAllTime}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+              <span style="font-size: 20px; font-weight: 800">All time</span>
+              <span style="font-size: 13px; color: #9A9AA0">{{allSince}}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Nights out</span>
+                <span style="font-size: 20px; font-weight: 800">{{allNights}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">On plan</span>
+                <span style="font-size: 20px; font-weight: 800">{{allOnPlan}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Best streak</span>
+                <span style="font-size: 20px; font-weight: 800">{{allBestStreak}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Drinks</span>
+                <span style="font-size: 20px; font-weight: 800">{{allDrinks}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Per night</span>
+                <span style="font-size: 20px; font-weight: 800">{{allAvg}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Water</span>
+                <span style="font-size: 20px; font-weight: 800">{{allWater}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Alcohol</span>
+                <span style="font-size: 20px; font-weight: 800">{{allAlc}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Calories</span>
+                <span style="font-size: 20px; font-weight: 800">{{allKcal}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Pace</span>
+                <span style="font-size: 20px; font-weight: 800">{{allPace}}</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 15px; font-weight: 600">Drinks per night</div>
+            <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{allChart.caption}}</div>
+            <div style="display: flex; gap: 14px; font-size: 13px; color: #B8B8BE">
+              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #2A9E7A"></span>On plan</span>
+              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #E0682A"></span>Over plan</span>
+            </div>
+            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
+              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{allChart.maxLabel}}</span>
+              <sc-for list="{{allChart.bars}}" as="b" hint-placeholder-count="6">
+                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
+                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
+                </button>
+              </sc-for>
+            </div>
+            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
+              <sc-for list="{{allChart.bars}}" as="b" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{showCalories}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 15px; font-weight: 600">Calories from drinks, per week</div>
+            <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{calChart.caption}}</div>
+            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
+              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{calChart.maxLabel}}</span>
+              <sc-for list="{{calChart.bars}}" as="b" hint-placeholder-count="6">
+                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
+                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
+                </button>
+              </sc-for>
+            </div>
+            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
+              <sc-for list="{{calChart.bars}}" as="b" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex-shrink: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Latest week</span>
+              <span style="font-size: 20px; font-weight: 800">{{calLatest}}</span>
+            </div>
+            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Per night</span>
+              <span style="font-size: 20px; font-weight: 800">{{calAvg}}</span>
+            </div>
+            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">All time</span>
+              <span style="font-size: 20px; font-weight: 800">{{calTotal}}</span>
+            </div>
+          </div>
+
+          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+            <div style="font-size: 15px; font-weight: 600">By drink type</div>
+            <sc-for list="{{calByType}}" as="ct" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; justify-content: space-between; font-size: 14px">
+                  <span style="font-weight: 700">{{ct.name}}</span>
+                  <span style="color: #B8B8BE">{{ct.kcal}} · {{ct.count}}</span>
+                </div>
+                <div style="height: 10px; border-radius: 5px; background: #353538; overflow: hidden">
+                  <div style="height: 10px; width: {{ct.w}}; border-radius: 5px; background: #2A9E7A"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Each night</div>
+          <div style="flex-shrink: 0; background: #262628; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column">
+            <sc-for list="{{calNights}}" as="cn" hint-placeholder-count="3">
+              <button onClick="{{cn.open}}" style="min-height: 56px; border: none; border-top: 1px solid {{cn.divider}}; background: none; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+                <span style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-size: 15px; font-weight: 600">{{cn.title}}</span>
+                  <span style="font-size: 13px; color: #9A9AA0">{{cn.sub}}</span>
+                </span>
+                <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{cn.kcal}}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45">An estimate from your drink sizes: alcohol has about 7 kcal per gram, plus sugar in beer, wine and mixers. Water has none.</div>
+        </sc-if>
       </sc-if>
 
       <sc-if value="{{showNightList}}" hint-placeholder-val="{{true}}">
@@ -1149,6 +1327,17 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="font-size: 24px; font-weight: 800; color: #6EE7C1">{{sumAlc}}</div>
           <div style="font-size: 12px; color: #9A9AA0">estimate from your sizes</div>
         </div>
+      </div>
+
+      <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3-1-5 1-8z"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Calories from drinks</span>
+          <span style="font-size: 24px; font-weight: 800">{{sumKcal}}</span>
+        </span>
+        <span style="font-size: 13px; color: #9A9AA0; text-align: right; max-width: 120px">Estimate from your drink sizes</span>
       </div>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
@@ -2040,7 +2229,87 @@ class Component extends DCLogic {
       };
     });
     const nv = s.nightsView || 'nights';
-    const nightsTabs = [['nights', 'Nights'], ['weeks', 'Weeks'], ['months', 'Months']].map((t) => ({
+    // ----- Charts, all time and calories
+    const CARB = { shot: 0, wine: 0.15, beer: 0.13, cocktail: 0.3, mixed: 0.12 };
+    const kcalOf = (e) => {
+      if (e.kind !== 'drink') return 0;
+      const k = e.type || sel[0];
+      const z = sizeOf(k);
+      return z.ml * z.abv / 100 * 0.789 * 7 + z.ml * (CARB[k] === undefined ? 0.12 : CARB[k]);
+    };
+    const nightKcal = (n) => n.entries.reduce((a, e) => a + kcalOf(e), 0);
+    const kcalText = (v) => Math.round(v).toLocaleString('en-GB') + ' kcal';
+    const chartSel = s.chartSel || {};
+    const makeChart = (key, items, unit) => {
+      const max = Math.max(1, ...items.map((it) => it.value));
+      const pick = chartSel[key] != null && chartSel[key] < items.length ? chartSel[key] : items.length - 1;
+      const every = Math.max(1, Math.ceil(items.length / 7));
+      return {
+        caption: items.length ? items[pick].detail : '',
+        maxLabel: Math.round(max).toLocaleString('en-GB') + (unit || ''),
+        bars: items.map((it, i) => ({
+          h: (it.value > 0 ? Math.max(3, Math.round(it.value / max * 100)) : 0) + '%',
+          bg: it.color || '#2A9E7A',
+          op: i === pick ? '1' : '0.55',
+          pressed: i === pick ? 'true' : 'false',
+          label: (items.length - 1 - i) % every === 0 ? it.label : '',
+          aria: it.detail,
+          pick: () => this.setState({ chartSel: Object.assign({}, chartSel, { [key]: i }) })
+        }))
+      };
+    };
+    const shortDate = (d) => d.getUTCDate() + ' ' + MONTHS[d.getUTCMonth()].slice(0, 3);
+    const weekGroups = groups((d) => isoOf(weekStartOf(d)));
+    const monthGroups = groups((d) => isoOf(d).slice(0, 7));
+    const chronoWeeks = weekGroups.slice(0, 8).reverse();
+    const weekChart = makeChart('week', chronoWeeks.map((g) => {
+      const st = statsOf(g.idxs);
+      return { value: st.drinks, label: shortDate(toD(g.key)), detail: 'Week of ' + shortDate(toD(g.key)) + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') };
+    }));
+    const monthChart = makeChart('month', monthGroups.slice(0, 6).reverse().map((g) => {
+      const st = statsOf(g.idxs);
+      const parts = g.key.split('-').map(Number);
+      return { value: st.drinks, label: MONTHS[parts[1] - 1].slice(0, 3), detail: MONTHS[parts[1] - 1] + ' ' + parts[0] + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') };
+    }));
+    const chronoIdx = s.nights.map((n, i) => i).reverse();
+    const allChart = makeChart('all', chronoIdx.map((i) => {
+      const n = s.nights[i];
+      return { value: nDrinks(n), color: okNight(n) ? '#2A9E7A' : '#E0682A', label: shortDate(toD(n.date)), detail: n.title + ' · ' + nDrinks(n) + ' of ' + n.plan + ' drinks · ' + (okNight(n) ? 'on plan' : 'over plan') };
+    }));
+    const calChart = makeChart('cal', chronoWeeks.map((g) => {
+      const k = g.idxs.reduce((a, i) => a + nightKcal(s.nights[i]), 0);
+      return { value: k, label: shortDate(toD(g.key)), detail: 'Week of ' + shortDate(toD(g.key)) + ' · ' + kcalText(k) };
+    }), '');
+    const allSt = statsOf(s.nights.map((n, i) => i));
+    let bestStreak = 0;
+    let run = 0;
+    chronoIdx.forEach((i) => { run = okNight(s.nights[i]) ? run + 1 : 0; bestStreak = Math.max(bestStreak, run); });
+    const allKcalSum = s.nights.reduce((a, n) => a + nightKcal(n), 0);
+    const firstNight = s.nights.length ? s.nights[s.nights.length - 1] : null;
+    const typeTotals = {};
+    s.nights.forEach((n) => n.entries.forEach((e) => {
+      if (e.kind !== 'drink') return;
+      const k = e.type || sel[0];
+      typeTotals[k] = typeTotals[k] || { kcal: 0, count: 0 };
+      typeTotals[k].kcal += kcalOf(e);
+      typeTotals[k].count += 1;
+    }));
+    const topType = Math.max(1, ...Object.values(typeTotals).map((t) => t.kcal));
+    const calByType = Object.keys(typeTotals).sort((a, b) => typeTotals[b].kcal - typeTotals[a].kcal).map((k) => ({
+      name: (dtDefs.find((d) => d.k === k) || { label: 'Drinks' }).label,
+      kcal: kcalText(typeTotals[k].kcal),
+      count: typeTotals[k].count + (typeTotals[k].count === 1 ? ' drink' : ' drinks'),
+      w: Math.round(typeTotals[k].kcal / topType * 100) + '%'
+    }));
+    const calNights = s.nights.map((n, i) => ({
+      title: n.title,
+      sub: nDrinks(n) + (nDrinks(n) === 1 ? ' drink' : ' drinks'),
+      kcal: kcalText(nightKcal(n)),
+      divider: i === 0 ? 'transparent' : '#353538',
+      open: openNight(i)
+    }));
+
+    const nightsTabs = [['nights', 'Nights'], ['weeks', 'Weeks'], ['months', 'Months'], ['all', 'All time'], ['calories', 'Calories']].map((t) => ({
       label: t[1], pressed: nv === t[0] ? 'true' : 'false', bg: nv === t[0] ? '#6EE7C1' : 'transparent', fg: nv === t[0] ? '#1A1A1C' : '#FFFFFF',
       pick: () => this.setState({ nightsView: t[0] })
     }));
@@ -2373,8 +2642,30 @@ class Component extends DCLogic {
       showWeeks: nv === 'weeks',
       showMonths: nv === 'months',
       showNightList: nv === 'nights',
-      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : 'Tap a night to see its summary.',
+      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : nv === 'all' ? 'Everything since your first night. Tap a bar to see that night.' : nv === 'calories' ? 'Calories from what you drank. Tap a bar or a night for details.' : 'Tap a night to see its summary.',
       weekCards: weekCards,
+      weekChart: weekChart,
+      monthChart: monthChart,
+      allChart: allChart,
+      calChart: calChart,
+      showAllTime: nv === 'all',
+      showCalories: nv === 'calories',
+      allSince: firstNight ? 'Since ' + toD(firstNight.date).getUTCDate() + ' ' + MONTHS[toD(firstNight.date).getUTCMonth()] + ' ' + toD(firstNight.date).getUTCFullYear() : '',
+      allNights: allSt.count,
+      allOnPlan: allSt.count ? Math.round(allSt.onPlan / allSt.count * 100) + '%' : '–',
+      allBestStreak: bestStreak + (bestStreak === 1 ? ' night' : ' nights'),
+      allDrinks: allSt.drinks,
+      allAvg: allSt.count ? Math.round(allSt.drinks / allSt.count * 10) / 10 : 0,
+      allWater: allSt.water,
+      allAlc: volText(allSt.alc),
+      allKcal: Math.round(allKcalSum).toLocaleString('en-GB'),
+      allPace: allSt.pace === null ? '–' : allSt.pace + ' min',
+      calLatest: weekGroups.length ? kcalText(weekGroups[0].idxs.reduce((a, i) => a + nightKcal(s.nights[i]), 0)) : '–',
+      calAvg: s.nights.length ? kcalText(allKcalSum / s.nights.length) : '–',
+      calTotal: Math.round(allKcalSum).toLocaleString('en-GB'),
+      calByType: calByType,
+      calNights: calNights,
+      sumKcal: kcalText(view.entries.reduce((a, e) => a + kcalOf(e), 0)),
       monthCards: monthCards,
       quickRows: quickRows,
       chipCap: chipCap,

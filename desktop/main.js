@@ -3,6 +3,7 @@ const { app, BrowserWindow, screen, shell } = require('electron');
 const path = require('path');
 
 const DEV = process.argv.includes('--dev');
+const DEMO = process.argv.includes('--demo');
 // Window size that fits the phone (390 x 844 screen + body) with a small margin.
 const BASE_WIDTH = 462;
 const BASE_HEIGHT = 916;
@@ -33,7 +34,7 @@ function createWindow() {
     }
   });
 
-  win.loadFile(path.join(__dirname, 'app', 'index.html'), { query: { dev: DEV ? '1' : '0' } });
+  win.loadFile(path.join(__dirname, 'app', 'index.html'), { query: { dev: DEV ? '1' : '0', demo: DEMO ? '1' : '0' } });
   win.webContents.on('did-finish-load', () => win.webContents.setZoomFactor(zoom));
 
   // Links such as tel:, sms: and https: open in the operating system, never inside the app.

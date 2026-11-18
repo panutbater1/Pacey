@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node bin/pacey.js",
-    "dev": "node bin/pacey.js --dev"
+    "dev": "node bin/pacey.js --dev",
+    "demo": "node bin/pacey.js --demo"
   }
 }
