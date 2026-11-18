@@ -320,7 +320,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
-      <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
+      <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
           <button onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 40px; padding: 0; border-radius: 20px; border: none; background: {{t.bg}}; color: {{t.fg}}; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer">{{t.label}}</button>
         </sc-for>
@@ -332,18 +332,26 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
             <div style="font-size: 15px; font-weight: 600">Drinks per week</div>
             <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{weekChart.caption}}</div>
-            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
-              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
               <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{weekChart.maxLabel}}</span>
-              <sc-for list="{{weekChart.bars}}" as="b" hint-placeholder-count="6">
-                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
-                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
-                </button>
+              <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+                <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
+                <path d="{{weekChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
+                <path d="{{weekChart.area}}" fill="#2A9E7A" fill-opacity="0.16"></path>
+                <path d="{{weekChart.line}}" fill="none" stroke="#2A9E7A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <sc-for list="{{weekChart.points}}" as="pt" hint-placeholder-count="6">
+                <span aria-hidden="true" style="position: absolute; left: {{pt.x}}; top: {{pt.y}}; width: {{pt.size}}; height: {{pt.size}}; margin-left: {{pt.offset}}; margin-top: {{pt.offset}}; border-radius: 50%; background: {{pt.bg}}; box-shadow: 0 0 0 2px #262628"></span>
               </sc-for>
+              <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex">
+                <sc-for list="{{weekChart.points}}" as="pt" hint-placeholder-count="6">
+                  <button onClick="{{pt.pick}}" aria-label="{{pt.aria}}" aria-pressed="{{pt.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; cursor: pointer"></button>
+                </sc-for>
+              </div>
             </div>
-            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
-              <sc-for list="{{weekChart.bars}}" as="b" hint-placeholder-count="6">
-                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+              <sc-for list="{{weekChart.points}}" as="pt" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
               </sc-for>
             </div>
           </div>
@@ -386,18 +394,26 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
             <div style="font-size: 15px; font-weight: 600">Drinks per month</div>
             <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{monthChart.caption}}</div>
-            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
-              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
               <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{monthChart.maxLabel}}</span>
-              <sc-for list="{{monthChart.bars}}" as="b" hint-placeholder-count="6">
-                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
-                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
-                </button>
+              <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+                <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
+                <path d="{{monthChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
+                <path d="{{monthChart.area}}" fill="#2A9E7A" fill-opacity="0.16"></path>
+                <path d="{{monthChart.line}}" fill="none" stroke="#2A9E7A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <sc-for list="{{monthChart.points}}" as="pt" hint-placeholder-count="6">
+                <span aria-hidden="true" style="position: absolute; left: {{pt.x}}; top: {{pt.y}}; width: {{pt.size}}; height: {{pt.size}}; margin-left: {{pt.offset}}; margin-top: {{pt.offset}}; border-radius: 50%; background: {{pt.bg}}; box-shadow: 0 0 0 2px #262628"></span>
               </sc-for>
+              <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex">
+                <sc-for list="{{monthChart.points}}" as="pt" hint-placeholder-count="6">
+                  <button onClick="{{pt.pick}}" aria-label="{{pt.aria}}" aria-pressed="{{pt.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; cursor: pointer"></button>
+                </sc-for>
+              </div>
             </div>
-            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
-              <sc-for list="{{monthChart.bars}}" as="b" hint-placeholder-count="6">
-                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+              <sc-for list="{{monthChart.points}}" as="pt" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
               </sc-for>
             </div>
           </div>
@@ -440,12 +456,24 @@ button{font-family:Outfit,system-ui,sans-serif}
                 <span style="font-size: 20px; font-weight: 800">{{m.avg}}</span>
               </div>
               <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Water</span>
+                <span style="font-size: 20px; font-weight: 800">{{m.water}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
                 <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Alcohol</span>
                 <span style="font-size: 20px; font-weight: 800">{{m.alc}}</span>
               </div>
               <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Calories</span>
+                <span style="font-size: 20px; font-weight: 800">{{m.kcal}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
                 <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Pace</span>
                 <span style="font-size: 20px; font-weight: 800">{{m.pace}}</span>
+              </div>
+              <div style="background: #353538; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Best streak</span>
+                <span style="font-size: 20px; font-weight: 800">{{m.best}}</span>
               </div>
             </div>
           </div>
@@ -502,91 +530,32 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="font-size: 15px; font-weight: 600">Drinks per night</div>
             <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{allChart.caption}}</div>
             <div style="display: flex; gap: 14px; font-size: 13px; color: #B8B8BE">
-              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #2A9E7A"></span>On plan</span>
-              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #E0682A"></span>Over plan</span>
+              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #2A9E7A"></span>On plan</span>
+              <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #E0682A"></span>Over plan</span>
             </div>
-            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
-              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
+            <div style="position: relative; height: 128px; border-bottom: 1px solid #4A4A4E">
               <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{allChart.maxLabel}}</span>
-              <sc-for list="{{allChart.bars}}" as="b" hint-placeholder-count="6">
-                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
-                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
-                </button>
+              <svg width="100%" height="128" viewBox="0 0 300 128" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+                <path d="M0 8 L300 8" stroke="#353538" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
+                <path d="{{allChart.cross}}" stroke="#9A9AA0" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></path>
+                <path d="{{allChart.area}}" fill="#2A9E7A" fill-opacity="0.16"></path>
+                <path d="{{allChart.line}}" fill="none" stroke="#2A9E7A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <sc-for list="{{allChart.points}}" as="pt" hint-placeholder-count="6">
+                <span aria-hidden="true" style="position: absolute; left: {{pt.x}}; top: {{pt.y}}; width: {{pt.size}}; height: {{pt.size}}; margin-left: {{pt.offset}}; margin-top: {{pt.offset}}; border-radius: 50%; background: {{pt.bg}}; box-shadow: 0 0 0 2px #262628"></span>
               </sc-for>
-            </div>
-            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
-              <sc-for list="{{allChart.bars}}" as="b" hint-placeholder-count="6">
-                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
-              </sc-for>
-            </div>
-          </div>
-        </sc-if>
-      </sc-if>
-
-      <sc-if value="{{showCalories}}" hint-placeholder-val="{{false}}">
-        <sc-if value="{{hasNights}}" hint-placeholder-val="{{true}}">
-          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-            <div style="font-size: 15px; font-weight: 600">Calories from drinks, per week</div>
-            <div aria-live="polite" style="min-height: 20px; font-size: 14px; font-weight: 700; color: #FFFFFF">{{calChart.caption}}</div>
-            <div style="position: relative; height: 128px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid #4A4A4E">
-              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #353538"></div>
-              <span aria-hidden="true" style="position: absolute; right: 0; top: -16px; font-size: 11px; color: #9A9AA0">{{calChart.maxLabel}}</span>
-              <sc-for list="{{calChart.bars}}" as="b" hint-placeholder-count="6">
-                <button onClick="{{b.pick}}" aria-label="{{b.aria}}" aria-pressed="{{b.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer">
-                  <span style="width: 100%; max-width: 28px; height: {{b.h}}; border-radius: 4px 4px 0 0; background: {{b.bg}}; opacity: {{b.op}}; transition: opacity 0.15s ease"></span>
-                </button>
-              </sc-for>
-            </div>
-            <div aria-hidden="true" style="display: flex; gap: 2px; margin-top: -4px">
-              <sc-for list="{{calChart.bars}}" as="b" hint-placeholder-count="6">
-                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{b.label}}</span>
-              </sc-for>
-            </div>
-          </div>
-
-          <div style="flex-shrink: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
-              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Latest week</span>
-              <span style="font-size: 20px; font-weight: 800">{{calLatest}}</span>
-            </div>
-            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
-              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">Per night</span>
-              <span style="font-size: 20px; font-weight: 800">{{calAvg}}</span>
-            </div>
-            <div style="background: #262628; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; gap: 2px">
-              <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">All time</span>
-              <span style="font-size: 20px; font-weight: 800">{{calTotal}}</span>
-            </div>
-          </div>
-
-          <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-            <div style="font-size: 15px; font-weight: 600">By drink type</div>
-            <sc-for list="{{calByType}}" as="ct" hint-placeholder-count="2">
-              <div style="display: flex; flex-direction: column; gap: 6px">
-                <div style="display: flex; justify-content: space-between; font-size: 14px">
-                  <span style="font-weight: 700">{{ct.name}}</span>
-                  <span style="color: #B8B8BE">{{ct.kcal}} · {{ct.count}}</span>
-                </div>
-                <div style="height: 10px; border-radius: 5px; background: #353538; overflow: hidden">
-                  <div style="height: 10px; width: {{ct.w}}; border-radius: 5px; background: #2A9E7A"></div>
-                </div>
+              <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex">
+                <sc-for list="{{allChart.points}}" as="pt" hint-placeholder-count="6">
+                  <button onClick="{{pt.pick}}" aria-label="{{pt.aria}}" aria-pressed="{{pt.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; background: none; padding: 0; cursor: pointer"></button>
+                </sc-for>
               </div>
-            </sc-for>
+            </div>
+            <div aria-hidden="true" style="display: flex; margin-top: -4px">
+              <sc-for list="{{allChart.points}}" as="pt" hint-placeholder-count="6">
+                <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #9A9AA0; white-space: nowrap; overflow: visible">{{pt.label}}</span>
+              </sc-for>
+            </div>
           </div>
-
-          <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Each night</div>
-          <div style="flex-shrink: 0; background: #262628; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column">
-            <sc-for list="{{calNights}}" as="cn" hint-placeholder-count="3">
-              <button onClick="{{cn.open}}" style="min-height: 56px; border: none; border-top: 1px solid {{cn.divider}}; background: none; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
-                <span style="display: flex; flex-direction: column; gap: 2px">
-                  <span style="font-size: 15px; font-weight: 600">{{cn.title}}</span>
-                  <span style="font-size: 13px; color: #9A9AA0">{{cn.sub}}</span>
-                </span>
-                <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{cn.kcal}}</span>
-              </button>
-            </sc-for>
-          </div>
-          <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45">An estimate from your drink sizes: alcohol has about 7 kcal per gram, plus sugar in beer, wine and mixers. Water has none.</div>
         </sc-if>
       </sc-if>
 
@@ -655,11 +624,19 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1.5 17h-7z"></path><path d="M7.5 8h9"></path></svg>
             </div>
-            <div style="font-size: 16px; font-weight: 600">{{nounCap}}</div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <div style="font-size: 16px; font-weight: 600">{{nounCap}}</div>
+              <sc-if value="{{bigPlan}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #FF8A3D">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+                  A heavy night
+                </div>
+              </sc-if>
+            </div>
           </div>
           <div style="display: flex; align-items: center; gap: 12px">
             <button aria-label="One less drink" onClick="{{less}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-            <div style="font-size: 30px; font-weight: 800; width: 34px; text-align: center">{{plan}}</div>
+            <div style="font-size: 30px; font-weight: 800; min-width: 34px; text-align: center; color: {{planColor}}">{{plan}}</div>
             <button aria-label="One more drink" onClick="{{more}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
           </div>
         </div>
@@ -1711,6 +1688,22 @@ button{font-family:Outfit,system-ui,sans-serif}
     <button onClick="{{skipSetup}}" style="position: absolute; top: 12px; right: 12px; z-index: 30; height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px dashed #FFC56B; background: rgba(26, 26, 28, 0.9); color: #FFC56B; font-size: 13px; font-weight: 700; cursor: pointer">Skip setup · prototype only</button>
   </sc-if>
 
+  <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="alertdialog" aria-label="Are you sure?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF8A3D; display: flex; align-items: center; justify-content: center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+        </div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Are you <span style="color: #FF8A3D">sure?</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">More than 10 drinks is a lot for one night, and it raises the risk of getting hurt or ill. Pacey is here to help you pace, so a lower plan usually makes for a better night.</div>
+        <button onClick="{{keepTen}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Keep it at 10</button>
+        <button onClick="{{confirmBigPlan}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Yes, I'm sure</button>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{waterFirstOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{waterFirstCancel}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -1952,6 +1945,16 @@ class Component extends DCLogic {
       const z = drinkSize(e);
       return { vol: t.vol + z.ml, alc: t.alc + z.ml * z.abv / 100 };
     }, { vol: 0, alc: 0 });
+    // Calories: about 7 kcal per gram of alcohol, plus sugar in beer, wine, cocktails and mixers.
+    const CARB = { shot: 0, wine: 0.15, beer: 0.13, cocktail: 0.3, mixed: 0.12 };
+    const kcalOf = (e) => {
+      if (e.kind !== 'drink') return 0;
+      const k = e.type || sel[0];
+      const z = sizeOf(k);
+      return z.ml * z.abv / 100 * 0.789 * 7 + z.ml * (CARB[k] === undefined ? 0.12 : CARB[k]);
+    };
+    const nightKcal = (n) => n.entries.reduce((a, e) => a + kcalOf(e), 0);
+    const kcalText = (v) => Math.round(v).toLocaleString('en-GB') + ' kcal';
     // Body details for the blood alcohol estimate (Settings > Profile).
     const useBody = s.bodyConsent !== false;
     const weightKg = (useBody && s.weightKg) || 70;
@@ -2044,7 +2047,7 @@ class Component extends DCLogic {
       return {
         title: n.title,
         sub: nightSub(n),
-        time: fmt(startOf(n)) + ' to ' + fmt(startOf(n) + n.endTick),
+        time: fmt(startOf(n)) + ' to ' + fmt(startOf(n) + n.endTick) + ' · ' + kcalText(nightKcal(n)),
         stuck: ok,
         notStuck: !ok,
         open: () => this.setState({ screen: 'summary', viewIdx: i, summaryFrom: 'history' })
@@ -2099,6 +2102,7 @@ class Component extends DCLogic {
         editRide: () => this.setState({ picker: 'ride', pickerTarget: d[0], qRide: p.ride })
       };
     });
+
 
     // Pace streak: nights in a row (most recent first) that stayed within the plan.
     const onPlan = (n) => n.entries.filter((e) => e.kind === 'drink').length <= n.plan;
@@ -2170,6 +2174,8 @@ class Component extends DCLogic {
       }).filter((x) => x !== null);
       return {
         count: list.length, drinks: drinksN, water: waterN, alc: alc,
+        kcal: list.reduce((a, n) => a + nightKcal(n), 0),
+        best: (() => { let best = 0; let r = 0; idxs.slice().reverse().forEach((i) => { r = okNight(s.nights[i]) ? r + 1 : 0; best = Math.max(best, r); }); return best; })(),
         onPlan: list.filter(okNight).length,
         pace: gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null
       };
@@ -2190,7 +2196,7 @@ class Component extends DCLogic {
         nights: st.count,
         drinks: st.drinks,
         onPlan: st.onPlan + ' of ' + st.count,
-        line: 'About ' + (Math.round(st.drinks / st.count * 10) / 10) + ' drinks a night · ' + st.water + ' water · ' + volText(st.alc) + ' alcohol',
+        line: 'About ' + (Math.round(st.drinks / st.count * 10) / 10) + ' drinks a night · ' + st.water + ' water · ' + volText(st.alc) + ' alcohol · ' + kcalText(st.kcal),
         chips: g.idxs.slice().reverse().map((i) => {
           const n = s.nights[i];
           const d = toD(n.date);
@@ -2225,34 +2231,40 @@ class Component extends DCLogic {
         drinks: st.drinks,
         avg: Math.round(st.drinks / st.count * 10) / 10,
         alc: volText(st.alc),
+        water: st.water,
+        kcal: Math.round(st.kcal).toLocaleString('en-GB'),
+        best: st.best + (st.best === 1 ? ' night' : ' nights'),
         pace: st.pace === null ? '–' : st.pace + ' min'
       };
     });
     const nv = s.nightsView || 'nights';
     // ----- Charts, all time and calories
-    const CARB = { shot: 0, wine: 0.15, beer: 0.13, cocktail: 0.3, mixed: 0.12 };
-    const kcalOf = (e) => {
-      if (e.kind !== 'drink') return 0;
-      const k = e.type || sel[0];
-      const z = sizeOf(k);
-      return z.ml * z.abv / 100 * 0.789 * 7 + z.ml * (CARB[k] === undefined ? 0.12 : CARB[k]);
-    };
-    const nightKcal = (n) => n.entries.reduce((a, e) => a + kcalOf(e), 0);
-    const kcalText = (v) => Math.round(v).toLocaleString('en-GB') + ' kcal';
     const chartSel = s.chartSel || {};
+    // Line graph: points spaced evenly, with a dashed line marking the selected point.
     const makeChart = (key, items, unit) => {
+      const n = items.length;
       const max = Math.max(1, ...items.map((it) => it.value));
-      const pick = chartSel[key] != null && chartSel[key] < items.length ? chartSel[key] : items.length - 1;
-      const every = Math.max(1, Math.ceil(items.length / 7));
+      const pick = chartSel[key] != null && chartSel[key] < n ? chartSel[key] : n - 1;
+      const every = Math.max(1, Math.ceil(n / 7));
+      const xOf = (i) => (i + 0.5) / Math.max(1, n);
+      const yOf = (v) => 8 + (1 - v / max) * 112;
+      const pts = items.map((it, i) => [xOf(i) * 300, yOf(it.value)]);
+      const line = pts.length ? 'M' + pts.map((q) => q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' L') : '';
+      const area = pts.length > 1 ? line + ' L' + pts[pts.length - 1][0].toFixed(1) + ' 128 L' + pts[0][0].toFixed(1) + ' 128 Z' : '';
       return {
-        caption: items.length ? items[pick].detail : '',
+        caption: n ? items[pick].detail : '',
         maxLabel: Math.round(max).toLocaleString('en-GB') + (unit || ''),
-        bars: items.map((it, i) => ({
-          h: (it.value > 0 ? Math.max(3, Math.round(it.value / max * 100)) : 0) + '%',
+        line: line,
+        area: area,
+        cross: n ? 'M' + (xOf(pick) * 300).toFixed(1) + ' 8 L' + (xOf(pick) * 300).toFixed(1) + ' 128' : '',
+        points: items.map((it, i) => ({
+          x: (xOf(i) * 100).toFixed(2) + '%',
+          y: yOf(it.value).toFixed(1) + 'px',
+          size: i === pick ? '14px' : '10px',
+          offset: i === pick ? '-7px' : '-5px',
           bg: it.color || '#2A9E7A',
-          op: i === pick ? '1' : '0.55',
           pressed: i === pick ? 'true' : 'false',
-          label: (items.length - 1 - i) % every === 0 ? it.label : '',
+          label: (n - 1 - i) % every === 0 ? it.label : '',
           aria: it.detail,
           pick: () => this.setState({ chartSel: Object.assign({}, chartSel, { [key]: i }) })
         }))
@@ -2264,52 +2276,25 @@ class Component extends DCLogic {
     const chronoWeeks = weekGroups.slice(0, 8).reverse();
     const weekChart = makeChart('week', chronoWeeks.map((g) => {
       const st = statsOf(g.idxs);
-      return { value: st.drinks, label: shortDate(toD(g.key)), detail: 'Week of ' + shortDate(toD(g.key)) + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') };
+      return { value: st.drinks, label: shortDate(toD(g.key)), detail: 'Week of ' + shortDate(toD(g.key)) + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') + ' · ' + kcalText(st.kcal) };
     }));
     const monthChart = makeChart('month', monthGroups.slice(0, 6).reverse().map((g) => {
       const st = statsOf(g.idxs);
       const parts = g.key.split('-').map(Number);
-      return { value: st.drinks, label: MONTHS[parts[1] - 1].slice(0, 3), detail: MONTHS[parts[1] - 1] + ' ' + parts[0] + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') };
+      return { value: st.drinks, label: MONTHS[parts[1] - 1].slice(0, 3), detail: MONTHS[parts[1] - 1] + ' ' + parts[0] + ' · ' + st.drinks + ' drinks over ' + st.count + (st.count === 1 ? ' night' : ' nights') + ' · ' + kcalText(st.kcal) };
     }));
     const chronoIdx = s.nights.map((n, i) => i).reverse();
     const allChart = makeChart('all', chronoIdx.map((i) => {
       const n = s.nights[i];
-      return { value: nDrinks(n), color: okNight(n) ? '#2A9E7A' : '#E0682A', label: shortDate(toD(n.date)), detail: n.title + ' · ' + nDrinks(n) + ' of ' + n.plan + ' drinks · ' + (okNight(n) ? 'on plan' : 'over plan') };
+      return { value: nDrinks(n), color: okNight(n) ? '#2A9E7A' : '#E0682A', label: shortDate(toD(n.date)), detail: n.title + ' · ' + nDrinks(n) + ' of ' + n.plan + ' drinks · ' + kcalText(nightKcal(n)) };
     }));
-    const calChart = makeChart('cal', chronoWeeks.map((g) => {
-      const k = g.idxs.reduce((a, i) => a + nightKcal(s.nights[i]), 0);
-      return { value: k, label: shortDate(toD(g.key)), detail: 'Week of ' + shortDate(toD(g.key)) + ' · ' + kcalText(k) };
-    }), '');
     const allSt = statsOf(s.nights.map((n, i) => i));
     let bestStreak = 0;
     let run = 0;
     chronoIdx.forEach((i) => { run = okNight(s.nights[i]) ? run + 1 : 0; bestStreak = Math.max(bestStreak, run); });
     const allKcalSum = s.nights.reduce((a, n) => a + nightKcal(n), 0);
     const firstNight = s.nights.length ? s.nights[s.nights.length - 1] : null;
-    const typeTotals = {};
-    s.nights.forEach((n) => n.entries.forEach((e) => {
-      if (e.kind !== 'drink') return;
-      const k = e.type || sel[0];
-      typeTotals[k] = typeTotals[k] || { kcal: 0, count: 0 };
-      typeTotals[k].kcal += kcalOf(e);
-      typeTotals[k].count += 1;
-    }));
-    const topType = Math.max(1, ...Object.values(typeTotals).map((t) => t.kcal));
-    const calByType = Object.keys(typeTotals).sort((a, b) => typeTotals[b].kcal - typeTotals[a].kcal).map((k) => ({
-      name: (dtDefs.find((d) => d.k === k) || { label: 'Drinks' }).label,
-      kcal: kcalText(typeTotals[k].kcal),
-      count: typeTotals[k].count + (typeTotals[k].count === 1 ? ' drink' : ' drinks'),
-      w: Math.round(typeTotals[k].kcal / topType * 100) + '%'
-    }));
-    const calNights = s.nights.map((n, i) => ({
-      title: n.title,
-      sub: nDrinks(n) + (nDrinks(n) === 1 ? ' drink' : ' drinks'),
-      kcal: kcalText(nightKcal(n)),
-      divider: i === 0 ? 'transparent' : '#353538',
-      open: openNight(i)
-    }));
-
-    const nightsTabs = [['nights', 'Nights'], ['weeks', 'Weeks'], ['months', 'Months'], ['all', 'All time'], ['calories', 'Calories']].map((t) => ({
+    const nightsTabs = [['nights', 'Nights'], ['weeks', 'Weeks'], ['months', 'Months'], ['all', 'All time']].map((t) => ({
       label: t[1], pressed: nv === t[0] ? 'true' : 'false', bg: nv === t[0] ? '#6EE7C1' : 'transparent', fg: nv === t[0] ? '#1A1A1C' : '#FFFFFF',
       pick: () => this.setState({ nightsView: t[0] })
     }));
@@ -2642,14 +2627,12 @@ class Component extends DCLogic {
       showWeeks: nv === 'weeks',
       showMonths: nv === 'months',
       showNightList: nv === 'nights',
-      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : nv === 'all' ? 'Everything since your first night. Tap a bar to see that night.' : nv === 'calories' ? 'Calories from what you drank. Tap a bar or a night for details.' : 'Tap a night to see its summary.',
+      nightsIntro: s.nights.length === 0 ? 'No nights yet. Your nights will show here after you end one.' : nv === 'weeks' ? 'Each week at a glance. Tap a point on the graph, or a night for its summary.' : nv === 'months' ? 'Green nights stayed on plan. Tap a day for its summary.' : nv === 'all' ? 'Everything since your first night. Tap a point to see that night.' : 'Tap a night to see its summary.',
       weekCards: weekCards,
       weekChart: weekChart,
       monthChart: monthChart,
       allChart: allChart,
-      calChart: calChart,
       showAllTime: nv === 'all',
-      showCalories: nv === 'calories',
       allSince: firstNight ? 'Since ' + toD(firstNight.date).getUTCDate() + ' ' + MONTHS[toD(firstNight.date).getUTCMonth()] + ' ' + toD(firstNight.date).getUTCFullYear() : '',
       allNights: allSt.count,
       allOnPlan: allSt.count ? Math.round(allSt.onPlan / allSt.count * 100) + '%' : '–',
@@ -2660,11 +2643,6 @@ class Component extends DCLogic {
       allAlc: volText(allSt.alc),
       allKcal: Math.round(allKcalSum).toLocaleString('en-GB'),
       allPace: allSt.pace === null ? '–' : allSt.pace + ' min',
-      calLatest: weekGroups.length ? kcalText(weekGroups[0].idxs.reduce((a, i) => a + nightKcal(s.nights[i]), 0)) : '–',
-      calAvg: s.nights.length ? kcalText(allKcalSum / s.nights.length) : '–',
-      calTotal: Math.round(allKcalSum).toLocaleString('en-GB'),
-      calByType: calByType,
-      calNights: calNights,
       sumKcal: kcalText(view.entries.reduce((a, e) => a + kcalOf(e), 0)),
       monthCards: monthCards,
       quickRows: quickRows,
@@ -2890,8 +2868,14 @@ class Component extends DCLogic {
       paceLabel: gapLabel,
       hours: hours,
       goHome: () => this.setState({ screen: 'quiz', qIdx: 0 }),
-      less: () => this.setState({ plan: Math.max(1, s.plan - 1) }),
-      more: () => this.setState({ plan: Math.min(12, s.plan + 1) }),
+      less: () => this.setState({ plan: Math.max(1, s.plan - 1), bigPlanOk: s.plan - 1 > 10 ? s.bigPlanOk : false }),
+      // No upper limit, but going past 10 asks once.
+      more: () => (s.plan >= 10 && !s.bigPlanOk) ? this.setState({ bigPlanAsk: true }) : this.setState({ plan: Math.min(99, s.plan + 1) }),
+      bigPlanAsk: !!s.bigPlanAsk,
+      bigPlan: s.plan > 10,
+      planColor: s.plan > 10 ? '#FF8A3D' : '#FFFFFF',
+      keepTen: () => this.setState({ bigPlanAsk: false, plan: Math.min(s.plan, 10) }),
+      confirmBigPlan: () => this.setState({ bigPlanAsk: false, bigPlanOk: true, plan: Math.max(11, s.plan + 1) }),
       hourItems: hourItems,
       minItems: minItems,
       rideItems: rideItems,
