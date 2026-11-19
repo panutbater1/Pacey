@@ -1636,6 +1636,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </sc-for>
 
+      <sc-if value="{{canDeleteNight}}" hint-placeholder-val="{{true}}">
+        <button onClick="{{askDeleteNight}}" style="flex-shrink: 0; min-height: 52px; margin: 6px 0 18px; border-radius: 26px; border: none; background: #262628; color: #FF9B8F; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; cursor: pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+          Delete this night
+        </button>
+      </sc-if>
+
       </div>
     </div>
   </sc-if>
@@ -2010,6 +2017,22 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-for>
         </div>
         <button onClick="{{editQuickStarts}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 15px; font-weight: 700; cursor: pointer">Edit quick starts</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteNightOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{keepNight}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="alertdialog" aria-label="Delete this night?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF9B8F; display: flex; align-items: center; justify-content: center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+        </div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Delete this <span style="color: #FF9B8F">night?</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{deleteNightBody}}</div>
+        <button onClick="{{deleteNight}}" style="height: 62px; border-radius: 31px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Delete night</button>
+        <button onClick="{{keepNight}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Keep it</button>
       </div>
     </div>
   </sc-if>
@@ -3644,6 +3667,28 @@ class Component extends DCLogic {
         rideBooked: false
       }),
       done: () => this.setState({ screen: s.summaryFrom }),
+      // Delete one night from Nights (and its streak and stats). Sample nights in the prototype can be deleted too.
+      canDeleteNight: s.nights.length > 0 && !!s.nights[s.viewIdx],
+      askDeleteNight: () => this.setState({ deleteNightAsk: true }),
+      keepNight: () => this.setState({ deleteNightAsk: false }),
+      deleteNightOpen: !!s.deleteNightAsk && s.screen === 'summary',
+      deleteNightBody: (view.title || 'This night') + ' will be removed from your nights, streak and stats. This can\'t be undone.',
+      deleteNight: () => {
+        const i = s.viewIdx;
+        const id = Date.now();
+        this.setState({
+          deleteNightAsk: false,
+          nights: s.nights.filter((n, j) => j !== i),
+          viewIdx: 0,
+          hourSel: null,
+          // Deleting the latest night also closes its Last night page.
+          morningAfter: i === 0 ? false : s.morningAfter,
+          screen: s.summaryFrom === 'history' ? 'history' : 'home',
+          banner: { id: id, title: 'Night deleted', body: (view.title || 'The night') + ' was removed from your nights.' }
+        });
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 3500);
+      },
       openHelp: () => this.setState({ screen: 'help', helpFrom: s.screen }),
       closeHelp: () => this.setState({ screen: s.helpFrom })
     };
