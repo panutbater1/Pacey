@@ -891,7 +891,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <div style="display: flex; justify-content: center; flex-shrink: 0">
-        <button style="min-height: 44px; padding: 0 18px; border: none; background: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFFFFF; font-size: 16px; font-weight: 600; cursor: pointer">
+        <button onClick="{{openRide}}" aria-label="{{rideAria}}" style="min-height: 44px; padding: 0 18px; border: none; background: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFFFFF; font-size: 16px; font-weight: 600; cursor: pointer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
           Ride home
         </button>
@@ -922,6 +922,31 @@ button{font-family:Outfit,system-ui,sans-serif}
           </button>
         </sc-for>
       </div>
+
+      <sc-if value="{{rideCardShow}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 44px; height: 44px; border-radius: 14px; background: {{rideTileBg}}; color: {{rideTileFg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 18px; font-weight: 700">Your ride home</span>
+            <span style="font-size: 14px; color: #B8B8BE; line-height: 1.35">{{rideCardSub}}</span>
+          </span>
+        </div>
+        <sc-if value="{{rideNeedsAddress}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{goRideSettings}}" style="height: 52px; border-radius: 26px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Add your home address</button>
+        </sc-if>
+        <sc-if value="{{rideHasAddress}}" hint-placeholder-val="{{true}}">
+          <button onClick="{{bookRide}}" style="height: 52px; border-radius: 26px; border: none; background: {{rideBtnBg}}; color: {{rideBtnFg}}; font-size: 16px; font-weight: 700; cursor: pointer">{{rideBtnLabel}}</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+            <span style="font-size: 13px; color: #9A9AA0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">To {{homeAddress}}</span>
+            <button onClick="{{goRideSettings}}" style="min-height: 36px; flex-shrink: 0; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 13px; font-weight: 700; cursor: pointer">Change</button>
+          </div>
+        </sc-if>
+        <div style="font-size: 12px; color: #7A7A80; line-height: 1.4">{{rideAppName}} opens with your address filled in. Pick the time and confirm the booking there.</div>
+      </div>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
         <label for="pacey-reason" style="font-size: 18px; font-weight: 700">Tonight's reason <span style="font-size: 14px; font-weight: 500; color: #9A9AA0">· optional</span></label>
@@ -1098,6 +1123,22 @@ button{font-family:Outfit,system-ui,sans-serif}
             <input id="pacey-friend" type="text" placeholder="Name or phone number" value="{{friend}}" onChange="{{setFriend}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
           </div>
         </div>
+        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Your ride home</div>
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="pacey-address" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Home address</label>
+            <input id="pacey-address" type="text" autocomplete="street-address" placeholder="e.g. 12 High Street, Leeds" value="{{homeAddress}}" onChange="{{setHomeAddress}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Taxi app</div>
+            <div role="radiogroup" aria-label="Taxi app" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{rideAppOptions}}" as="o" hint-placeholder-count="3">
+                <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 44px; border-radius: 22px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45; padding: 0 4px">Only used to fill in your taxi app. It stays on this phone. Pacey can't see or confirm the booking.</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 0 18px; min-height: 56px; display: flex; align-items: center; justify-content: space-between">
           <div style="font-size: 16px; font-weight: 600">Age</div>
           <div style="font-size: 15px; color: #9A9AA0">Confirmed · 18 or older</div>
@@ -1570,13 +1611,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         </span>
       </button>
 
-      <button style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
+      <button onClick="{{openRide}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
         <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
         </span>
         <span style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 16px; font-weight: 600">Get a ride home</span>
-          <span style="font-size: 14px; color: #9A9AA0">Find a taxi nearby</span>
+          <span style="font-size: 14px; color: #9A9AA0">{{helpRideSub}}</span>
         </span>
       </button>
 
@@ -2076,6 +2117,26 @@ class Component extends DCLogic {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
     }, 5000);
   }
+  // 20 minutes before home by, on a taxi or rideshare night: a nudge that opens the taxi app.
+  checkRideNudge() {
+    const s = this.state;
+    if (!s.active || s.rideNudged || s.remHome === false || [0, 1].indexOf(s.rideIdx || 0) === -1) return;
+    const start = this.props.realtime ? (s.startMin != null ? s.startMin : 0) : 21 * 60 + 5;
+    let home = s.homeH * 60 + s.homeMi * 5;
+    if (home <= start) home += 24 * 60;
+    if (start + s.tick < home - 20) return;
+    const app = { uber: 'Uber', bolt: 'Bolt', local: 'a local taxi' }[s.rideApp || 'uber'];
+    const time = String(s.homeH).padStart(2, '0') + ':' + String(s.homeMi * 5).padStart(2, '0');
+    const title = s.rideBooked ? 'Your ride home' : 'Time to book your ride home';
+    const body = s.rideBooked ? 'If you pre-booked, check ' + app + ' for your driver. If not, book now to be home by ' + time + '.' : 'To be home by ' + time + ', book ' + app + ' now. Tap to open it.';
+    const id = Date.now();
+    this.setState({ rideNudged: true, banner: { id: id, title: title, body: body, action: 'ride' } });
+    if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
+    clearTimeout(this.bannerTimer);
+    this.bannerTimer = setTimeout(() => {
+      if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
+    }, 8000);
+  }
   playAnim(type, title, sub) {
     clearTimeout(this.animTimer);
     clearTimeout(this.animStart);
@@ -2098,13 +2159,14 @@ class Component extends DCLogic {
         const minute = Math.floor(Date.now() / 60000);
         if (tick !== this.state.tick || minute !== this.lastMinute) { this.lastMinute = minute; this.setState({ tick: tick }); }
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
+      this.checkRideNudge();
     }, 1000);
   }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
   renderVals() {
     const s = this.state;
     const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
-    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, weight and body type you add in Profile."}, {"h": "Weight and body type", "b": "These are optional. If you add them, they are used only on your phone to work out the blood alcohol estimate in your night summary. You can turn this off below."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: [YOUR CONTACT EMAIL]"}];
+    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, home address, taxi app, weight and body type you add in Profile."}, {"h": "Weight and body type", "b": "These are optional. If you add them, they are used only on your phone to work out the blood alcohol estimate in your night summary. You can turn this off below."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: [YOUR CONTACT EMAIL]"}];
     // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
     const RT = !!this.props.realtime;
     const nowDate = new Date();
@@ -2365,6 +2427,25 @@ class Component extends DCLogic {
     };
 
     // ----- Getting ready page
+    // Ride home: Pacey fills in the taxi app; the booking itself happens there.
+    const RIDE_APPS = [['uber', 'Uber'], ['bolt', 'Bolt'], ['local', 'Local taxi']];
+    const rideApp = s.rideApp || 'uber';
+    const rideAppName = (RIDE_APPS.find((a) => a[0] === rideApp) || RIDE_APPS[0])[1];
+    const homeAddress = (s.homeAddress || '').trim();
+    const rideUrl = rideApp === 'uber'
+      ? 'https://m.uber.com/ul/?action=setPickup&pickup=my_location' + (homeAddress ? '&dropoff[formatted_address]=' + encodeURIComponent(homeAddress) : '')
+      : rideApp === 'bolt' ? 'https://bolt.eu/en/rides/' : 'https://www.google.com/maps/search/' + encodeURIComponent('taxi near me');
+    const openRide = (extra) => {
+      // The laptop app opens links in the browser. The prototype only shows what would happen.
+      if (RT && typeof window !== 'undefined' && window.open) window.open(rideUrl, '_blank');
+      const id = Date.now();
+      this.setState(Object.assign({ banner: { id: id, title: 'Opening ' + rideAppName, body: homeAddress ? 'Your home address is filled in. Pick the time and confirm there.' : 'Add your home address in Settings › Profile to fill it in next time.' } }, extra || {}));
+      clearTimeout(this.bannerTimer);
+      this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 3500);
+    };
+    const pickupMin = (s.homeH * 60 + s.homeMi * 5 - 15 + 24 * 60) % (24 * 60);
+    const pickupLabel = pad(Math.floor(pickupMin / 60)) + ':' + pad(pickupMin % 60);
+    const rideByCar = [0, 1].indexOf(s.rideIdx || 0) !== -1;
     const checkDefs = [['eat', 'Eaten a proper meal'], ['phone', 'Phone charged'], ['ride', 'Ride home sorted'], ['water', 'Water ready at home for later']];
     const checks = s.checklist || {};
     const checklist = checkDefs.map((c, i) => {
@@ -2977,7 +3058,7 @@ class Component extends DCLogic {
       setReason: (e) => this.setState({ reason: e.target.value }),
       usualN: usualP.n,
       usualSummary: usualP.n + ' ' + usualNoun + ' · home by ' + pad(usualP.h) + ':' + pad(usualP.mi * 5) + ' · ' + rides[usualP.ride],
-      startUsual: () => this.setState({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, startedAtMs: Date.now(), startMin: nowMin }),
+      startUsual: () => this.setState({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, startedAtMs: Date.now(), startMin: nowMin }),
       historyTip: historyTip,
       showMorningAfter: () => this.setState({ morningAfter: true }),
       doneMorningAfter: () => this.setState({ morningAfter: false }),
@@ -3158,10 +3239,36 @@ class Component extends DCLogic {
       waterFirstWater: () => { this.setState({ waterFirst: false }); add('water')(); },
       waterFirstDrink: () => { this.setState({ waterFirst: false }); add('drink')(); },
       waterFirstCancel: () => this.setState({ waterFirst: false }),
+      rideCardShow: rideByCar,
+      rideNeedsAddress: !homeAddress,
+      rideHasAddress: !!homeAddress,
+      homeAddress: s.homeAddress || '',
+      setHomeAddress: (e) => this.setState({ homeAddress: e.target.value }),
+      rideAppName: rideAppName,
+      rideCardSub: s.rideBooked ? 'You opened ' + rideAppName + ' to book for ' + pickupLabel + '. Untick Ride home sorted if you didn\'t book.' : 'Pre-book for ' + pickupLabel + ' to be home by ' + pad(s.homeH) + ':' + pad(s.homeMi * 5) + '.',
+      rideTileBg: s.rideBooked ? '#2FAE86' : '#353538',
+      rideTileFg: s.rideBooked ? '#1A1A1C' : '#FFFFFF',
+      rideBtnLabel: s.rideBooked ? 'Open ' + rideAppName + ' again' : 'Pre-book with ' + rideAppName,
+      rideBtnBg: s.rideBooked ? '#353538' : '#6EE7C1',
+      rideBtnFg: s.rideBooked ? '#FFFFFF' : '#1A1A1C',
+      bookRide: () => openRide({ rideBooked: true, checklist: Object.assign({}, s.checklist || {}, { ride: true }) }),
+      openRide: () => openRide(),
+      rideAria: 'Ride home. Opens ' + rideAppName,
+      helpRideSub: 'Opens ' + rideAppName + (homeAddress ? ' with your address' : ''),
+      goRideSettings: () => this.setState({ screen: 'settings', settingsPage: 'profile' }),
+      rideAppOptions: RIDE_APPS.map((a) => ({
+        label: a[1], checked: rideApp === a[0] ? 'true' : 'false',
+        bg: rideApp === a[0] ? '#6EE7C1' : '#353538', fg: rideApp === a[0] ? '#1A1A1C' : '#FFFFFF',
+        pick: () => this.setState({ rideApp: a[0] })
+      })),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
       bannerBody: s.banner ? s.banner.body : '',
-      dismissBanner: () => this.setState({ banner: null }),
+      dismissBanner: () => {
+        const b = s.banner;
+        this.setState({ banner: null });
+        if (b && b.action === 'ride') openRide();
+      },
       toggles: toggles,
       initial: (s.name.trim()[0] || 'P').toUpperCase(),
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
@@ -3252,7 +3359,7 @@ class Component extends DCLogic {
       ridePillC: s.picker === 'ride' ? '#6EE7C1' : '#FFFFFF',
       toggleHomePicker: () => this.setState({ picker: s.picker === 'home' ? null : 'home', pickerTarget: null }),
       toggleRidePicker: () => this.setState({ picker: s.picker === 'ride' ? null : 'ride', pickerTarget: null }),
-      startNight: () => this.setState({ screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, startedAtMs: Date.now(), startMin: nowMin }),
+      startNight: () => this.setState({ screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, startedAtMs: Date.now(), startMin: nowMin }),
       addDrink: () => {
         // Water first: once the plan is reached, offer a water before logging another drink.
         if (s.waterFirstOn !== false && drinks.length >= s.plan) this.setState({ waterFirst: true, typeMenu: false });
@@ -3288,7 +3395,8 @@ class Component extends DCLogic {
           date: [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-'),
           day: new Date().toLocaleDateString('en-GB', { weekday: 'long' }),
           plan: s.plan, entries: s.entries, endTick: s.tick, start: START }].concat(s.nights),
-        morningAfter: true
+        morningAfter: true,
+        rideBooked: false
       }),
       done: () => this.setState({ screen: s.summaryFrom }),
       openHelp: () => this.setState({ screen: 'help', helpFrom: s.screen }),
