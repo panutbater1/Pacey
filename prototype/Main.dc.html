@@ -2822,7 +2822,7 @@ class Component extends DCLogic {
       ['remHome', 'Heading home', '15 minutes before your home by time'],
       ['remLimit', 'Past your plan', 'A kind nudge when you go over your limit'],
       ['waterFirstOn', 'Water first', 'Offer a water before each drink past your plan'],
-      ['earlyCheck', 'Pace check', 'Ask before a drink that comes earlier than your pace']
+      ['earlyCheck', 'Pace check', 'Ask before a drink that comes more than 5 minutes early']
     ];
     const toggles = toggleDefs.map((t, i) => {
       const on = s[t[0]] !== false;
@@ -3469,8 +3469,9 @@ class Component extends DCLogic {
       addDrink: () => {
         // Water first: once the plan is reached, offer a water before logging another drink.
         if (s.waterFirstOn !== false && drinks.length >= s.plan) this.setState({ waterFirst: true, typeMenu: false });
-        // Pace check: a drink before the timer ends gets a gentle question first.
-        else if (s.earlyCheck !== false && waiting) this.setState({ earlyAsk: true, typeMenu: false });
+        // Pace check: a drink more than 5 minutes before the timer ends gets a gentle question first.
+        // Up to 5 minutes early is close enough, so it logs straight away.
+        else if (s.earlyCheck !== false && waiting && remaining > 5) this.setState({ earlyAsk: true, typeMenu: false });
         else { this.setState({ typeMenu: false }); add('drink')(); }
       },
       addWater: add('water'),
