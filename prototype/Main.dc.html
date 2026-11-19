@@ -2677,6 +2677,11 @@ class Component extends DCLogic {
       if (m.getTime() <= lastNight.endedAtMs) m.setDate(m.getDate() + 1);
       morningAtMs = m.getTime();
     }
+    // Last night stays on the Tonight tab until Plan my night, but goes away by itself
+    // if nothing was updated in the 24 hours after the night ended.
+    const lastTouched = !!lastNight.feel || lastNight.entries.some((e) => e.late) || !!lastNight.keepOpen;
+    const lastExpired = !!lastNight.endedAtMs && Date.now() - lastNight.endedAtMs > 24 * 3600 * 1000 && !lastTouched;
+    const showLastNight = !!s.morningAfter && s.nights.length > 0 && !lastExpired;
     const morningReady = !lastNight.endedAtMs || !!lastNight.morningSkip || Date.now() >= morningAtMs;
     const feelMessages = {
       Great: 'Good to hear. Pacing did its job.',
@@ -2738,8 +2743,8 @@ class Component extends DCLogic {
       const mi = (m % 60) / 5;
       return { label: 'In ' + hrs + ' hours', time: '· ' + pad(hh) + ':' + pad(mi * 5), bg: i === 1 ? '#6EE7C1' : '#353538', fg: i === 1 ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState(Object.assign({ homeH: hh, homeMi: mi }, startFresh)) };
     });
-    // Ending a night: nights under 30 minutes aren't saved.
-    const shortNight = s.tick < 30;
+    // Ending a night: nights under 10 minutes aren't saved.
+    const shortNight = s.tick < 10;
 
     const sinceLast = last === null ? null : now - last;
     let lastDrinkLabel = 'None yet';
@@ -3132,7 +3137,7 @@ class Component extends DCLogic {
       usualSummary: usualP.n + ' ' + usualNoun + ' · home by ' + pad(usualP.h) + ':' + pad(usualP.mi * 5) + ' · ' + rides[usualP.ride],
       startUsual: () => beginNight({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, lastPreset: 'steady' }),
       historyTip: historyTip,
-      showMorningAfter: () => this.setState({ morningAfter: true }),
+      showMorningAfter: () => this.setState({ morningAfter: true, nights: [Object.assign({}, lastNight, { keepOpen: true })].concat(s.nights.slice(1)) }),
       morningReady: morningReady,
       morningWait: !morningReady,
       morningAt: pad(MORNING_H) + ':00',
@@ -3205,8 +3210,8 @@ class Component extends DCLogic {
       historyCurrent: s.screen === 'history' ? 'page' : 'false',
       tabHistory: () => this.setState({ screen: 'history' }),
       isDrink: s.screen === 'drink' && s.active,
-      isDrinkEmpty: s.screen === 'drink' && !s.active && !!s.morningAfter,
-      isReady: s.screen === 'drink' && !s.active && !s.morningAfter,
+      isDrinkEmpty: s.screen === 'drink' && !s.active && showLastNight,
+      isReady: s.screen === 'drink' && !s.active && !showLastNight,
       isSettings: s.screen === 'settings',
       showTabs: s.screen === 'home' || s.screen === 'drink' || s.screen === 'settings' || s.screen === 'history',
       nightActive: s.active,
@@ -3459,7 +3464,7 @@ class Component extends DCLogic {
       endAskShort: shortNight,
       endAskLong: !shortNight,
       endAskTitle: shortNight ? 'End already?' : 'End your night?',
-      endAskBody: shortNight ? 'You started ' + s.tick + ' min ago. Nights under 30 minutes aren\'t saved, so they won\'t show in your nights, streak or stats.' : 'You\'ll see a summary of tonight. Have a glass of water before bed.',
+      endAskBody: shortNight ? 'You started ' + s.tick + ' min ago. Nights under 10 minutes aren\'t saved, so they won\'t show in your nights, streak or stats.' : 'You\'ll see a summary of tonight. Have a glass of water before bed.',
       keepGoing: () => this.setState({ endAsk: false }),
       addDrink: () => {
         // Water first: once the plan is reached, offer a water before logging another drink.
@@ -3491,7 +3496,7 @@ class Component extends DCLogic {
       lockPhone: () => this.setState({ lockReturn: s.screen, screen: 'lock', islandOpen: false, typeMenu: false }),
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
-      endNight: () => shortNight ? this.setState({ endAsk: false, active: false, screen: 'home', entries: [], tick: 0, rideBooked: false, banner: { id: Date.now(), title: 'Night not saved', body: 'It was under 30 minutes, so it won\'t show in your nights.' } }) : this.setState({
+      endNight: () => shortNight ? this.setState({ endAsk: false, active: false, screen: 'home', entries: [], tick: 0, rideBooked: false, banner: { id: Date.now(), title: 'Night not saved', body: 'It was under 10 minutes, so it won\'t show in your nights.' } }) : this.setState({
         endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'home',
         nights: [{
           title: new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
