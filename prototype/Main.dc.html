@@ -677,14 +677,48 @@ button{font-family:Outfit,system-ui,sans-serif}
 
       <sc-if value="{{showNightList}}" hint-placeholder-val="{{true}}">
       <div style="display: flex; flex-direction: column; gap: 10px">
-        <sc-for list="{{nightList}}" as="n" hint-placeholder-count="3">
-          <button onClick="{{n.open}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
+        <sc-if value="{{hasLatest}}" hint-placeholder-val="{{true}}">
+        <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+              <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">Latest night</span>
+              <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.3px">{{latest.title}}</span>
+              <span style="font-size: 14px; color: #9A9AA0">{{latest.time}}</span>
+            </div>
+            <span style="flex-shrink: 0; font-size: 13px; font-weight: 700; color: #1A1A1C; background: {{latest.badgeBg}}; border-radius: 12px; padding: 4px 10px">{{latest.badge}}</span>
+          </div>
+          <div role="img" aria-label="{{latest.dotsAria}}" style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{latest.dots}}" as="d" hint-placeholder-count="4">
+              <span style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; box-shadow: inset 0 0 0 {{d.ring}}; color: {{d.fg}}; display: flex; align-items: center; justify-content: center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg>
+              </span>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{latest.stats}}" as="t" hint-placeholder-count="6">
+              <div style="background: #1F1F21; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                <span style="font-size: 12px; font-weight: 600; color: #9A9AA0">{{t.k}}</span>
+                <span style="font-size: 18px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.v}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{latest.hasFeel}}" hint-placeholder-val="{{false}}">
+            <div style="font-size: 14px; color: #B8B8BE">Next morning you felt <span style="font-weight: 700; color: #FFFFFF">{{latest.feel}}</span></div>
+          </sc-if>
+          <button onClick="{{latest.open}}" style="height: 52px; border-radius: 26px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Full summary</button>
+        </div>
+        <sc-if value="{{hasOlderNights}}" hint-placeholder-val="{{true}}">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0; padding: 6px 4px 0">Earlier nights</div>
+        </sc-if>
+        </sc-if>
+        <sc-for list="{{olderNights}}" as="n" hint-placeholder-count="3">
+          <button onClick="{{n.open}}" aria-label="{{n.aria}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
             <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
               <sc-if value="{{n.stuck}}" hint-placeholder-val="{{true}}">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
               </sc-if>
               <sc-if value="{{n.notStuck}}" hint-placeholder-val="{{false}}">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.500A8 8 0 0 1 9.500 4a8 8 0 1 0 10.500 10.500z"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF8A3D" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
               </sc-if>
             </span>
             <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
@@ -715,14 +749,12 @@ button{font-family:Outfit,system-ui,sans-serif}
             <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">First night? We picked {{recommendName}}</span>
           </sc-if>
         </div>
-        <div style="display: flex">
-          <button onClick="{{openQuick}}" aria-label="{{quickAria}}" aria-haspopup="dialog" style="height: 48px; max-width: 100%; padding: 0 14px 0 14px; border-radius: 24px; border: none; background: {{quickBg}}; color: {{quickFg}}; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; white-space: nowrap; cursor: pointer">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <button onClick="{{useQuick}}" onPointerDown="{{quickDown}}" onPointerUp="{{quickUp}}" onPointerLeave="{{quickUp}}" onPointerCancel="{{quickUp}}" onContextMenu="{{quickMenu}}" aria-label="{{quickAria}}" aria-pressed="{{quickPressed}}" style="-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; height: 48px; flex-shrink: 0; padding: 0 18px 0 14px; border-radius: 24px; border: none; background: {{quickBg}}; color: {{quickFg}}; box-shadow: inset 0 0 0 {{quickRing}}; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; white-space: nowrap; cursor: pointer">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{quickIcon}}"></path></svg>
             {{quickLabel}}
-            <span style="width: 1px; height: 20px; background: currentColor; opacity: 0.3; margin: 0 2px"></span>
-            <span style="font-size: 14px; font-weight: 600; opacity: 0.8">Change</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
           </button>
+          <span aria-hidden="true" style="font-size: 13px; font-weight: 600; color: #7A7A80">Hold to change</span>
         </div>
       </div>
 
@@ -874,15 +906,15 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="flex-grow: 1"></div>
 
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-        <button onClick="{{addWater}}" style="height: 62px; border-radius: 31px; border: none; background: {{waterBg}}; color: {{waterFg}}; font-size: 18px; font-weight: 700; cursor: pointer">+ Water</button>
-        <div style="position: relative; height: 62px; border-radius: 31px; background: {{drinkBg}}; display: flex; align-items: stretch">
-          <button onClick="{{addDrink}}" style="flex-grow: 1; min-width: 0; padding: 0 0 0 16px; border: none; background: none; color: {{drinkFg}}; font-size: 18px; font-weight: 700; cursor: pointer; white-space: nowrap">+ {{btnNoun}}</button>
-          <span style="width: 1px; margin: 16px 0; background: {{drinkFg}}; opacity: 0.25"></span>
-          <button onClick="{{toggleTypeMenu}}" aria-label="Change drink type" aria-expanded="{{typeMenuExpanded}}" style="width: 48px; flex-shrink: 0; border: none; background: none; color: {{drinkFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+        <button onClick="{{addWater}}" style="height: 76px; border-radius: 38px; border: none; background: {{waterBg}}; color: {{waterFg}}; font-size: 22px; font-weight: 700; cursor: pointer">+ Water</button>
+        <div style="position: relative; height: 76px; border-radius: 38px; background: {{drinkBg}}; display: flex; align-items: stretch">
+          <button onClick="{{addDrink}}" style="flex-grow: 1; min-width: 0; padding: 0 0 0 18px; border: none; background: none; color: {{drinkFg}}; font-size: 22px; font-weight: 700; cursor: pointer; white-space: nowrap">+ {{btnNoun}}</button>
+          <span style="width: 1px; margin: 20px 0; background: {{drinkFg}}; opacity: 0.25"></span>
+          <button onClick="{{toggleTypeMenu}}" aria-label="Change drink type" aria-expanded="{{typeMenuExpanded}}" style="width: 54px; flex-shrink: 0; border: none; background: none; color: {{drinkFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
           </button>
           <sc-if value="{{typeMenuOpen}}" hint-placeholder-val="{{false}}">
-            <div role="menu" aria-label="Drink type" style="position: absolute; right: 0; bottom: 72px; width: 210px; z-index: 5; background: #353538; border-radius: 20px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); overflow: hidden; display: flex; flex-direction: column">
+            <div role="menu" aria-label="Drink type" style="position: absolute; right: 0; bottom: 86px; width: 210px; z-index: 5; background: #353538; border-radius: 20px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); overflow: hidden; display: flex; flex-direction: column">
               <div style="padding: 12px 16px 6px; font-size: 13px; font-weight: 600; color: #9A9AA0">What are you drinking?</div>
               <sc-for list="{{typeMenuItems}}" as="m" hint-placeholder-count="2">
                 <button role="menuitemradio" aria-checked="{{m.on}}" onClick="{{m.pick}}" style="min-height: 48px; border: none; border-top: 1px solid {{m.divider}}; background: none; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; color: #FFFFFF; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer">
@@ -961,6 +993,24 @@ button{font-family:Outfit,system-ui,sans-serif}
         <input id="pacey-reason" type="text" placeholder="e.g. Football at 9am" value="{{reason}}" onChange="{{setReason}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
         <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">Pacey shows this back to you if you go over your plan.</div>
       </div>
+
+      <sc-if value="{{suggestShow}}" hint-placeholder-val="{{false}}">
+      <div role="region" aria-label="A suggestion from your nights" style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 0 0 2px #2A9E7A">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <span style="width: 40px; height: 40px; border-radius: 12px; background: #2A9E7A; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-7"></path><path d="M14 8h6v6"></path></svg>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">From your nights</span>
+            <span style="font-size: 16px; font-weight: 700; line-height: 1.35">{{suggestText}}</span>
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <button onClick="{{suggestNo}}" style="height: 48px; border-radius: 24px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Not now</button>
+          <button onClick="{{suggestYes}}" style="height: 48px; border-radius: 24px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 15px; font-weight: 700; cursor: pointer">{{suggestYesLabel}}</button>
+        </div>
+      </div>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
         <div style="display: flex; align-items: center; gap: 12px">
@@ -1188,32 +1238,64 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <sc-if value="{{subPlan}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{suggestShow}}" hint-placeholder-val="{{false}}">
+        <div role="region" aria-label="A suggestion from your nights" style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 0 0 2px #2A9E7A">
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #2A9E7A; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-7"></path><path d="M14 8h6v6"></path></svg>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">From your nights</span>
+              <span style="font-size: 16px; font-weight: 700; line-height: 1.35">{{suggestText}}</span>
+            </span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{suggestNo}}" style="height: 48px; border-radius: 24px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Not now</button>
+            <button onClick="{{suggestYes}}" style="height: 48px; border-radius: 24px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 15px; font-weight: 700; cursor: pointer">{{suggestYesLabel}}</button>
+          </div>
+        </div>
+        </sc-if>
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your limit</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <div style="display: flex; align-items: baseline; gap: 8px">
+              <span style="font-size: 52px; font-weight: 800; line-height: 1; color: #6EE7C1">{{limitN}}</span>
+              <span style="font-size: 17px; font-weight: 600; color: #B8B8BE">{{limitNoun}} a night</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button aria-label="Lower your limit" onClick="{{limitLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
+              <button aria-label="Raise your limit" onClick="{{limitMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+            </div>
+          </div>
+          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{limitSource}} Lowering it is always fine. Pacey checks with you before raising it.</div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 600">Water habit</div>
+            <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">A water after every few drinks. Pacey reminds you, and the water cup on Tonight fills towards it.</div>
+          </div>
+          <div role="radiogroup" aria-label="One water after every" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{waterHabitOptions}}" as="o" hint-placeholder-count="3">
+              <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 48px; border-radius: 24px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <div style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <div style="display: flex; flex-direction: column; gap: 2px">
-              <div style="font-size: 16px; font-weight: 600">Your average</div>
-              <div style="font-size: 13px; color: #9A9AA0">Drinks on a usual night out</div>
+              <div style="font-size: 16px; font-weight: 600">Your usual night</div>
+              <div style="font-size: 13px; color: #9A9AA0">Drinks before using Pacey, from your quiz</div>
             </div>
             <div style="display: flex; align-items: center; gap: 10px">
-              <button aria-label="Lower your average" onClick="{{avgLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
+              <button aria-label="Lower your usual night" onClick="{{avgLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
               <div style="font-size: 24px; font-weight: 800; width: 28px; text-align: center">{{avgDrinks}}</div>
-              <button aria-label="Raise your average" onClick="{{avgMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+              <button aria-label="Raise your usual night" onClick="{{avgMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
             </div>
           </div>
-          <div style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
-            <div style="font-size: 16px; font-weight: 600">Suggested limit</div>
-            <div style="font-size: 15px; font-weight: 700; color: #6EE7C1">{{usualLabel}}</div>
-          </div>
-          <div style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
-            <div style="font-size: 16px; font-weight: 600">Home by</div>
-            <div style="font-size: 15px; color: #9A9AA0">{{homeByLabel}}</div>
-          </div>
-          <div style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
-            <div style="font-size: 16px; font-weight: 600">Getting home</div>
-            <div style="font-size: 15px; color: #9A9AA0">{{rideLabel}}</div>
-          </div>
         </div>
-        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Your suggested limit is worked out from your average, and is never more than 4 or more than your average.</div>
+        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Your limit is a most, not a target. Home by times and getting home are set in Quick start.</div>
       </sc-if>
 
       <sc-if value="{{subQuick}}" hint-placeholder-val="{{false}}">
@@ -1604,6 +1686,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </sc-for>
 
+      <sc-if value="{{canDeleteNight}}" hint-placeholder-val="{{true}}">
+        <button onClick="{{askDeleteNight}}" style="flex-shrink: 0; min-height: 52px; margin: 6px 0 18px; border-radius: 26px; border: none; background: #262628; color: #FF9B8F; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; cursor: pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+          Delete this night
+        </button>
+      </sc-if>
+
       </div>
     </div>
   </sc-if>
@@ -1947,28 +2036,29 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{quickOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
-      <button aria-label="Close" onClick="{{closeQuick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
-      <div role="dialog" aria-label="Pick a quick start" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
-        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <div style="font-size: 20px; font-weight: 800">Pick a quick start</div>
-          <button onClick="{{closeQuick}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Close</button>
-        </div>
-        <div role="radiogroup" aria-label="Quick starts" style="display: flex; flex-direction: column; gap: 8px">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15">
+      <button aria-label="Close" onClick="{{closeQuick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.55); cursor: pointer"></button>
+      <button onClick="{{closeQuick}}" aria-hidden="true" tabindex="-1" style="position: absolute; left: {{quickChipX}}; top: {{quickChipY}}; height: 48px; padding: 0 18px 0 14px; border-radius: 24px; border: none; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; white-space: nowrap; transform: scale(1.06); box-shadow: 0 0 0 6px rgba(110, 231, 193, 0.25); cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{quickIcon}}"></path></svg>
+        {{quickLabel}}
+      </button>
+      <div style="position: absolute; left: {{quickArrowX}}; top: {{quickArrowY}}; width: 18px; height: 18px; background: #262628; transform: rotate(45deg)"></div>
+      <div role="dialog" aria-label="Change quick start" style="position: absolute; left: 20px; right: 20px; top: {{quickCardY}}; box-sizing: border-box; background: #262628; border-radius: 24px; padding: 14px 14px 8px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55); display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 15px; font-weight: 700; color: #9A9AA0; padding: 0 4px">Change quick start</div>
+        <div role="radiogroup" aria-label="Quick starts" style="display: flex; flex-direction: column; gap: 6px">
           <sc-for list="{{quickPicks}}" as="q" hint-placeholder-count="3">
-            <button role="radio" aria-checked="{{q.checked}}" aria-label="{{q.aria}}" onClick="{{q.pick}}" style="min-height: 72px; border-radius: 20px; border: 2px solid {{q.ring}}; background: #1F1F21; padding: 12px 14px; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
-              <span style="width: 44px; height: 44px; border-radius: 14px; background: {{q.accent}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{q.icon}}"></path></svg>
+            <button role="radio" aria-checked="{{q.checked}}" aria-label="{{q.aria}}" onClick="{{q.pick}}" style="min-height: 64px; border-radius: 18px; border: 2px solid {{q.ring}}; background: #1F1F21; padding: 10px 12px; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+              <span style="width: 40px; height: 40px; border-radius: 12px; background: {{q.accent}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{q.icon}}"></path></svg>
               </span>
               <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
                 <span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
-                  <span style="font-size: 17px; font-weight: 800">{{q.name}}</span>
+                  <span style="font-size: 16px; font-weight: 800">{{q.name}}</span>
                   <sc-if value="{{q.rec}}" hint-placeholder-val="{{false}}">
                     <span style="font-size: 12px; font-weight: 700; color: #1A1A1C; background: #6EE7C1; border-radius: 10px; padding: 2px 8px">First night pick</span>
                   </sc-if>
                 </span>
-                <span style="font-size: 14px; color: #B8B8BE">{{q.summary}}</span>
+                <span style="font-size: 13px; color: #B8B8BE">{{q.summary}}</span>
               </span>
               <sc-if value="{{q.on}}" hint-placeholder-val="{{false}}">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
@@ -1977,6 +2067,38 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-for>
         </div>
         <button onClick="{{editQuickStarts}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 15px; font-weight: 700; cursor: pointer">Edit quick starts</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteNightOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{keepNight}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="alertdialog" aria-label="Delete this night?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF9B8F; display: flex; align-items: center; justify-content: center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+        </div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Delete this <span style="color: #FF9B8F">night?</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{deleteNightBody}}</div>
+        <button onClick="{{deleteNight}}" style="height: 62px; border-radius: 31px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Delete night</button>
+        <button onClick="{{keepNight}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Keep it</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{raiseLimitOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{keepLimit}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="alertdialog" aria-label="Raise your limit?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF8A3D; display: flex; align-items: center; justify-content: center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+        </div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Raise your <span style="color: #FF8A3D">limit?</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{raiseLimitBody}}</div>
+        <button onClick="{{keepLimit}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Keep {{limitN}}</button>
+        <button onClick="{{raiseLimit}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Raise to {{limitNext}}</button>
       </div>
     </div>
   </sc-if>
@@ -2248,7 +2370,7 @@ class Component extends DCLogic {
       this.checkRideNudge();
     }, 1000);
   }
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
   renderVals() {
     const s = this.state;
     const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
@@ -2387,7 +2509,8 @@ class Component extends DCLogic {
       const ok = n.entries.filter((e) => e.kind === 'drink').length <= n.plan;
       return {
         title: n.title,
-        sub: nightSub(n),
+        sub: n.entries.filter((e) => e.kind === 'drink').length + ' of ' + n.plan + ' drinks',
+        aria: n.title + ', ' + (ok ? 'on plan' : 'over plan') + '. Open summary',
         time: fmt(startOf(n)) + ' to ' + fmt(startOf(n) + n.endTick) + ' · ' + kcalText(nightKcal(n)),
         stuck: ok,
         notStuck: !ok,
@@ -2416,6 +2539,19 @@ class Component extends DCLogic {
     const matchDef = presetDefs.find((d) => { const p = presetOf(d[0]); return s.plan === p.n && s.homeH === p.h && s.homeMi === p.mi && s.rideIdx === p.ride; });
     const shownDef = matchDef || presetDefs.find((d) => d[0] === s.lastPreset) || presetDefs[1];
     const shownP = presetOf(shownDef[0]);
+    // Where the held chip sits on the phone screen, so the pop-up can point at it.
+    const measureChip = (el) => {
+      try {
+        const root = el.closest('[data-pacey-root]');
+        const r = el.getBoundingClientRect();
+        const R = root.getBoundingClientRect();
+        const k = R.width / root.offsetWidth || 1; // the canvas may show the phone scaled
+        return { x: (r.left - R.left) / k, y: (r.top - R.top) / k, w: r.width / k, h: r.height / k };
+      } catch (err) {
+        return { x: 24, y: 262, w: 160, h: 48 };
+      }
+    };
+    const quickAt = s.quickAt || { x: 24, y: 262, w: 160, h: 48 };
     const quickPicks = presetDefs.map((d) => {
       const p = presetOf(d[0]);
       const on = !!matchDef && matchDef[0] === d[0];
@@ -2470,8 +2606,19 @@ class Component extends DCLogic {
     const avgNow = s.avgDrinks || 4;
     const setAvg = (n) => {
       const avg = Math.max(1, Math.min(12, n));
-      this.setState({ avgDrinks: avg, usualPlan: Math.min(4, avg) });
+      // The limit never goes above the usual night; raising the usual night doesn't raise the limit.
+      this.setState({ avgDrinks: avg, usualPlan: Math.min(s.usualPlan || 4, avg) });
     };
+    // Your limit (Settings > Pace plan). Lowering is instant; raising asks first.
+    const limitN = s.usualPlan || 4;
+    const LIMIT_MAX = 10;
+    // Water habit: one water after every 1, 2 or 3 drinks.
+    const waterEvery = s.waterEvery || 2;
+    // A suggestion from history: only ever lower, after staying on plan 4 of the last 5 nights.
+    const last5 = s.nights.slice(0, 5);
+    const last5On = last5.filter((n) => n.entries.filter((e) => e.kind === 'drink').length <= n.plan).length;
+    const suggestKey = s.nights.length + ':' + limitN;
+    const suggestShow = last5.length === 5 && last5On >= 4 && limitN > 1 && s.suggestDismissed !== suggestKey;
 
     // ----- Getting ready page
     // Ride home: Pacey fills in the taxi app; the booking itself happens there.
@@ -2729,6 +2876,19 @@ class Component extends DCLogic {
       }
       this.setState({ entries: entries });
       if (kind === 'drink' && s.remLimit !== false && count >= s.plan) this.notifyLimit(count - s.plan);
+      // Water habit: a gentle nudge when a drink completes the habit (the plan nudges take over at the plan).
+      else if (kind === 'drink' && !silent && s.remWater !== false && count % (s.waterEvery || 2) === 0) {
+        const id = Date.now();
+        const every = s.waterEvery || 2;
+        const title = 'Water time';
+        const body = every === 1 ? 'Your habit is a water after every drink.' : 'That\'s ' + count + ' drinks. Your habit is a water after every ' + every + '.';
+        setTimeout(() => {
+          this.setState({ banner: { id: id, title: title, body: body } });
+          if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
+        }, 1900);
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 6000);
+      }
       // Calm, drink-specific animation. Kept neutral on purpose: it confirms the log, it doesn't celebrate drinking.
       const waters = entries.filter((e) => e.kind === 'water').length;
       let title;
@@ -2738,7 +2898,7 @@ class Component extends DCLogic {
         sub = waters === 1 ? 'Your first water tonight. Nice.' : waters + ' waters tonight. Nice pacing.';
       } else {
         title = cur.btn + ' logged';
-        sub = count <= s.plan ? count + ' of ' + s.plan + ' tonight' : 'That\'s ' + (count - s.plan) + ' over your plan. Water next?';
+        sub = count <= s.plan ? count + ' of ' + s.plan + ' tonight' + (count % (s.waterEvery || 2) === 0 ? ' · water next' : '') : 'That\'s ' + (count - s.plan) + ' over your plan. Water next?';
       }
       if (!silent) this.playAnim(kind === 'water' ? 'water' : cur.k, title, sub);
     };
@@ -2837,7 +2997,7 @@ class Component extends DCLogic {
     const sp = s.settingsPage;
     const goTo = (page) => () => this.setState({ settingsPage: page });
     const toggleDefs = [
-      ['remWater', 'Water reminders', '20 minutes after a drink'],
+      ['remWater', 'Water reminders', 'Follows your water habit in Pace plan'],
       ['remNext', 'Next drink fits your plan', 'When your pace timer ends'],
       ['remHome', 'Heading home', '15 minutes before your home by time'],
       ['remLimit', 'Past your plan', 'A kind nudge when you go over your limit'],
@@ -2960,6 +3120,46 @@ class Component extends DCLogic {
         ring: had ? '0 transparent' : '2px #353538',
         aria: had ? 'Drink ' + (i + 1) + ': ' + ((dtDefs.find((d) => d.k === kind) || {}).btn || 'Drink') + (i < view.plan ? '' : ', over plan') : 'Planned drink not had'
       });
+    }
+
+    // Nights tab: the latest night opens with its numbers; the rest stay as a list underneath.
+    let latest = null;
+    if (s.nights.length) {
+      const ln = s.nights[0];
+      const lst = statsOf([0]);
+      const lDrinks = ln.entries.filter((e) => e.kind === 'drink').sort((a, b) => a.t - b.t);
+      const lOk = lDrinks.length <= ln.plan;
+      const dots = [];
+      for (let i = 0; i < Math.max(ln.plan, lDrinks.length); i += 1) {
+        const had = i < lDrinks.length;
+        const k = had ? (lDrinks[i].type || sel[0]) : ((lDrinks[0] && lDrinks[0].type) || sel[0]);
+        dots.push({
+          icon: DRINK_ICON[k] || DRINK_ICON.mixed,
+          bg: had ? (i < ln.plan ? '#2FAE86' : '#FF8A3D') : 'transparent',
+          fg: had ? '#1A1A1C' : '#4A4A4E',
+          ring: had ? '0 transparent' : '2px #353538'
+        });
+      }
+      const lMins = ln.endTick || 0;
+      latest = {
+        title: ln.title,
+        time: fmt(startOf(ln)) + ' to ' + fmt(startOf(ln) + lMins),
+        badge: lOk ? 'On plan' : 'Over plan',
+        badgeBg: lOk ? '#6EE7C1' : '#FF8A3D',
+        dots: dots,
+        dotsAria: lDrinks.length + ' of ' + ln.plan + ' planned drinks' + (lOk ? '' : ', ' + (lDrinks.length - ln.plan) + ' over'),
+        stats: [
+          { k: 'Drinks', v: lDrinks.length + ' of ' + ln.plan },
+          { k: 'Water', v: String(lst.water) },
+          { k: 'Lasted', v: lMins < 60 ? lMins + ' min' : Math.floor(lMins / 60) + 'h ' + (lMins % 60) + 'm' },
+          { k: 'Alcohol', v: volText(lst.alc) },
+          { k: 'Calories', v: Math.round(lst.kcal).toLocaleString('en-GB') },
+          { k: 'Pace', v: lst.pace === null ? '–' : lst.pace + ' min' }
+        ],
+        hasFeel: !!ln.feel,
+        feel: ln.feel === 'OK' ? 'OK' : (ln.feel || '').toLowerCase(),
+        open: openNight(0)
+      };
     }
 
     const stuck = vDrinks <= view.plan;
@@ -3118,9 +3318,33 @@ class Component extends DCLogic {
       quickIcon: shownDef[3],
       quickBg: matchDef ? '#6EE7C1' : '#262628',
       quickFg: matchDef ? '#1A1A1C' : '#FFFFFF',
-      quickAria: 'Quick start: ' + shownDef[1] + ', ' + shownP.n + ' drinks' + (matchDef ? ', in use' : '') + '. Change quick start',
+      quickAria: 'Quick start: ' + shownDef[1] + ', ' + shownP.n + ' drinks, home by ' + pad(shownP.h) + ':' + pad(shownP.mi * 5) + (matchDef ? ', in use' : '') + '. Press and hold to change',
       quickOpen: !!s.quickOpen,
-      openQuick: () => this.setState({ quickOpen: true }),
+      quickPressed: matchDef ? 'true' : 'false',
+      quickRing: !matchDef && s.nights.length === 0 ? '2px #6EE7C1' : '0 transparent',
+      // Tap uses the quick start shown. Press and hold (or right-click) opens a pop-up to change it.
+      useQuick: () => {
+        if (this.held) { this.held = false; return; }
+        this.setState({ plan: shownP.n, homeH: shownP.h, homeMi: shownP.mi, rideIdx: shownP.ride, lastPreset: shownDef[0] });
+      },
+      quickDown: (e) => {
+        clearTimeout(this.holdTimer);
+        this.held = false;
+        const el = e && e.currentTarget;
+        this.holdTimer = setTimeout(() => { this.held = true; this.setState({ quickOpen: true, quickAt: measureChip(el) }); }, 450);
+      },
+      quickUp: () => clearTimeout(this.holdTimer),
+      quickMenu: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        clearTimeout(this.holdTimer);
+        this.held = true;
+        if (!s.quickOpen) this.setState({ quickOpen: true, quickAt: measureChip(e && e.currentTarget) });
+      },
+      quickChipX: quickAt.x + 'px',
+      quickChipY: quickAt.y + 'px',
+      quickArrowX: Math.max(40, Math.min(390 - 58, quickAt.x + quickAt.w / 2 - 9)) + 'px',
+      quickArrowY: (quickAt.y + quickAt.h + 10) + 'px',
+      quickCardY: (quickAt.y + quickAt.h + 18) + 'px',
       closeQuick: () => this.setState({ quickOpen: false }),
       editQuickStarts: () => this.setState({ quickOpen: false, screen: 'settings', settingsPage: 'quick' }),
       quickPicks: quickPicks,
@@ -3202,6 +3426,10 @@ class Component extends DCLogic {
       isHomeTimer: s.screen === 'home' && s.active,
       isHistory: s.screen === 'history',
       nightList: nightList,
+      hasLatest: !!latest,
+      latest: latest || { dots: [], stats: [] },
+      olderNights: nightList.slice(1),
+      hasOlderNights: nightList.length > 1,
       elapsedLabel: elapsedLabel,
       startLabel: fmt(START),
       showBrand: !(s.screen === 'drink' && s.active),
@@ -3374,6 +3602,33 @@ class Component extends DCLogic {
       toggles: toggles,
       initial: (s.name.trim()[0] || 'P').toUpperCase(),
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
+      limitN: limitN,
+      limitNext: Math.min(LIMIT_MAX, limitN + 1),
+      limitNoun: limitN === 1 ? 'drink' : 'drinks',
+      limitSource: s.nights.length >= 3 ? 'Based on your quiz answers and your last ' + Math.min(5, s.nights.length) + ' nights.' : 'Based on your quiz answers.',
+      limitLess: () => this.setState({ usualPlan: Math.max(1, limitN - 1), plan: s.active ? s.plan : Math.min(s.plan, Math.max(1, limitN - 1)) }),
+      limitMore: () => { if (limitN < LIMIT_MAX) this.setState({ raiseLimitAsk: true }); },
+      raiseLimitOpen: !!s.raiseLimitAsk,
+      raiseLimitBody: 'Your limit would go from ' + limitN + ' to ' + Math.min(LIMIT_MAX, limitN + 1) + ' drinks a night. A higher limit makes it easier to have more than you meant to. You can always lower it again.',
+      keepLimit: () => this.setState({ raiseLimitAsk: false }),
+      raiseLimit: () => { const n = Math.min(LIMIT_MAX, limitN + 1); this.setState({ raiseLimitAsk: false, usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
+      waterHabitOptions: [1, 2, 3].map((k) => ({
+        label: k === 1 ? 'Every drink' : 'Every ' + k,
+        checked: waterEvery === k ? 'true' : 'false',
+        bg: waterEvery === k ? '#6EE7C1' : '#353538', fg: waterEvery === k ? '#1A1A1C' : '#FFFFFF',
+        pick: () => this.setState({ waterEvery: k })
+      })),
+      suggestShow: suggestShow,
+      suggestText: 'You stayed on plan ' + last5On + ' of your last 5 nights. Try a limit of ' + (limitN - 1) + ' next time?',
+      suggestYesLabel: 'Try ' + (limitN - 1),
+      suggestYes: () => {
+        const n = Math.max(1, limitN - 1);
+        const id = Date.now();
+        this.setState({ usualPlan: n, plan: s.active ? s.plan : Math.min(s.plan, n), suggestDismissed: s.nights.length + ':' + n, banner: { id: id, title: 'New limit: ' + n, body: 'Nice. Your quick starts and plan now use ' + n + '.' } });
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 3500);
+      },
+      suggestNo: () => this.setState({ suggestDismissed: suggestKey }),
       friendLabel: s.friend.trim() || 'Not set',
       durationLabel: durationLabel,
       timeRange: fmt(VSTART) + ' – ' + fmt(end),
@@ -3411,8 +3666,8 @@ class Component extends DCLogic {
       countdown: remaining + ' min',
       progressW: Math.max(4, Math.min(100, Math.round((1 - remaining / interval) * 100))) + '%',
       // The water cup fills towards one water per drink.
-      waterFillH: Math.round(Math.min(1, waters.length / Math.max(1, drinks.length)) * 100) + '%',
-      waterAria: waters.length + ' water for ' + drinks.length + (drinks.length === 1 ? ' drink' : ' drinks'),
+      waterFillH: (Math.floor(drinks.length / waterEvery) === 0 ? (waters.length ? 100 : 0) : Math.round(Math.min(1, waters.length / Math.floor(drinks.length / waterEvery)) * 100)) + '%',
+      waterAria: waters.length + ' water for ' + drinks.length + (drinks.length === 1 ? ' drink' : ' drinks') + '. Your habit: one after every ' + (waterEvery === 1 ? 'drink' : waterEvery + ' drinks'),
       countGlassRef: (element) => { this.countGlass = element; },
       fillH:Math.min(100, Math.round((drinks.length / s.plan) * 100)) + '%',
       accent: reached ? '#FF8A3D' : '#6EE7C1',
@@ -3529,6 +3784,28 @@ class Component extends DCLogic {
         rideBooked: false
       }),
       done: () => this.setState({ screen: s.summaryFrom }),
+      // Delete one night from Nights (and its streak and stats). Sample nights in the prototype can be deleted too.
+      canDeleteNight: s.nights.length > 0 && !!s.nights[s.viewIdx],
+      askDeleteNight: () => this.setState({ deleteNightAsk: true }),
+      keepNight: () => this.setState({ deleteNightAsk: false }),
+      deleteNightOpen: !!s.deleteNightAsk && s.screen === 'summary',
+      deleteNightBody: (view.title || 'This night') + ' will be removed from your nights, streak and stats. This can\'t be undone.',
+      deleteNight: () => {
+        const i = s.viewIdx;
+        const id = Date.now();
+        this.setState({
+          deleteNightAsk: false,
+          nights: s.nights.filter((n, j) => j !== i),
+          viewIdx: 0,
+          hourSel: null,
+          // Deleting the latest night also closes its Last night page.
+          morningAfter: i === 0 ? false : s.morningAfter,
+          screen: s.summaryFrom === 'history' ? 'history' : 'home',
+          banner: { id: id, title: 'Night deleted', body: (view.title || 'The night') + ' was removed from your nights.' }
+        });
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 3500);
+      },
       openHelp: () => this.setState({ screen: 'help', helpFrom: s.screen }),
       closeHelp: () => this.setState({ screen: s.helpFrom })
     };
