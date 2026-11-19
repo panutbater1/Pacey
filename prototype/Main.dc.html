@@ -1531,27 +1531,34 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
           <div style="font-size: 15px; font-weight: 600">Your night, hour by hour</div>
           <div style="display: flex; gap: 12px; font-size: 13px; color: #9A9AA0">
-            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #6EE7C1"></span>Drinks</span>
-            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #5CC8F5"></span>Water</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #2A9E7A"></span>Drinks</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #3B82D9"></span>Water</span>
           </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 10px">
-          <sc-for list="{{hours}}" as="h" hint-placeholder-count="5">
-            <div style="display: flex; align-items: center; gap: 12px">
-              <div style="width: 46px; flex-shrink: 0; font-size: 14px; font-weight: 600; color: #B8B8BE">{{h.label}}</div>
-              <div style="flex-grow: 1; height: 26px; box-sizing: border-box; padding: 3px; border-radius: 13px; background: #353538; display: flex; gap: 3px">
-                <sc-if value="{{h.hasD}}" hint-placeholder-val="{{true}}">
-                  <div style="width: {{h.dW}}; border-radius: 10px; background: #6EE7C1"></div>
-                </sc-if>
-                <sc-if value="{{h.hasW}}" hint-placeholder-val="{{false}}">
-                  <div style="width: {{h.wW}}; border-radius: 10px; background: #5CC8F5"></div>
-                </sc-if>
-              </div>
-              <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; gap: 8px; font-size: 14px; font-weight: 800">
-                <span style="color: #6EE7C1">{{h.d}}</span>
-                <span style="color: #5CC8F5">{{h.w}}</span>
-              </div>
+        <div aria-live="polite" style="font-size: 14px; font-weight: 700; color: #FFFFFF; margin-top: -4px">{{hourCaption}}</div>
+        <div style="display: flex; gap: 8px">
+          <div aria-hidden="true" style="position: relative; width: 16px; height: 128px; flex-shrink: 0; font-size: 11px; color: #9A9AA0; text-align: right">
+            <span style="position: absolute; right: 0; top: 0">{{hourMax}}</span>
+            <span style="position: absolute; right: 0; top: {{hourMidTop}}">{{hourMid}}</span>
+            <span style="position: absolute; right: 0; bottom: -7px">0</span>
+          </div>
+          <div style="position: relative; flex-grow: 1; height: 128px; padding-top: 7px; box-sizing: border-box">
+            <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 7px; border-top: 1px dashed #3A3A3E"></div>
+            <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: {{hourMidLine}}; border-top: 1px dashed #3A3A3E"></div>
+            <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; border-top: 1px solid #4A4A4E"></div>
+            <div role="group" aria-label="Drinks and water per hour" style="position: relative; height: 100%; display: flex; align-items: stretch">
+              <sc-for list="{{hours}}" as="h" hint-placeholder-count="5">
+                <button onClick="{{h.pick}}" aria-label="{{h.aria}}" aria-pressed="{{h.pressed}}" style="flex: 1 1 0; min-width: 0; height: 100%; border: none; padding: 0 2px; border-radius: 8px 8px 0 0; background: {{h.selBg}}; display: flex; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer">
+                  <span style="width: 14px; height: {{h.dH}}; border-radius: 4px 4px 0 0; background: #2A9E7A"></span>
+                  <span style="width: 14px; height: {{h.wH}}; border-radius: 4px 4px 0 0; background: #3B82D9"></span>
+                </button>
+              </sc-for>
             </div>
+          </div>
+        </div>
+        <div aria-hidden="true" style="display: flex; margin-left: 24px; margin-top: -6px">
+          <sc-for list="{{hours}}" as="h" hint-placeholder-count="5">
+            <span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; font-weight: {{h.labelWeight}}; color: {{h.labelColor}}">{{h.label}}</span>
           </sc-for>
         </div>
       </div>
@@ -2765,6 +2772,7 @@ class Component extends DCLogic {
       const d = inHour.filter((e) => e.kind === 'drink').length;
       const w = inHour.filter((e) => e.kind === 'water').length;
       hours.push({
+        start: h,
         label: fmt(h),
         d: d,
         w: w,
@@ -2777,11 +2785,24 @@ class Component extends DCLogic {
         node: d > 0 ? '#6EE7C1' : w > 0 ? '#5CC8F5' : '#4A4A4E'
       });
     }
-    const busiest = Math.max(4, ...hours.map((h) => h.d + h.w));
-    hours.forEach((h) => {
-      h.dW = 'calc(' + (h.d / busiest) * 100 + '% - 2px)';
-      h.wW = 'calc(' + (h.w / busiest) * 100 + '% - 2px)';
+    // Vertical bars: drinks and water side by side for each hour, on one shared scale.
+    const hMax = Math.max(2, ...hours.map((h) => Math.max(h.d, h.w)));
+    const hMid = Math.round(hMax / 2);
+    const hBusiest = hours.reduce((bi, h, i) => (h.d + h.w > hours[bi].d + hours[bi].w ? i : bi), 0);
+    const hPick = s.hourSel && s.hourSel.v === s.viewIdx && s.hourSel.i < hours.length ? s.hourSel.i : hBusiest;
+    hours.forEach((h, i) => {
+      const on = i === hPick;
+      h.dH = (h.d / hMax * 100) + '%';
+      h.wH = (h.w / hMax * 100) + '%';
+      h.selBg = on ? 'rgba(255, 255, 255, 0.06)' : 'transparent';
+      h.pressed = on ? 'true' : 'false';
+      h.labelColor = on ? '#FFFFFF' : '#9A9AA0';
+      h.labelWeight = on ? '700' : '500';
+      h.aria = h.label + ' to ' + fmt(h.start + 60) + ': ' + h.d + (h.d === 1 ? ' drink, ' : ' drinks, ') + h.w + ' water';
+      h.pick = () => this.setState({ hourSel: { v: s.viewIdx, i: i } });
     });
+    const hSel = hours[hPick];
+    const hourCaption = hSel ? hSel.label + ' to ' + fmt(hSel.start + 60) + ' · ' + hSel.d + (hSel.d === 1 ? ' drink' : ' drinks') + ' · ' + hSel.w + ' water' : '';
     const durMins = view.endTick;
     const durationLabel = durMins < 60
       ? durMins + ' min'
@@ -3389,6 +3410,12 @@ class Component extends DCLogic {
       summaryMessage: summaryMessage,
       paceLabel: gapLabel,
       hours: hours,
+      hourMax: hMax,
+      hourMid: hMid > 0 && hMid < hMax ? hMid : '',
+      // The plot is 128px with a 7px top pad: 121px from the max line to the baseline.
+      hourMidLine: (7 + (1 - hMid / hMax) * 121).toFixed(1) + 'px',
+      hourMidTop: (7 + (1 - hMid / hMax) * 121 - 7).toFixed(1) + 'px',
+      hourCaption: hourCaption,
       goHome: () => this.setState({ screen: 'quiz', qIdx: 0 }),
       less: () => this.setState({ plan: Math.max(1, s.plan - 1), bigPlanOk: s.plan - 1 > 10 ? s.bigPlanOk : false }),
       // No upper limit, but going past 10 asks once.
