@@ -793,7 +793,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isDrink}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 12px 24px 8px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 12px 24px 8px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto">
       <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">{{clockLabel}} · home by {{homeByLabel}}</div>
 
       <sc-if value="{{notReached}}" hint-placeholder-val="{{true}}">
@@ -803,14 +803,14 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Plan <span style="color: #FF8A3D">reached</span></div>
       </sc-if>
 
-      <div style="background: #262628; border-radius: 26px; padding: 16px 20px; display: flex; align-items: center; gap: 24px">
-        <div style="position: relative; width: 96px; height: 120px; flex-shrink: 0">
-          <div style="position: absolute; inset: 3px; clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); background: #2F2F32">
+      <div style="background: #262628; border-radius: 26px; padding: 12px 20px; display: flex; align-items: center; gap: 24px">
+        <div style="position: relative; width: 116px; height: 145px; flex-shrink: 0">
+          <div style="position: absolute; inset: 4px; clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); background: #2F2F32">
             <svg class="pc-count-liquid" ref="{{countGlassRef}}" viewBox="0 0 100 114" preserveAspectRatio="none" aria-hidden="true" style="top: calc(100% - {{fillH}}); color: {{accent}}">
               <path d="M-2 0 C15 0 33 0 50 0 S85 0 102 0 V130 H-2 Z" fill="currentColor"></path>
             </svg>
           </div>
-          <svg width="96" height="120" viewBox="0 0 96 120" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M3 3L15.6 117H80.4L93 3"></path></svg>
+          <svg width="116" height="145" viewBox="0 0 96 120" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M3 3L15.6 117H80.4L93 3"></path></svg>
         </div>
         <div style="display: flex; flex-direction: column; gap: 2px">
           <div style="font-size: 56px; font-weight: 800; line-height: 1">{{drinkCount}}</div>
@@ -853,11 +853,11 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Water</div>
             <div style="font-size: 22px; font-weight: 800">{{waterCount}}</div>
           </div>
-          <div role="img" aria-label="{{waterAria}}" style="position: relative; width: 34px; height: 42px; flex-shrink: 0">
-            <div style="position: absolute; left: 2px; top: 2px; right: 2px; bottom: 2px; clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%); background: #2F2F32">
+          <div role="img" aria-label="{{waterAria}}" style="position: relative; width: 48px; height: 60px; flex-shrink: 0">
+            <div style="position: absolute; left: 3px; top: 3px; right: 3px; bottom: 3px; clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%); background: #2F2F32">
               <div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{waterFillH}}; background: #5CC8F5; transition: height 0.4s ease"></div>
             </div>
-            <svg width="34" height="42" viewBox="0 0 34 42" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M2 2L7 40H27L32 2"></path></svg>
+            <svg width="48" height="60" viewBox="0 0 34 42" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M2 2L7 40H27L32 2"></path></svg>
           </div>
         </div>
         <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
