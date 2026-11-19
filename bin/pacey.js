@@ -34,24 +34,37 @@ require(path.join(desktop, 'build.js'));
 
 function findElectron() {
   try {
-    return require(path.join(desktop, 'node_modules', 'electron'));
+    return { path: require(path.join(desktop, 'node_modules', 'electron')) };
   } catch (e) {
-    return null;
+    return { error: e.message };
   }
 }
 
-let electron = findElectron();
-if (!electron) {
-  // The Electron download can fail on a flaky connection: try it once more.
-  console.log('Pacey: finishing setup...');
-  spawnSync(process.execPath, [path.join(desktop, 'node_modules', 'electron', 'install.js')], { cwd: desktop, stdio: 'inherit' });
+// Newer npm versions block package setup scripts unless they are approved, which stops Electron
+// downloading itself. So Pacey runs Electron's download step itself when it is missing.
+function downloadElectron() {
+  console.log('Pacey: downloading Electron (about 100 MB, only the first time)...');
+  const env = Object.assign({}, process.env);
+  delete env.ELECTRON_SKIP_BINARY_DOWNLOAD;
+  const result = spawnSync(process.execPath, [path.join(desktop, 'node_modules', 'electron', 'install.js')], { cwd: desktop, stdio: 'inherit', env: env });
   delete require.cache[require.resolve(path.join(desktop, 'node_modules', 'electron'))];
+  return result.status;
+}
+
+let electron = findElectron();
+if (!electron.path) {
+  const status = downloadElectron();
   electron = findElectron();
+  if (!electron.path) {
+    console.error('');
+    console.error('Pacey: Electron did not download (exit code ' + status + ').');
+    console.error('Reason: ' + electron.error);
+    console.error('Check your internet connection, then run this again. If it keeps happening, run:');
+    console.error('  cd "' + desktop + '" && npm install-scripts approve electron && npm rebuild electron');
+    process.exit(1);
+  }
 }
-if (!electron) {
-  console.error('Pacey: Electron is not installed correctly. Delete the desktop/node_modules folder and run this again.');
-  process.exit(1);
-}
+electron = electron.path;
 
 console.log('Pacey: opening...');
 const child = spawn(electron, [desktop].concat(args), { stdio: 'ignore', detached: true });
