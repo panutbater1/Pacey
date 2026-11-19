@@ -18,6 +18,18 @@ button{font-family:Outfit,system-ui,sans-serif}
 .wheel::-webkit-scrollbar{display:none}
 .chips{scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
+.pc-count-liquid{position:absolute;left:0;width:100%;height:100%;overflow:visible;transition:top 2.1s cubic-bezier(.28,.12,.35,1),color .3s}
+.pc-count-liquid.is-filling path{animation:pcCountSlosh 2.9s ease-in-out both}
+@keyframes pcCountSlosh{
+  0%,100%{d:path('M-2 0 C15 0 33 0 50 0 S85 0 102 0 V130 H-2 Z')}
+  15%{d:path('M-2 5 C16 8 31 -5 50 0 S86 -2 102 -8 V130 H-2 Z')}
+  31%{d:path('M-2 -7 C14 -6 33 4 50 1 S85 2 102 5 V130 H-2 Z')}
+  48%{d:path('M-2 4 C17 4 34 -2 50 0 S87 -2 102 -5 V130 H-2 Z')}
+  66%{d:path('M-2 -4 C16 -3 33 2 50 0 S86 1 102 3 V130 H-2 Z')}
+  81%{d:path('M-2 2 C15 2 34 -1 50 0 S86 0 102 -2 V130 H-2 Z')}
+  92%{d:path('M-2 -1 C15 -1 33 0 50 0 S85 0 102 1 V130 H-2 Z')}
+}
+@media(prefers-reduced-motion:reduce){.pc-count-liquid{transition:none}.pc-count-liquid.is-filling path{animation:none}}
 .pc-anim{animation:pcFade .2s ease-out both}
 .pc-card{animation:pcPop .38s cubic-bezier(.2,1.4,.4,1) both}
 .pc-anim svg *{transform-box:fill-box}
@@ -800,7 +812,9 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="background: #262628; border-radius: 26px; padding: 16px 20px; display: flex; align-items: center; gap: 24px">
         <div style="position: relative; width: 96px; height: 120px; flex-shrink: 0">
           <div style="position: absolute; inset: 3px; clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); background: #2F2F32">
-            <div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{fillH}}; background: {{accent}}; transition: height 0.4s ease, background 0.3s ease"></div>
+            <svg class="pc-count-liquid" ref="{{countGlassRef}}" viewBox="0 0 100 114" preserveAspectRatio="none" aria-hidden="true" style="top: calc(100% - {{fillH}}); color: {{accent}}">
+              <path d="M-2 0 C15 0 33 0 50 0 S85 0 102 0 V130 H-2 Z" fill="currentColor"></path>
+            </svg>
           </div>
           <svg width="96" height="120" viewBox="0 0 96 120" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M3 3L15.6 117H80.4L93 3"></path></svg>
         </div>
@@ -2659,6 +2673,12 @@ class Component extends DCLogic {
       const entry = kind === 'drink' ? { kind: kind, t: now, type: cur.k } : { kind: kind, t: now };
       const entries = s.entries.concat([entry]);
       const count = entries.filter((e) => e.kind === 'drink').length;
+      if (kind === 'drink' && this.countGlass) {
+        // Restart the surface motion even when two drinks are logged in quick succession.
+        this.countGlass.classList.remove('is-filling');
+        this.countGlass.getBoundingClientRect();
+        this.countGlass.classList.add('is-filling');
+      }
       this.setState({ entries: entries });
       if (kind === 'drink' && s.remLimit !== false && count >= s.plan) this.notifyLimit(count - s.plan);
       // Calm, drink-specific animation. Kept neutral on purpose: it confirms the log, it doesn't celebrate drinking.
@@ -3311,6 +3331,7 @@ class Component extends DCLogic {
       // The water cup fills towards one water per drink.
       waterFillH: Math.round(Math.min(1, waters.length / Math.max(1, drinks.length)) * 100) + '%',
       waterAria: waters.length + ' water for ' + drinks.length + (drinks.length === 1 ? ' drink' : ' drinks'),
+      countGlassRef: (element) => { this.countGlass = element; },
       fillH:Math.min(100, Math.round((drinks.length / s.plan) * 100)) + '%',
       accent: reached ? '#FF8A3D' : '#6EE7C1',
       waterBg: reached ? '#6EE7C1' : '#262628',
