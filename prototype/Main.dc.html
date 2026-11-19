@@ -1016,7 +1016,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="display: flex; align-items: center; gap: 12px">
           <span style="width: 44px; height: 44px; border-radius: 14px; background: #FFC56B; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; font-weight: 800">{{usualN}}</span>
           <span style="display: flex; flex-direction: column; gap: 2px">
-            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your night out plan</span>
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Quick start · {{usualName}}</span>
             <span style="font-size: 16px; font-weight: 700">{{usualSummary}}</span>
           </span>
         </div>
@@ -1299,15 +1299,28 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <sc-if value="{{subQuick}}" hint-placeholder-val="{{false}}">
-        <div style="flex-shrink: 0; font-size: 15px; color: #B8B8BE; line-height: 1.45">Set up the quick start buttons on Home. Tap one and your whole plan is filled in.</div>
+        <div style="flex-shrink: 0; font-size: 15px; color: #B8B8BE; line-height: 1.45">Set up the quick starts on Home. Give each one your own name and symbol, and tap it on Home to fill in your whole plan.</div>
         <sc-for list="{{quickRows}}" as="q" hint-placeholder-count="3">
           <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 18px 6px; display: flex; flex-direction: column">
             <div style="display: flex; align-items: center; gap: 12px; padding: 2px 0 14px">
-              <span style="width: 44px; height: 44px; border-radius: 14px; background: {{q.accent}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; font-weight: 800">{{q.value}}</span>
+              <button onClick="{{q.pickIcon}}" aria-label="{{q.iconAria}}" style="width: 44px; height: 44px; border-radius: 14px; border: none; background: {{q.accent}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{q.icon}}"></path></svg>
+              </button>
               <span style="display: flex; flex-direction: column; gap: 2px">
                 <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.1">{{q.name}}</span>
                 <span style="font-size: 14px; color: #B8B8BE">{{q.summary}}</span>
               </span>
+            </div>
+            <div style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
+              <div style="font-size: 16px; font-weight: 600; flex-shrink: 0">Name</div>
+              <input type="text" maxlength="20" aria-label="{{q.nameAria}}" placeholder="{{q.defaultName}}" value="{{q.nameDraft}}" onChange="{{q.setName}}" style="min-width: 0; width: 180px; height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px; font-weight: 600; text-align: left">
+            </div>
+            <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
+              <div style="font-size: 16px; font-weight: 600">Symbol</div>
+              <button onClick="{{q.pickIcon}}" aria-label="{{q.iconAria}}" style="height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; cursor: pointer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{q.icon}}"></path></svg>
+                Change
+              </button>
             </div>
             <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
               <div style="font-size: 16px; font-weight: 600">{{q.noun}}</div>
@@ -2103,6 +2116,28 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{iconPickOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closeIconPick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="{{iconPickTitle}}" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 30px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="font-size: 20px; font-weight: 800">{{iconPickTitle}}</div>
+          <button onClick="{{closeIconPick}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+        </div>
+        <div role="radiogroup" aria-label="Symbols" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{iconChoices}}" as="c" hint-placeholder-count="12">
+            <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.label}}" onClick="{{c.pick}}" style="height: 64px; border-radius: 18px; border: none; background: {{c.bg}}; color: {{c.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.path}}"></path></svg>
+              <span style="font-size: 11px; font-weight: 600">{{c.label}}</span>
+            </button>
+          </sc-for>
+        </div>
+        <button onClick="{{resetQuickLook}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Reset name and symbol</button>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2522,12 +2557,34 @@ class Component extends DCLogic {
     // Quick starts: each preset holds drinks, a home by time and a way home (Settings > Quick start).
     const chipCap = s.avgDrinks || 4;
     const quick = s.quick || {};
-    const presetDefs = [
+    const presetBase = [
       // Named after the kind of night, so new people know which to pick.
       ['quiet', 'Dinner & drinks', { n: 2, h: 23, mi: 6, ride: 0 }, 'M7 3v7M5 3v4a2 2 0 0 0 4 0V3M7 10v11M17 3c-1.6 1.2-2.5 3.4-2.5 6.2 0 2.2 1 3.8 2.5 3.8V21'],
       ['steady', 'Night out', { n: usualPlan, h: 1, mi: 6, ride: 0 }, 'M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'],
       ['usual', 'Big occasion', { n: usualPlan, h: 2, mi: 6, ride: 0 }, 'M12 3l2.6 5.6 6 .7-4.5 4 1.3 6L12 16.4l-5.4 2.9 1.3-6-4.5-4 6-.7z']
     ];
+    // Symbols a quick start can use (Settings > Quick start > Symbol).
+    const QS_ICONS = [
+      ['dinner', 'Dinner', presetBase[0][3]],
+      ['moon', 'Moon', presetBase[1][3]],
+      ['star', 'Star', presetBase[2][3]],
+      ['cocktail', 'Cocktail', 'M4 4h16l-8 9zM12 13v7M8 20.5h8'],
+      ['beer', 'Beer', 'M5 6h10v14H5zM15 9.5h2.5A1.5 1.5 0 0 1 19 11v4.5a1.5 1.5 0 0 1-1.5 1.5H15M5 9.5h10'],
+      ['wine', 'Wine', 'M7 3h10c0 5.5-2.2 8.5-5 8.5S7 8.5 7 3zM12 11.5V20M8 20.5h8'],
+      ['music', 'Music', 'M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z'],
+      ['heart', 'Heart', 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'],
+      ['cake', 'Birthday', 'M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M12 12V8M12 5.5a1.2 1.2 0 0 0 0-2.4'],
+      ['ball', 'Sport', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5l3.8 2.8-1.5 4.4H9.7l-1.5-4.4z'],
+      ['friends', 'Friends', 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20a6 6 0 0 1 12 0M16 11a2.5 2.5 0 1 0 0-5M21 20a5 5 0 0 0-4-4.9'],
+      ['work', 'Work drinks', 'M3 8h18v12H3zM8 8V5h8v3M3 13h18']
+    ];
+    // A person's own name and symbol replace the defaults everywhere the quick start shows.
+    const presetDefs = presetBase.map((d) => {
+      const c = quick[d[0]] || {};
+      const nm = (c.name || '').trim();
+      const ic = QS_ICONS.find((x) => x[0] === c.icon);
+      return [d[0], nm || d[1], d[2], ic ? ic[2] : d[3], d[1]];
+    });
     const presetOf = (k) => {
       const d = presetDefs.find((p) => p[0] === k);
       const p = Object.assign({}, d[2], quick[k] || {});
@@ -2573,6 +2630,13 @@ class Component extends DCLogic {
       const t = pad(p.h) + ':' + pad(p.mi * 5);
       return {
         name: d[1],
+        nameDraft: (quick[d[0]] || {}).name !== undefined ? quick[d[0]].name : d[1],
+        defaultName: d[4],
+        setName: (e) => setPreset(d[0], { name: e.target.value.slice(0, 20) }),
+        icon: d[3],
+        pickIcon: () => this.setState({ iconPickFor: d[0] }),
+        nameAria: 'Name for ' + d[1],
+        iconAria: 'Symbol for ' + d[1] + '. Change',
         accent: { quiet: '#5CC8F5', steady: '#6EE7C1', usual: '#FFC56B' }[d[0]],
         summary: p.n + ' ' + (p.n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany) + ' · home by ' + t + ' · ' + rides[p.ride],
         noun: nounMany.charAt(0).toUpperCase() + nounMany.slice(1),
@@ -3348,6 +3412,27 @@ class Component extends DCLogic {
       closeQuick: () => this.setState({ quickOpen: false }),
       editQuickStarts: () => this.setState({ quickOpen: false, screen: 'settings', settingsPage: 'quick' }),
       quickPicks: quickPicks,
+      iconPickOpen: !!s.iconPickFor,
+      iconPickTitle: 'Symbol for ' + ((presetDefs.find((d) => d[0] === s.iconPickFor) || presetDefs[0])[1]),
+      iconPickAccent: { quiet: '#5CC8F5', steady: '#6EE7C1', usual: '#FFC56B' }[s.iconPickFor] || '#6EE7C1',
+      iconChoices: QS_ICONS.map((x) => {
+        const k = s.iconPickFor;
+        const curDef = presetDefs.find((d) => d[0] === k);
+        const on = !!curDef && curDef[3] === x[2];
+        return {
+          path: x[2], label: x[1], checked: on ? 'true' : 'false',
+          bg: on ? ({ quiet: '#5CC8F5', steady: '#6EE7C1', usual: '#FFC56B' }[k] || '#6EE7C1') : '#353538',
+          fg: on ? '#1A1A1C' : '#FFFFFF',
+          pick: () => this.setState({ quick: Object.assign({}, quick, { [k]: Object.assign({}, presetOf(k), { icon: x[0] }) }) })
+        };
+      }),
+      closeIconPick: () => this.setState({ iconPickFor: null }),
+      resetQuickLook: () => {
+        const k = s.iconPickFor;
+        const c = Object.assign({}, presetOf(k));
+        delete c.icon; delete c.name;
+        this.setState({ iconPickFor: null, quick: Object.assign({}, quick, { [k]: c }) });
+      },
       showRecommend: s.nights.length === 0,
       recommendName: presetDefs[1][1],
       planNoun: cur.label,
@@ -3378,6 +3463,7 @@ class Component extends DCLogic {
       hasReason: !!(s.reason || '').trim(),
       setReason: (e) => this.setState({ reason: e.target.value }),
       usualN: usualP.n,
+      usualName: presetDefs[1][1],
       usualSummary: usualP.n + ' ' + usualNoun + ' · home by ' + pad(usualP.h) + ':' + pad(usualP.mi * 5) + ' · ' + rides[usualP.ride],
       startUsual: () => beginNight({ plan: usualP.n, homeH: usualP.h, homeMi: usualP.mi, rideIdx: usualP.ride, lastPreset: 'steady' }),
       historyTip: historyTip,
