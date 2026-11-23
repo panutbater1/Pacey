@@ -406,6 +406,10 @@ button{font-family:Outfit,system-ui,sans-serif}
   <sc-if value="{{isRecovery}}" hint-placeholder-val="{{false}}">
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <button onClick="{{closeRecovery}}" aria-label="Back" style="align-self: flex-start; min-height: 44px; margin-left: -6px; padding: 0 10px 0 4px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+          Back
+        </button>
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{recAfter}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">recovery</span></div>
       </div>
@@ -1088,6 +1092,17 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">For your next night out</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Getting <span style="color: #6EE7C1">ready</span></div>
       </div>
+      <sc-if value="{{recCardOnTonight}}" hint-placeholder-val="{{true}}">
+      <button onClick="{{openRecovery}}" aria-label="{{recCardAria}}" style="flex-shrink: 0; border: none; border-radius: 26px; padding: 18px; background: linear-gradient(135deg, #6EE7C1 0%, #4FD1C5 100%); color: #1A1A1C; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer; box-shadow: 0 8px 24px rgba(110, 231, 193, 0.18)">
+        <span style="width: 52px; height: 52px; border-radius: 16px; background: rgba(26, 26, 28, 0.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; opacity: 0.75">{{recCardKicker}}</span>
+          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15">Your recovery plan</span>
+          <span style="font-size: 14px; font-weight: 600; line-height: 1.35">{{recCardSub}}</span>
+        </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px 8px; display: flex; flex-direction: column">
         <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-bottom: 6px">
@@ -1215,6 +1230,17 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{lastTitle}} · {{lnTime}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your last <span style="color: #6EE7C1">night</span></div>
       </div>
+      <sc-if value="{{recHas}}" hint-placeholder-val="{{true}}">
+      <button onClick="{{openRecovery}}" aria-label="{{recCardAria}}" style="flex-shrink: 0; border: none; border-radius: 26px; padding: 18px; background: linear-gradient(135deg, #6EE7C1 0%, #4FD1C5 100%); color: #1A1A1C; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer; box-shadow: 0 8px 24px rgba(110, 231, 193, 0.18)">
+        <span style="width: 52px; height: 52px; border-radius: 16px; background: rgba(26, 26, 28, 0.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; opacity: 0.75">{{recCardKicker}}</span>
+          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15">Your recovery plan</span>
+          <span style="font-size: 14px; font-weight: 600; line-height: 1.35">{{recCardSub}}</span>
+        </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+      </sc-if>
 
       <sc-if value="{{morningWait}}" hint-placeholder-val="{{false}}">
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; gap: 14px; align-items: flex-start">
@@ -1283,10 +1309,6 @@ button{font-family:Outfit,system-ui,sans-serif}
         <button onClick="{{openLastFromTonight}}" style="height: 44px; flex-shrink: 0; padding: 0 18px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Full summary</button>
       </div>
 
-      <button onClick="{{tabRecovery}}" style="min-height: 52px; flex-shrink: 0; border-radius: 26px; border: none; background: #262628; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg>
-        See your recovery plan
-      </button>
       <button onClick="{{doneMorningAfter}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Plan my night</button>
     </div>
   </sc-if>
@@ -1942,7 +1964,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{showTabs}}" hint-placeholder-val="{{false}}">
-    <nav aria-label="Main" style="flex-shrink: 0; height: 76px; box-sizing: border-box; padding: 6px 16px 12px; border-top: 1px solid #262628; background: #1A1A1C; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px">
+    <nav aria-label="Main" style="flex-shrink: 0; height: 76px; box-sizing: border-box; padding: 6px 16px 12px; border-top: 1px solid #262628; background: #1A1A1C; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
       <button onClick="{{tabHome}}" aria-current="{{homeCurrent}}" style="border: none; background: none; color: {{homeTabC}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; cursor: pointer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"></path><path d="M6 10v10h12V10"></path></svg>
         Home
@@ -1954,10 +1976,6 @@ button{font-family:Outfit,system-ui,sans-serif}
       <button onClick="{{tabHistory}}" aria-current="{{historyCurrent}}" style="border: none; background: none; color: {{historyTabC}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; cursor: pointer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11"></path><path d="M12 20V5"></path><path d="M19 20v-6"></path></svg>
         Nights
-      </button>
-      <button onClick="{{tabRecovery}}" aria-current="{{recoveryCurrent}}" style="border: none; background: none; padding: 0; color: {{recoveryTabC}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; cursor: pointer">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg>
-        Recovery
       </button>
       <button onClick="{{tabSettings}}" aria-current="{{settingsCurrent}}" style="border: none; background: none; color: {{settingsTabC}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; cursor: pointer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.500 8 6.500"></path></svg>
@@ -3278,7 +3296,15 @@ class Component extends DCLogic {
       recAvoid.push({ t: 'Lots of coffee on its own', b: 'One is fine. Have a glass of water with it.' });
       if (R.drinksN > (n.plan || 0)) recAvoid.push({ t: 'Another night out straight away', b: 'You went over your plan of ' + n.plan + '. A couple of alcohol-free days gives your body time to reset.' });
       const dayName = n.day || n.title || 'last';
+      // Getting ready shows the card until a day and a half after the night (sample nights: always).
+      const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 36 * 3600 * 1000;
+      const waterLeft = Math.max(0, waterTarget - had);
+      const cardBits = [!R.drank ? 'No alcohol left to clear' : atZero ? 'Back to zero since about ' + f5(R.mid.zero) : 'Back to zero around ' + f5(R.mid.zero), waterLeft ? waterLeft + ' more ' + (waterLeft === 1 ? 'glass' : 'glasses') + ' of water' : 'Water done'];
       return {
+        recCardOnTonight: recRecent,
+        recCardKicker: 'After ' + (/night$/i.test(n.day || n.title || '') ? (n.day || n.title) : (n.day || n.title || 'last') + ' night'),
+        recCardSub: cardBits.join(' · '),
+        recCardAria: 'Your recovery plan. ' + cardBits.join('. '),
         recHas: true, recNone: false,
         recAfter: 'After ' + (/night$/i.test(dayName) ? dayName : dayName + ' night'),
         recHeavy: R.mid.peak >= 0.2,
@@ -3985,9 +4011,8 @@ class Component extends DCLogic {
       showBrand: !(s.screen === 'drink' && s.active),
       drinkTabLabel: 'Tonight',
       isRecovery: s.screen === 'recovery',
-      recoveryTabC: s.screen === 'recovery' ? '#6EE7C1' : '#9A9AA0',
-      recoveryCurrent: s.screen === 'recovery' ? 'page' : 'false',
-      tabRecovery: () => this.setState({ screen: 'recovery' }),
+      openRecovery: () => this.setState({ screen: 'recovery', recoveryFrom: s.screen }),
+      closeRecovery: () => this.setState({ screen: s.recoveryFrom || 'drink' }),
       lnTime: fmt(LSTART) + ' to ' + fmt(LSTART + lastNight.endTick),
       lnDrinks: lastNight.entries.filter((e) => e.kind === 'drink').length,
       lnWater: lastNight.entries.filter((e) => e.kind === 'water').length,
@@ -4015,7 +4040,7 @@ class Component extends DCLogic {
       isDrinkEmpty: s.screen === 'drink' && !s.active && showLastNight,
       isReady: s.screen === 'drink' && !s.active && !showLastNight,
       isSettings: s.screen === 'settings',
-      showTabs: s.screen === 'home' || s.screen === 'drink' || s.screen === 'settings' || s.screen === 'history' || s.screen === 'recovery',
+      showTabs: s.screen === 'home' || s.screen === 'drink' || s.screen === 'settings' || s.screen === 'history',
       nightActive: s.active,
       nightIdle: !s.active,
       homeTabC: s.screen === 'home' ? '#6EE7C1' : '#9A9AA0',
@@ -4359,7 +4384,7 @@ class Component extends DCLogic {
       islandAria: drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : waiting ? 'Next drink fits in ' + remaining + ' minutes.' : 'Next drink fits now.') + ' Expand',
       lockGaugeAria: drinks.length + ' of ' + s.plan + ' drinks',
       gaugeDash: (Math.min(1, drinks.length / s.plan) * 194.8).toFixed(1) + ' 194.8',
-      showLockChip: this.props.devSkip !== false && s.active && ['home', 'drink', 'history', 'recovery', 'settings'].indexOf(s.screen) !== -1,
+      showLockChip: this.props.devSkip !== false && s.active && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
       lockPhone: () => this.setState({ lockReturn: s.screen, screen: 'lock', islandOpen: false, typeMenu: false }),
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
