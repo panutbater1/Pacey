@@ -961,8 +961,34 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px 8px; display: flex; flex-direction: column">
         <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-bottom: 6px">
           <span style="font-size: 18px; font-weight: 700">Before you go</span>
-          <span style="font-size: 14px; font-weight: 700; color: {{checkCountColor}}">{{checkCount}}</span>
+          <span style="display: flex; align-items: center; gap: 12px">
+            <sc-if value="{{checkViewing}}" hint-placeholder-val="{{true}}">
+              <span style="font-size: 14px; font-weight: 700; color: {{checkCountColor}}">{{checkCount}}</span>
+            </sc-if>
+            <button onClick="{{toggleCheckEdit}}" aria-label="{{checkEditAria}}" style="min-height: 36px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; cursor: pointer">{{checkEditLabel}}</button>
+          </span>
         </div>
+        <sc-if value="{{checkEmpty}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 6px 0 12px; font-size: 14px; color: #9A9AA0; line-height: 1.45">Nothing on your list. Tap Edit to add what you want to sort before you go.</div>
+        </sc-if>
+        <sc-if value="{{checkEditing}}" hint-placeholder-val="{{false}}">
+          <sc-for list="{{checkEditRows}}" as="r" hint-placeholder-count="4">
+            <div style="min-height: 56px; border-top: 1px solid {{r.divider}}; display: flex; align-items: center; gap: 10px">
+              <input type="text" maxlength="40" aria-label="{{r.aria}}" value="{{r.label}}" onChange="{{r.rename}}" style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 12px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+              <button onClick="{{r.remove}}" aria-label="{{r.removeAria}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: none; color: #FF8F8F; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+              </button>
+            </div>
+          </sc-for>
+          <sc-if value="{{checkCanAdd}}" hint-placeholder-val="{{true}}">
+            <div style="min-height: 60px; border-top: 1px solid {{checkAddDivider}}; display: flex; align-items: center; gap: 10px">
+              <input id="pacey-check-new" type="text" maxlength="40" placeholder="Add something, e.g. Keys and wallet" value="{{checkDraft}}" onChange="{{setCheckDraft}}" style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 12px; border: 1px dashed #4A4A4E; background: none; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+              <button onClick="{{addCheck}}" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{checkAddBg}}; color: {{checkAddFg}}; font-size: 15px; font-weight: 700; flex-shrink: 0; cursor: pointer">Add</button>
+            </div>
+          </sc-if>
+          <div style="padding: 4px 0 10px; font-size: 13px; color: #9A9AA0; line-height: 1.4">{{checkEditNote}}</div>
+        </sc-if>
+        <sc-if value="{{checkViewing}}" hint-placeholder-val="{{true}}">
         <sc-for list="{{checklist}}" as="k" hint-placeholder-count="4">
           <button role="checkbox" aria-checked="{{k.checked}}" onClick="{{k.toggle}}" style="min-height: 52px; border: none; border-top: 1px solid {{k.divider}}; background: none; padding: 0; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
               <span style="width: 26px; height: 26px; border-radius: 8px; border: 2px solid {{k.ring}}; background: {{k.fill}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex-shrink: 0">
@@ -973,6 +999,7 @@ button{font-family:Outfit,system-ui,sans-serif}
             <span style="font-size: 16px; font-weight: 600; color: {{k.fg}}">{{k.label}}</span>
           </button>
         </sc-for>
+        </sc-if>
       </div>
 
       <sc-if value="{{rideCardShow}}" hint-placeholder-val="{{true}}">
@@ -1285,7 +1312,7 @@ button{font-family:Outfit,system-ui,sans-serif}
               <button aria-label="Raise your limit" onClick="{{limitMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
             </div>
           </div>
-          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{limitSource}} Lowering it is always fine. Pacey checks with you before raising it.</div>
+          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{limitSource}}</div>
         </div>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
@@ -1300,19 +1327,6 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
 
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
-          <div style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <div style="font-size: 16px; font-weight: 600">Your usual night</div>
-              <div style="font-size: 13px; color: #9A9AA0">Drinks before using Pacey, from your quiz</div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px">
-              <button aria-label="Lower your usual night" onClick="{{avgLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-              <div style="font-size: 24px; font-weight: 800; width: 28px; text-align: center">{{avgDrinks}}</div>
-              <button aria-label="Raise your usual night" onClick="{{avgMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
-            </div>
-          </div>
-        </div>
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Your limit is a most, not a target. Home by times and getting home are set in Quick start.</div>
       </sc-if>
 
@@ -2121,22 +2135,6 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
-  <sc-if value="{{raiseLimitOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
-      <button aria-label="Close" onClick="{{keepLimit}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
-      <div role="alertdialog" aria-label="Raise your limit?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
-        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
-        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF8A3D; display: flex; align-items: center; justify-content: center">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
-        </div>
-        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Raise your <span style="color: #FF8A3D">limit?</span></div>
-        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{raiseLimitBody}}</div>
-        <button onClick="{{keepLimit}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Keep {{limitN}}</button>
-        <button onClick="{{raiseLimit}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Raise to {{limitNext}}</button>
-      </div>
-    </div>
-  </sc-if>
-
   <sc-if value="{{iconPickOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{closeIconPick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2837,7 +2835,11 @@ class Component extends DCLogic {
     const pickupMin = (s.homeH * 60 + s.homeMi * 5 - 15 + 24 * 60) % (24 * 60);
     const pickupLabel = pad(Math.floor(pickupMin / 60)) + ':' + pad(pickupMin % 60);
     const rideByCar = [0, 1].indexOf(s.rideIdx || 0) !== -1;
-    const checkDefs = [['eat', 'Eaten a proper meal'], ['phone', 'Phone charged'], ['ride', 'Ride home sorted'], ['water', 'Water ready at home for later']];
+    // The person's own Before you go list. 'ride' stays special: booking a taxi ticks it.
+    const CHECK_DEFAULTS = [['eat', 'Eaten a proper meal'], ['phone', 'Phone charged'], ['ride', 'Ride home sorted'], ['water', 'Water ready at home for later']];
+    const CHECK_MAX = 10;
+    const checkDefs = Array.isArray(s.checkItems) ? s.checkItems.map((c) => [c.id, c.label]) : CHECK_DEFAULTS;
+    const saveChecks = (defs, extra) => this.setState(Object.assign({ checkItems: defs.map((c) => ({ id: c[0], label: c[1] })) }, extra || {}));
     const checks = s.checklist || {};
     const checklist = checkDefs.map((c, i) => {
       const on = !!checks[c[0]];
@@ -2847,6 +2849,16 @@ class Component extends DCLogic {
         toggle: () => this.setState({ checklist: Object.assign({}, checks, { [c[0]]: !on }) })
       };
     });
+    const checkDraft = (s.checkDraft || '').trim();
+    const checkEditRows = checkDefs.map((c, i) => ({
+      label: c[1], divider: i === 0 ? 'transparent' : '#353538', aria: 'Rename item ' + (i + 1), removeAria: 'Remove ' + (c[1].trim() || 'item ' + (i + 1)),
+      rename: (e) => {
+        // Empty names are allowed while typing and tidied away when you tap Done.
+        const v = String(e.target.value || '').slice(0, 40);
+        saveChecks(checkDefs.map((d, j) => (j === i ? [d[0], v] : d)));
+      },
+      remove: () => saveChecks(checkDefs.filter((d, j) => j !== i))
+    }));
     const doneCount = checklist.filter((c) => c.on).length;
     const usualP = presetOf('steady');
     const usualNoun = usualP.n === 1 ? (nounMany === 'drinks' ? 'drink' : nounMany.replace(/es$|s$/, '')) : nounMany;
@@ -3648,6 +3660,25 @@ class Component extends DCLogic {
       lockDate: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Friday 20 November',
       hasNights: s.nights.length > 0,
       checklist: checklist,
+      checkEditing: !!s.checkEdit,
+      checkViewing: !s.checkEdit && checkDefs.length > 0,
+      checkEmpty: !s.checkEdit && checkDefs.length === 0,
+      checkEditLabel: s.checkEdit ? 'Done' : 'Edit',
+      checkEditAria: s.checkEdit ? 'Done editing Before you go' : 'Edit Before you go',
+      toggleCheckEdit: () => {
+        if (!s.checkEdit) return this.setState({ checkEdit: true, checkDraft: '' });
+        const kept = checkDefs.map((d) => [d[0], d[1].trim()]).filter((d) => d[1]);
+        saveChecks(checkDraft && kept.length < CHECK_MAX ? kept.concat([['c' + Date.now(), checkDraft.slice(0, 40)]]) : kept, { checkEdit: false, checkDraft: '' });
+      },
+      checkEditRows: checkEditRows,
+      checkCanAdd: checkDefs.length < CHECK_MAX,
+      checkAddDivider: checkDefs.length === 0 ? 'transparent' : '#353538',
+      checkDraft: s.checkDraft || '',
+      setCheckDraft: (e) => this.setState({ checkDraft: e.target.value }),
+      checkAddBg: checkDraft ? '#6EE7C1' : '#353538',
+      checkAddFg: checkDraft ? '#1A1A1C' : '#9A9AA0',
+      addCheck: () => { if (checkDraft && checkDefs.length < CHECK_MAX) saveChecks(checkDefs.concat([['c' + Date.now(), checkDraft.slice(0, 40)]]), { checkDraft: '' }); },
+      checkEditNote: checkDefs.length >= CHECK_MAX ? 'That\'s the most, ' + CHECK_MAX + ' things. Remove one to add another.' : 'Rename, remove or add things. Your list stays the same each night, and the ticks reset when you start a night.',
       checkCount: doneCount + ' of ' + checkDefs.length + ' done',
       checkCountColor: doneCount === checkDefs.length ? '#6EE7C1' : '#9A9AA0',
       reason: s.reason || '',
@@ -3920,15 +3951,10 @@ class Component extends DCLogic {
       initial: (s.name.trim()[0] || 'P').toUpperCase(),
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
       limitN: limitN,
-      limitNext: Math.min(LIMIT_MAX, limitN + 1),
       limitNoun: limitN === 1 ? 'drink' : 'drinks',
       limitSource: s.nights.length >= 3 ? 'Based on your quiz answers and your last ' + Math.min(5, s.nights.length) + ' nights.' : 'Based on your quiz answers.',
       limitLess: () => { syncPlan(Math.max(1, limitN - 1), avgNow); this.setState({ usualPlan: Math.max(1, limitN - 1), plan: s.active ? s.plan : Math.min(s.plan, Math.max(1, limitN - 1)) }); },
-      limitMore: () => { if (limitN < LIMIT_MAX) this.setState({ raiseLimitAsk: true }); },
-      raiseLimitOpen: !!s.raiseLimitAsk,
-      raiseLimitBody: 'Your limit would go from ' + limitN + ' to ' + Math.min(LIMIT_MAX, limitN + 1) + ' drinks a night. A higher limit makes it easier to have more than you meant to. You can always lower it again.',
-      keepLimit: () => this.setState({ raiseLimitAsk: false }),
-      raiseLimit: () => { const n = Math.min(LIMIT_MAX, limitN + 1); syncPlan(n, Math.max(avgNow, n)); this.setState({ raiseLimitAsk: false, usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
+      limitMore: () => { if (limitN >= LIMIT_MAX) return; const n = limitN + 1; syncPlan(n, Math.max(avgNow, n)); this.setState({ usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
       waterHabitOptions: [1, 2, 3].map((k) => ({
         label: k === 1 ? 'Every drink' : 'Every ' + k,
         checked: waterEvery === k ? 'true' : 'false',
