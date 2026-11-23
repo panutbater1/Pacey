@@ -36,3 +36,46 @@ Opens with the prototype's sample nights and sped-up time (one second is one min
 - Unlike the prototype, it uses the real clock (no sped-up time) and starts with no sample nights.
 - Everything you enter is saved on this computer. To start again from the welcome screen, open the developer tools (View › Toggle Developer Tools) and run `paceyReset()` in the console.
 - The phone shrinks to fit if your screen is small.
+
+## Real sign-in (Supabase)
+
+Without any settings, the account screen only pretends to sign in. To make it real:
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In the project, open **Project Settings › API** and copy the **Project URL** and the **anon public** key.
+3. Paste them into `desktop/pacey.config.json`:
+
+   ```json
+   {
+     "supabaseUrl": "https://your-project.supabase.co",
+     "supabaseAnonKey": "your-anon-public-key"
+   }
+   ```
+
+   Both are meant to be public. Never put the **service_role** key here.
+4. So that people can delete their own account (Settings › Profile › Delete my account), open **SQL Editor** in Supabase and run:
+
+   ```sql
+   create or replace function public.delete_user()
+   returns void
+   language sql
+   security definer
+   set search_path = ''
+   as $$
+     delete from auth.users where id = auth.uid();
+   $$;
+
+   revoke all on function public.delete_user() from public, anon;
+   grant execute on function public.delete_user() to authenticated;
+   ```
+5. Optional: under **Authentication › Sign In / Providers › Email**, turn **Confirm email** on or off. With it on, people get a link to confirm before they can sign in, and the app tells them to check their email.
+
+Then run `npm start` again. The terminal says "(real sign-in on)" when the settings are picked up.
+
+What it does:
+
+- **Create account** and **Sign in** with email and password, with clear messages for a wrong password, an email that's already registered, or an unconfirmed email.
+- Saves the person's plan (their limit and usual night) with the account, and brings it back when they sign in on another computer.
+- **Sign out** and **Delete my account** in Settings › Profile.
+- Apple and Google sign-in aren't connected yet, so those buttons are hidden when real sign-in is on.
+- Only the laptop app connects. The prototype link keeps the pretend sign-in.

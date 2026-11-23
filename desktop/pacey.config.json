@@ -1,0 +1,5 @@
+{
+  "_help": "Real sign-in. Paste your Supabase Project URL and anon public key below (Supabase dashboard > Project Settings > API). Both are safe to share; never paste the service_role key here. Leave them empty to keep the pretend sign-in.",
+  "supabaseUrl": "",
+  "supabaseAnonKey": ""
+}

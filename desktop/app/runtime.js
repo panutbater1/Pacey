@@ -14,7 +14,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'raiseLimitAsk', 'iconPickFor'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'raiseLimitAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -182,6 +182,92 @@
 
   window.paceyRequestNotify = function () {
     if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  };
+
+  // ---------- real sign-in (Supabase), when pacey.config.json has a project URL and key
+  const AUTH_KEY = 'pacey.auth.v1';
+  const cfg = build.config || {};
+  const authOn = !!(cfg.supabaseUrl && cfg.supabaseAnonKey) && !DEMO;
+
+  function readSession() {
+    try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function writeSession(sess) {
+    try { if (sess) localStorage.setItem(AUTH_KEY, JSON.stringify(sess)); else localStorage.removeItem(AUTH_KEY); } catch (e) { /* ignore */ }
+  }
+  function keep(json) {
+    const sess = { access: json.access_token, refresh: json.refresh_token, expiresAt: Date.now() + (json.expires_in || 3600) * 1000, user: json.user };
+    writeSession(sess);
+    return sess;
+  }
+  function friendly(json, status) {
+    const msg = String((json && (json.msg || json.error_description || json.message || json.error)) || '');
+    if (/invalid login credentials/i.test(msg)) return 'That email and password don\'t match.';
+    if (/already registered|already exists/i.test(msg)) return 'There\'s already an account with that email. Sign in instead.';
+    if (/email not confirmed/i.test(msg)) return 'Confirm your email first: open the link we sent you, then sign in.';
+    if (/password/i.test(msg) && /(short|weak|at least)/i.test(msg)) return 'Choose a longer or stronger password.';
+    if (/rate limit|too many/i.test(msg) || status === 429) return 'Too many tries. Wait a minute and try again.';
+    return msg ? 'Sign-in problem: ' + msg : 'Something went wrong. Try again.';
+  }
+  async function call(pathPart, body, token, method) {
+    let res;
+    try {
+      res = await fetch(cfg.supabaseUrl + pathPart, {
+        method: method || 'POST',
+        headers: Object.assign({ apikey: cfg.supabaseAnonKey, 'Content-Type': 'application/json' }, token ? { Authorization: 'Bearer ' + token } : {}),
+        body: body === undefined ? undefined : JSON.stringify(body)
+      });
+    } catch (e) {
+      return { ok: false, error: 'Couldn\'t reach the sign-in service. Check your internet connection.' };
+    }
+    let json = null;
+    try { json = await res.json(); } catch (e) { json = null; }
+    return res.ok ? { ok: true, json: json } : { ok: false, error: friendly(json, res.status), status: res.status };
+  }
+  async function freshToken() {
+    const sess = readSession();
+    if (!sess) return null;
+    if (sess.expiresAt - Date.now() > 60000) return sess.access;
+    const r = await call('/auth/v1/token?grant_type=refresh_token', { refresh_token: sess.refresh });
+    return r.ok ? keep(r.json).access : null;
+  }
+  const userOut = (u) => ({ id: u.id, email: u.email, plan: u.user_metadata && u.user_metadata.plan, avg: u.user_metadata && u.user_metadata.avg });
+
+  window.paceyAuth = {
+    enabled: authOn,
+    async signUp(email, password, data) {
+      const r = await call('/auth/v1/signup', { email: email, password: password, data: data || {} });
+      if (!r.ok) return { error: r.error };
+      if (r.json && r.json.access_token) return { user: userOut(keep(r.json).user) };
+      // Email confirmation is switched on in Supabase: the account exists, but needs the link first.
+      return { needsConfirm: true };
+    },
+    async signIn(email, password) {
+      const r = await call('/auth/v1/token?grant_type=password', { email: email, password: password });
+      if (!r.ok) return { error: r.error };
+      return { user: userOut(keep(r.json).user) };
+    },
+    async savePlan(data) {
+      const token = await freshToken();
+      if (!token) return { error: 'Signed out' };
+      const r = await call('/auth/v1/user', { data: data }, token, 'PUT');
+      return r.ok ? { ok: true } : { error: r.error };
+    },
+    async signOut() {
+      const sess = readSession();
+      writeSession(null);
+      if (sess) await call('/auth/v1/logout', {}, sess.access);
+      return { ok: true };
+    },
+    async deleteAccount() {
+      const token = await freshToken();
+      if (!token) return { error: 'Sign in again, then delete your account.' };
+      // Needs the delete_user function from desktop/README.md in the Supabase project.
+      const r = await call('/rest/v1/rpc/delete_user', {}, token);
+      if (!r.ok) return { error: r.status === 404 ? 'Account deletion isn\'t set up yet (see the Supabase steps in desktop/README.md).' : r.error };
+      writeSession(null);
+      return { ok: true };
+    }
   };
 
   // ---------- start
