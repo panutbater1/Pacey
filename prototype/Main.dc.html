@@ -101,11 +101,14 @@ button{font-family:Outfit,system-ui,sans-serif}
         </button>
         <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">I agree to the <button onClick="{{openTermsSheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Terms and conditions</button> and the <button onClick="{{openPrivacySheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Privacy policy</button>.</div>
       </div>
-      <button onClick="{{confirmAge}}" aria-disabled="{{termsButtonDisabled}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: {{termsButtonBg}}; color: {{termsButtonFg}}; font-size: 18px; font-weight: 700; cursor: pointer">I'm 18 or older</button>
+      <button onClick="{{confirmAge}}" aria-disabled="{{termsButtonDisabled}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: {{termsButtonBg}}; color: {{termsButtonFg}}; font-size: 18px; font-weight: 700; cursor: pointer">I'm {{ageMin}} or older</button>
       <sc-if value="{{showTickHint}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="margin-top: -12px; text-align: center; font-size: 14px; color: #FFC56B; font-weight: 600">Tick the box to agree before you continue.</div>
       </sc-if>
-      <button style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">I'm under 18</button>
+      <button onClick="{{sayUnderAge}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">I'm under {{ageMin}}</button>
+      <sc-if value="{{underAgeShow}}" hint-placeholder-val="{{false}}">
+        <div role="alert" style="flex-shrink: 0; background: #262628; border-radius: 20px; padding: 14px 16px; font-size: 15px; color: #B8B8BE; line-height: 1.45">{{underAgeText}}</div>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1230,7 +1233,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45; padding: 0 4px">Only used to fill in your taxi app. It stays on this phone. Pacey can't see or confirm the booking.</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 0 18px; min-height: 56px; display: flex; align-items: center; justify-content: space-between">
           <div style="font-size: 16px; font-weight: 600">Age</div>
-          <div style="font-size: 15px; color: #9A9AA0">Confirmed · 18 or older</div>
+          <div style="font-size: 15px; color: #9A9AA0">Confirmed · {{ageMin}} or older</div>
         </div>
         <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px; margin-top: 4px">For your blood alcohol estimate</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px 14px; display: flex; flex-direction: column; gap: 4px">
@@ -1418,9 +1421,12 @@ button{font-family:Outfit,system-ui,sans-serif}
 
       <sc-if value="{{subSafety}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
-          <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="font-size: 16px; font-weight: 600">Emergency number</div>
-            <div style="font-size: 15px; color: #9A9AA0">112</div>
+          <div role="group" aria-label="{{countryAria}}" style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 600">Emergency number</span>
+              <span style="font-size: 13px; color: #9A9AA0">{{countryWhere}}</span>
+            </span>
+            <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
           </div>
           <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
             <div style="font-size: 16px; font-weight: 600">Trusted friend</div>
@@ -1431,7 +1437,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
           Open Need help
         </button>
-        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Safety features are always free.</div>
+        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">{{countrySourceNote}} Calls use your phone's own calling, so they work without the internet but need a phone signal. Safety features are always free.</div>
       </sc-if>
 
       <sc-if value="{{subPrivacy}}" hint-placeholder-val="{{false}}">
@@ -1735,11 +1741,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 14px">
 
-      <button style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #C93A3F; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
+      <button onClick="{{callEmergency}}" aria-label="{{callAria}}" style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #C93A3F; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>
         <span style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 19px; font-weight: 700">Call emergency services</span>
-          <span style="font-size: 14px; font-weight: 500">Calls 112</span>
+          <span style="font-size: 14px; font-weight: 500">{{callSub}}</span>
         </span>
       </button>
 
@@ -2433,6 +2439,48 @@ class Component extends DCLogic {
     const EMPTY_NIGHT = { title: 'No nights yet', day: '', date: nowDate.toISOString().slice(0, 10), plan: 4, endTick: 0, entries: [], start: START };
     const startOf = (n) => (n && n.start != null ? n.start : 21 * 60 + 5);
     const rides = ['Taxi', 'Rideshare', 'Public transport', 'Lift from a friend', 'Walking'];
+    // Emergency number (the medical one where it differs) and legal drinking age by country.
+    const COUNTRIES = [
+      ['AR', 'Argentina', '107', 18], ['AU', 'Australia', '000', 18], ['AT', 'Austria', '112', 18], ['BE', 'Belgium', '112', 18],
+      ['BR', 'Brazil', '192', 18], ['CA', 'Canada', '911', 19], ['DK', 'Denmark', '112', 18], ['FI', 'Finland', '112', 18],
+      ['FR', 'France', '112', 18], ['DE', 'Germany', '112', 18], ['GR', 'Greece', '112', 18], ['HK', 'Hong Kong', '999', 18],
+      ['IN', 'India', '112', 21], ['IE', 'Ireland', '112', 18], ['IT', 'Italy', '112', 18], ['JP', 'Japan', '119', 20],
+      ['MX', 'Mexico', '911', 18], ['NL', 'Netherlands', '112', 18], ['NZ', 'New Zealand', '111', 18], ['NO', 'Norway', '113', 18],
+      ['PH', 'Philippines', '911', 18], ['PL', 'Poland', '112', 18], ['PT', 'Portugal', '112', 18], ['SG', 'Singapore', '995', 18],
+      ['ZA', 'South Africa', '112', 18], ['KR', 'South Korea', '119', 19], ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18],
+      ['CH', 'Switzerland', '112', 18], ['TH', 'Thailand', '1669', 20], ['AE', 'United Arab Emirates', '998', 21], ['GB', 'United Kingdom', '999', 18],
+      ['US', 'United States', '911', 21], ['XX', 'Somewhere else', '112', 18]
+    ];
+    // Where the phone is right now, from its time zone: phones set it automatically from their location,
+    // so it changes when someone travels. No location permission or internet needed.
+    const TZ_COUNTRY = {
+      AR: ['America/Argentina/', 'America/Buenos_Aires', 'America/Cordoba', 'America/Mendoza'], AU: ['Australia/'], AT: ['Europe/Vienna'], BE: ['Europe/Brussels'],
+      BR: ['America/Sao_Paulo', 'America/Manaus', 'America/Fortaleza', 'America/Recife', 'America/Bahia', 'America/Belem', 'America/Cuiaba', 'America/Campo_Grande', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Rio_Branco', 'America/Noronha', 'America/Maceio', 'America/Araguaina', 'America/Santarem', 'America/Eirunepe'],
+      CA: ['America/Toronto', 'America/Vancouver', 'America/Edmonton', 'America/Winnipeg', 'America/Halifax', 'America/St_Johns', 'America/Regina', 'America/Montreal', 'America/Moncton', 'America/Whitehorse', 'America/Yellowknife', 'America/Iqaluit', 'America/Glace_Bay', 'America/Goose_Bay', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Creston', 'America/Swift_Current', 'America/Rankin_Inlet', 'America/Resolute', 'America/Cambridge_Bay', 'America/Inuvik', 'America/Dawson', 'America/Atikokan', 'Canada/'],
+      DK: ['Europe/Copenhagen'], FI: ['Europe/Helsinki'], FR: ['Europe/Paris'], DE: ['Europe/Berlin', 'Europe/Busingen'], GR: ['Europe/Athens'], HK: ['Asia/Hong_Kong'],
+      IN: ['Asia/Kolkata', 'Asia/Calcutta'], IE: ['Europe/Dublin'], IT: ['Europe/Rome'], JP: ['Asia/Tokyo'],
+      MX: ['America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Chihuahua', 'America/Ciudad_Juarez', 'America/Ojinaga', 'America/Mazatlan', 'America/Bahia_Banderas', 'America/Hermosillo', 'America/Tijuana', 'Mexico/'],
+      NL: ['Europe/Amsterdam'], NZ: ['Pacific/Auckland', 'Pacific/Chatham'], NO: ['Europe/Oslo'], PH: ['Asia/Manila'], PL: ['Europe/Warsaw'], PT: ['Europe/Lisbon', 'Atlantic/Azores', 'Atlantic/Madeira'],
+      SG: ['Asia/Singapore'], ZA: ['Africa/Johannesburg'], KR: ['Asia/Seoul'], ES: ['Europe/Madrid', 'Atlantic/Canary', 'Africa/Ceuta'], SE: ['Europe/Stockholm'], CH: ['Europe/Zurich'],
+      TH: ['Asia/Bangkok'], AE: ['Asia/Dubai'], GB: ['Europe/London'],
+      US: ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Phoenix', 'America/Anchorage', 'Pacific/Honolulu', 'America/Detroit', 'America/Boise', 'America/Juneau', 'America/Sitka', 'America/Nome', 'America/Adak', 'America/Yakutat', 'America/Metlakatla', 'America/Menominee', 'America/Indiana/', 'America/Kentucky/', 'America/North_Dakota/', 'America/Indianapolis', 'America/Louisville', 'US/']
+    };
+    let zone = '';
+    try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { zone = ''; }
+    let regionCode = Object.keys(TZ_COUNTRY).find((code) => TZ_COUNTRY[code].some((z) => (z.endsWith('/') ? zone.indexOf(z) === 0 : zone === z))) || null;
+    // If the time zone doesn't say, fall back to the phone's language region (e.g. en-GB).
+    if (!regionCode) {
+      try {
+        const loc = (typeof navigator !== 'undefined' && ((navigator.languages && navigator.languages[0]) || navigator.language)) || '';
+        const m = String(loc).match(/[-_]([A-Za-z]{2})(?:$|[-_])/);
+        regionCode = m ? m[1].toUpperCase() : null;
+      } catch (e) { regionCode = null; }
+    }
+    const country = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    const emergencyNumber = country[2];
+    const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
+    const countryIn = country[0] === 'XX' ? '' : ' in ' + (THE.indexOf(country[0]) !== -1 ? 'the ' : '') + country[1];
+    const ageMin = country[3];
     const pad = (n) => String(n).padStart(2, '0');
     // Drink types: the person can pick several; one of them is the current drink in Drink mode.
     const dtDefs = [
@@ -3751,6 +3799,25 @@ class Component extends DCLogic {
         bg: rideApp === a[0] ? '#6EE7C1' : '#353538', fg: rideApp === a[0] ? '#1A1A1C' : '#FFFFFF',
         pick: () => this.setState({ rideApp: a[0] })
       })),
+      ageMin: ageMin,
+      countryName: country[1],
+      emergencyNumber: emergencyNumber,
+      countryAria: 'Emergency number ' + emergencyNumber + (country[0] === 'XX' ? '' : ', for ' + country[1] + ', where you are now'),
+      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : 'Where you are now: ' + country[1],
+      countrySourceNote: country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones.' : 'Pacey works this out from where your phone is right now, so it changes when you travel.',
+      callAria: 'Call emergency services, ' + emergencyNumber,
+      // Calls straight away: in an emergency there's no confirmation step. The laptop app hands tel: links to the computer.
+      callEmergency: () => {
+        if (RT && typeof window !== 'undefined' && window.open) window.open('tel:' + emergencyNumber, '_blank');
+        const id = Date.now();
+        this.setState({ banner: { id: id, title: 'Calling ' + emergencyNumber, body: RT ? 'Opening your phone app. Stay on the line and tell them where you are.' : 'In the real app this calls ' + emergencyNumber + ' straight away.' } });
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 5000);
+      },
+      underAgeShow: !!s.underAge,
+      underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
+      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]),
+      sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
       bannerBody: s.banner ? s.banner.body : '',
