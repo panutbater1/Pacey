@@ -1285,7 +1285,7 @@ button{font-family:Outfit,system-ui,sans-serif}
               <button aria-label="Raise your limit" onClick="{{limitMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
             </div>
           </div>
-          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{limitSource}} Lowering it is always fine. Pacey checks with you before raising it.</div>
+          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{limitSource}}</div>
         </div>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
@@ -1300,19 +1300,6 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
 
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
-          <div style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <div style="font-size: 16px; font-weight: 600">Your usual night</div>
-              <div style="font-size: 13px; color: #9A9AA0">Drinks before using Pacey, from your quiz</div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px">
-              <button aria-label="Lower your usual night" onClick="{{avgLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-              <div style="font-size: 24px; font-weight: 800; width: 28px; text-align: center">{{avgDrinks}}</div>
-              <button aria-label="Raise your usual night" onClick="{{avgMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
-            </div>
-          </div>
-        </div>
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Your limit is a most, not a target. Home by times and getting home are set in Quick start.</div>
       </sc-if>
 
@@ -2117,22 +2104,6 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{deleteNightBody}}</div>
         <button onClick="{{deleteNight}}" style="height: 62px; border-radius: 31px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Delete night</button>
         <button onClick="{{keepNight}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Keep it</button>
-      </div>
-    </div>
-  </sc-if>
-
-  <sc-if value="{{raiseLimitOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
-      <button aria-label="Close" onClick="{{keepLimit}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
-      <div role="alertdialog" aria-label="Raise your limit?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
-        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
-        <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #FF8A3D; display: flex; align-items: center; justify-content: center">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
-        </div>
-        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Raise your <span style="color: #FF8A3D">limit?</span></div>
-        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{raiseLimitBody}}</div>
-        <button onClick="{{keepLimit}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Keep {{limitN}}</button>
-        <button onClick="{{raiseLimit}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Raise to {{limitNext}}</button>
       </div>
     </div>
   </sc-if>
@@ -3920,15 +3891,10 @@ class Component extends DCLogic {
       initial: (s.name.trim()[0] || 'P').toUpperCase(),
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
       limitN: limitN,
-      limitNext: Math.min(LIMIT_MAX, limitN + 1),
       limitNoun: limitN === 1 ? 'drink' : 'drinks',
       limitSource: s.nights.length >= 3 ? 'Based on your quiz answers and your last ' + Math.min(5, s.nights.length) + ' nights.' : 'Based on your quiz answers.',
       limitLess: () => { syncPlan(Math.max(1, limitN - 1), avgNow); this.setState({ usualPlan: Math.max(1, limitN - 1), plan: s.active ? s.plan : Math.min(s.plan, Math.max(1, limitN - 1)) }); },
-      limitMore: () => { if (limitN < LIMIT_MAX) this.setState({ raiseLimitAsk: true }); },
-      raiseLimitOpen: !!s.raiseLimitAsk,
-      raiseLimitBody: 'Your limit would go from ' + limitN + ' to ' + Math.min(LIMIT_MAX, limitN + 1) + ' drinks a night. A higher limit makes it easier to have more than you meant to. You can always lower it again.',
-      keepLimit: () => this.setState({ raiseLimitAsk: false }),
-      raiseLimit: () => { const n = Math.min(LIMIT_MAX, limitN + 1); syncPlan(n, Math.max(avgNow, n)); this.setState({ raiseLimitAsk: false, usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
+      limitMore: () => { if (limitN >= LIMIT_MAX) return; const n = limitN + 1; syncPlan(n, Math.max(avgNow, n)); this.setState({ usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
       waterHabitOptions: [1, 2, 3].map((k) => ({
         label: k === 1 ? 'Every drink' : 'Every ' + k,
         checked: waterEvery === k ? 'true' : 'false',
