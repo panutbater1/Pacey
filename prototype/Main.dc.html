@@ -1421,16 +1421,13 @@ button{font-family:Outfit,system-ui,sans-serif}
 
       <sc-if value="{{subSafety}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
-          <button onClick="{{openCountryPick}}" aria-label="{{countryAria}}" style="min-height: 64px; border: none; background: none; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+          <div role="group" aria-label="{{countryAria}}" style="min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <span style="display: flex; flex-direction: column; gap: 2px">
               <span style="font-size: 16px; font-weight: 600">Emergency number</span>
-              <span style="font-size: 13px; color: #9A9AA0">{{countryName}}</span>
+              <span style="font-size: 13px; color: #9A9AA0">{{countryWhere}}</span>
             </span>
-            <span style="display: flex; align-items: center; gap: 8px">
-              <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A9AA0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
-            </span>
-          </button>
+            <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
+          </div>
           <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
             <div style="font-size: 16px; font-weight: 600">Trusted friend</div>
             <div style="font-size: 15px; color: #9A9AA0">{{friendLabel}}</div>
@@ -2162,39 +2159,6 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
-  <sc-if value="{{countryPickOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
-      <button aria-label="Close" onClick="{{closeCountryPick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
-      <div role="dialog" aria-label="Where are you?" style="position: relative; height: 78%; background: #262628; border-radius: 28px 28px 0 0; display: flex; flex-direction: column">
-        <div style="flex-shrink: 0; padding: 12px 24px 12px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #353538">
-          <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <div style="font-size: 20px; font-weight: 800">Where are you?</div>
-              <div style="font-size: 13px; color: #9A9AA0">Sets the emergency number and drinking age</div>
-            </div>
-            <button onClick="{{closeCountryPick}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
-          </div>
-        </div>
-        <div role="radiogroup" aria-label="Country" style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 4px 24px 30px; display: flex; flex-direction: column">
-          <sc-for list="{{countryOptions}}" as="c" hint-placeholder-count="8">
-            <button role="radio" aria-checked="{{c.checked}}" onClick="{{c.pick}}" style="min-height: 52px; border: none; border-top: 1px solid {{c.divider}}; background: none; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
-              <span style="font-size: 16px; font-weight: {{c.weight}}">{{c.name}}</span>
-              <span style="display: flex; align-items: center; gap: 10px">
-                <span style="font-size: 14px; color: #9A9AA0">{{c.number}} · {{c.age}}+</span>
-                <span style="width: 20px; display: flex; justify-content: center">
-                  <sc-if value="{{c.on}}" hint-placeholder-val="{{false}}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
-                  </sc-if>
-                </span>
-              </span>
-            </button>
-          </sc-for>
-        </div>
-      </div>
-    </div>
-  </sc-if>
-
   <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2487,15 +2451,32 @@ class Component extends DCLogic {
       ['CH', 'Switzerland', '112', 18], ['TH', 'Thailand', '1669', 20], ['AE', 'United Arab Emirates', '998', 21], ['GB', 'United Kingdom', '999', 18],
       ['US', 'United States', '911', 21], ['XX', 'Somewhere else', '112', 18]
     ];
-    // The phone's region (e.g. en-GB -> GB) picks the country until the person changes it in Settings.
-    let regionCode = null;
-    try {
-      const loc = (typeof navigator !== 'undefined' && ((navigator.languages && navigator.languages[0]) || navigator.language)) || '';
-      const m = String(loc).match(/[-_]([A-Za-z]{2})(?:$|[-_])/);
-      regionCode = m ? m[1].toUpperCase() : null;
-    } catch (e) { regionCode = null; }
-    const detectedCountry = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
-    const country = COUNTRIES.find((c) => c[0] === s.country) || detectedCountry;
+    // Where the phone is right now, from its time zone: phones set it automatically from their location,
+    // so it changes when someone travels. No location permission or internet needed.
+    const TZ_COUNTRY = {
+      AR: ['America/Argentina/', 'America/Buenos_Aires', 'America/Cordoba', 'America/Mendoza'], AU: ['Australia/'], AT: ['Europe/Vienna'], BE: ['Europe/Brussels'],
+      BR: ['America/Sao_Paulo', 'America/Manaus', 'America/Fortaleza', 'America/Recife', 'America/Bahia', 'America/Belem', 'America/Cuiaba', 'America/Campo_Grande', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Rio_Branco', 'America/Noronha', 'America/Maceio', 'America/Araguaina', 'America/Santarem', 'America/Eirunepe'],
+      CA: ['America/Toronto', 'America/Vancouver', 'America/Edmonton', 'America/Winnipeg', 'America/Halifax', 'America/St_Johns', 'America/Regina', 'America/Montreal', 'America/Moncton', 'America/Whitehorse', 'America/Yellowknife', 'America/Iqaluit', 'America/Glace_Bay', 'America/Goose_Bay', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Creston', 'America/Swift_Current', 'America/Rankin_Inlet', 'America/Resolute', 'America/Cambridge_Bay', 'America/Inuvik', 'America/Dawson', 'America/Atikokan', 'Canada/'],
+      DK: ['Europe/Copenhagen'], FI: ['Europe/Helsinki'], FR: ['Europe/Paris'], DE: ['Europe/Berlin', 'Europe/Busingen'], GR: ['Europe/Athens'], HK: ['Asia/Hong_Kong'],
+      IN: ['Asia/Kolkata', 'Asia/Calcutta'], IE: ['Europe/Dublin'], IT: ['Europe/Rome'], JP: ['Asia/Tokyo'],
+      MX: ['America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Chihuahua', 'America/Ciudad_Juarez', 'America/Ojinaga', 'America/Mazatlan', 'America/Bahia_Banderas', 'America/Hermosillo', 'America/Tijuana', 'Mexico/'],
+      NL: ['Europe/Amsterdam'], NZ: ['Pacific/Auckland', 'Pacific/Chatham'], NO: ['Europe/Oslo'], PH: ['Asia/Manila'], PL: ['Europe/Warsaw'], PT: ['Europe/Lisbon', 'Atlantic/Azores', 'Atlantic/Madeira'],
+      SG: ['Asia/Singapore'], ZA: ['Africa/Johannesburg'], KR: ['Asia/Seoul'], ES: ['Europe/Madrid', 'Atlantic/Canary', 'Africa/Ceuta'], SE: ['Europe/Stockholm'], CH: ['Europe/Zurich'],
+      TH: ['Asia/Bangkok'], AE: ['Asia/Dubai'], GB: ['Europe/London'],
+      US: ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Phoenix', 'America/Anchorage', 'Pacific/Honolulu', 'America/Detroit', 'America/Boise', 'America/Juneau', 'America/Sitka', 'America/Nome', 'America/Adak', 'America/Yakutat', 'America/Metlakatla', 'America/Menominee', 'America/Indiana/', 'America/Kentucky/', 'America/North_Dakota/', 'America/Indianapolis', 'America/Louisville', 'US/']
+    };
+    let zone = '';
+    try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { zone = ''; }
+    let regionCode = Object.keys(TZ_COUNTRY).find((code) => TZ_COUNTRY[code].some((z) => (z.endsWith('/') ? zone.indexOf(z) === 0 : zone === z))) || null;
+    // If the time zone doesn't say, fall back to the phone's language region (e.g. en-GB).
+    if (!regionCode) {
+      try {
+        const loc = (typeof navigator !== 'undefined' && ((navigator.languages && navigator.languages[0]) || navigator.language)) || '';
+        const m = String(loc).match(/[-_]([A-Za-z]{2})(?:$|[-_])/);
+        regionCode = m ? m[1].toUpperCase() : null;
+      } catch (e) { regionCode = null; }
+    }
+    const country = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
     const emergencyNumber = country[2];
     const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
     const countryIn = country[0] === 'XX' ? '' : ' in ' + (THE.indexOf(country[0]) !== -1 ? 'the ' : '') + country[1];
@@ -3821,8 +3802,9 @@ class Component extends DCLogic {
       ageMin: ageMin,
       countryName: country[1],
       emergencyNumber: emergencyNumber,
-      countryAria: 'Emergency number ' + emergencyNumber + ', ' + country[1] + '. Change country',
-      countrySourceNote: s.country ? 'You chose ' + country[1] + '.' : (country[0] === 'XX' ? 'Pacey couldn\'t tell where you are, so it uses 112, which works on most mobile phones. Tap to choose your country.' : 'Pacey picked ' + country[1] + ' from your phone\'s region. Tap to change it.'),
+      countryAria: 'Emergency number ' + emergencyNumber + (country[0] === 'XX' ? '' : ', for ' + country[1] + ', where you are now'),
+      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : 'Where you are now: ' + country[1],
+      countrySourceNote: country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones.' : 'Pacey works this out from where your phone is right now, so it changes when you travel.',
       callAria: 'Call emergency services, ' + emergencyNumber,
       // Calls straight away: in an emergency there's no confirmation step. The laptop app hands tel: links to the computer.
       callEmergency: () => {
@@ -3836,14 +3818,6 @@ class Component extends DCLogic {
       underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
       callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]),
       sayUnderAge: () => this.setState({ underAge: true }),
-      countryPickOpen: !!s.countryPick,
-      openCountryPick: () => this.setState({ countryPick: true }),
-      closeCountryPick: () => this.setState({ countryPick: false }),
-      countryOptions: COUNTRIES.map((c, i) => ({
-        name: c[1], number: c[2], age: c[3], on: c[0] === country[0], checked: c[0] === country[0] ? 'true' : 'false',
-        weight: c[0] === country[0] ? '800' : '600', divider: i === 0 ? 'transparent' : '#353538',
-        pick: () => this.setState({ country: c[0] })
-      })),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
       bannerBody: s.banner ? s.banner.body : '',
