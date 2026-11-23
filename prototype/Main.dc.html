@@ -1603,7 +1603,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <span>{{bacStart}}</span>
           <span>{{bacEnd}}</span>
         </div>
-        <div style="padding: 12px 14px; border-radius: 16px; background: #2F2F32; font-size: 13px; color: #B8B8BE; line-height: 1.45">A rough guess from your drinks, sizes, weight and body type. Your real level can be much higher. It can't tell you if you're safe to drive, so don't drive after drinking.</div>
+        <div style="padding: 12px 14px; border-radius: 16px; background: #2F2F32; font-size: 13px; color: #B8B8BE; line-height: 1.45">A rough guess from your drinks, sizes, weight and body type. Alcohol takes 30 to 90 minutes to reach its highest level, so it can keep rising after your last drink. Your real level can be much higher. It can't tell you if you're safe to drive, so don't drive after drinking.</div>
         <sc-if value="{{bacNeedsProfile}}" hint-placeholder-val="{{false}}">
           <button onClick="{{goProfileFromSummary}}" style="min-height: 44px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer">Using an average body. Add your weight in Profile for a better estimate</button>
         </sc-if>
@@ -3125,24 +3125,34 @@ class Component extends DCLogic {
         color: isDrink ? '#6EE7C1' : '#5CC8F5'
       };
     });
-    // Rough Widmark-style estimate: each drink adds alcohol grams / (body weight x r), and the body clears about 0.015% an hour.
+    // Rough Widmark-style estimate. Each drink is absorbed gradually rather than all at once:
+    // the stomach passes on about 5% of what's left every minute (a 20-minute time constant),
+    // so a drink's effect rises over roughly 30 to 90 minutes. The body clears about 0.015% an hour.
     const bac = (() => {
-      const STEP = 5;
+      const TAU = 20;
+      const ABSORB = 1 - Math.exp(-1 / TAU);
+      const ELIM = 0.015 / 60;
       const doses = vEntries.filter((e) => e.kind === 'drink').map((e) => {
         const z = drinkSize(e);
         const grams = z.ml * z.abv / 100 * 0.789;
         return { t: Math.min(e.t, end), pct: grams / (weightKg * 1000 * bodyR) * 100 };
-      });
+      }).sort((x, y) => x.t - y.t);
+      const lastDose = doses.length ? doses[doses.length - 1].t : VSTART;
+      // Show the curve until the end of the night, or long enough after the last drink to see where it peaks.
+      const plotEnd = Math.max(end, Math.min(lastDose + 90, end + 120));
       const pts = [];
+      let stomach = 0;
       let level = 0;
       let peak = 0;
       let peakT = VSTART;
-      for (let t = VSTART; t <= end + 0.001; t += STEP) {
-        level = Math.max(0, level - 0.015 * STEP / 60);
-        doses.forEach((d) => { if (d.t > t - STEP && d.t <= t) level += d.pct; });
-        if (t === VSTART) doses.forEach((d) => { if (d.t < VSTART) level += d.pct; });
+      let next = 0;
+      for (let t = VSTART; t <= plotEnd + 0.001; t += 1) {
+        while (next < doses.length && doses[next].t <= t) { stomach += doses[next].pct; next += 1; }
+        const absorbed = stomach * ABSORB;
+        stomach -= absorbed;
+        level = Math.max(0, level + absorbed - ELIM);
         if (level > peak) { peak = level; peakT = t; }
-        pts.push(level);
+        if ((t - VSTART) % 2 === 0) pts.push(level);
       }
       const top = Math.max(0.08, peak * 1.25);
       const span = Math.max(1, pts.length - 1);
@@ -3150,14 +3160,15 @@ class Component extends DCLogic {
       const line = 'M' + xy.join(' L');
       const area = line + ' L300 80 L0 80 Z';
       const endLevel = pts[pts.length - 1] || 0;
-      const clearAt = end + Math.ceil(endLevel / 0.015 * 60);
+      const clearAt = plotEnd + Math.ceil(endLevel / 0.015 * 60);
       const f2 = (v) => v.toFixed(2);
       if (peak < 0.005) {
-        return { range: 'Below 0.01%', note: 'Very little alcohol that night', line: line, area: area, clear: fmt(end), aria: 'Estimated blood alcohol stayed close to zero' };
+        return { plotEnd: plotEnd, range: 'Below 0.01%', note: 'Very little alcohol that night', line: line, area: area, clear: fmt(end), aria: 'Estimated blood alcohol stayed close to zero' };
       }
       return {
         range: f2(peak * 0.8) + '–' + f2(peak * 1.2) + '%',
-        note: 'Highest point, around ' + fmt(peakT),
+        note: 'Highest point, around ' + fmt(peakT) + (peakT > end ? ', after the night ended' : ''),
+        plotEnd: plotEnd,
         line: line,
         area: area,
         clear: fmt(clearAt),
@@ -3629,7 +3640,7 @@ class Component extends DCLogic {
       bacArea: bac.area,
       bacAria: bac.aria,
       bacStart: fmt(VSTART),
-      bacEnd: fmt(end),
+      bacEnd: fmt(bac.plotEnd || end),
       bacClear: bac.clear,
       bacNeedsProfile: !s.weightKg && useBody,
       goProfileFromSummary: () => this.setState({ screen: 'settings', settingsPage: 'profile' }),
