@@ -429,6 +429,51 @@ button{font-family:Outfit,system-ui,sans-serif}
             <button onClick="{{openHelp}}" style="height: 48px; border-radius: 24px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Open Need help</button>
           </div>
         </sc-if>
+        <sc-if value="{{recSleeping}}" hint-placeholder-val="{{false}}">
+          <div style="flex-grow: 1; min-height: 360px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 12px 8px">
+            <div style="position: relative; width: 132px; height: 132px; border-radius: 66px; background: radial-gradient(circle at 50% 45%, rgba(185, 164, 255, 0.22), rgba(185, 164, 255, 0) 70%); display: flex; align-items: center; justify-content: center">
+              <svg width="76" height="76" viewBox="0 0 24 24" fill="#B9A4FF" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg>
+              <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true" style="position: absolute; left: 0; top: 0"><circle cx="24" cy="30" r="2" fill="#B9A4FF"></circle><circle cx="108" cy="22" r="1.6" fill="#B9A4FF"></circle><circle cx="114" cy="96" r="2.2" fill="#B9A4FF"></circle><circle cx="16" cy="100" r="1.4" fill="#B9A4FF"></circle></svg>
+            </div>
+            <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.6px">Time to <span style="color: #B9A4FF">sleep</span></div>
+            <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; max-width: 300px">Your recovery plan will be ready after {{morningAt}}. Rest is the best thing you can do right now.</div>
+            <div style="align-self: stretch; margin-top: 6px; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+              <div style="font-size: 15px; font-weight: 700">Before you sleep</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">A big glass of water, and another by the bed.</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">Phone on charge, alarm set if you need one.</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">If you feel sick, sleep on your side.</div>
+            </div>
+            <sc-if value="{{showSkipMorning}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{skipToMorning}}" style="min-height: 40px; padding: 0 14px; border-radius: 20px; border: 1.5px dashed #FFC56B; background: none; color: #FFC56B; font-size: 13px; font-weight: 700; cursor: pointer">Prototype only · skip to the morning</button>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{recAwake}}" hint-placeholder-val="{{true}}">
+        <div role="img" aria-label="{{recRingsAria}}" style="flex-shrink: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="position: relative; width: 104px; height: 104px">
+                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#6EE7C1" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{recDash}}" transform="rotate(-90 48 48)"></circle>
+                </svg>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{recPct}}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 700; color: #6EE7C1">Recovery</span>
+              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{recRingNote}}</span>
+            </div>
+            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="position: relative; width: 104px; height: 104px">
+                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#5CC8F5" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{hydDash}}" transform="rotate(-90 48 48)"></circle>
+                </svg>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{hydPct}}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 700; color: #5CC8F5">Hydration</span>
+              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{hydRingNote}}</span>
+            </div>
+        </div>
+
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recZeroKicker}}</div>
@@ -534,6 +579,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
 
         <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time lowers your blood alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. Everything here is an estimate from what you logged, not medical advice.</div>
+        </sc-if>
       </sc-if>
     </div>
   </sc-if>
@@ -3237,7 +3283,7 @@ class Component extends DCLogic {
       const sim = (k) => {
         const ABSORB = 1 - Math.exp(-1 / 20);
         const ELIM = 0.015 / 60;
-        let stomach = 0, level = 0, peak = 0, next = 0;
+        let stomach = 0, level = 0, peak = 0, next = 0, levelNow = 0;
         const lastT = doses.length ? doses[doses.length - 1].t : RS;
         for (let t = RS; t <= lastT + 48 * 60; t += 1) {
           while (next < doses.length && doses[next].t <= t) { stomach += doses[next].pct * k; next += 1; }
@@ -3245,15 +3291,16 @@ class Component extends DCLogic {
           stomach -= a;
           level = Math.max(0, level + a - ELIM);
           if (level > peak) peak = level;
-          if (t > lastT && level === 0 && stomach < 0.0005) return { peak: peak, zero: t };
+          if (t === Math.floor(nowR)) levelNow = level;
+          if (t > lastT && level === 0 && stomach < 0.0005) return { peak: peak, zero: t, levelNow: t > nowR ? levelNow : 0 };
         }
-        return { peak: peak, zero: lastT + 48 * 60 };
+        return { peak: peak, zero: lastT + 48 * 60, levelNow: levelNow };
       };
-      const mid = sim(1), lo = sim(0.8), hi = sim(1.2);
       // Where "now" is on the night's clock. The prototype pretends it's 09:30 the next morning.
       // The next given clock time (minutes after midnight) after a point on the night's clock.
       const nextClock = (after, clock) => { let m = after - (((after % 1440) + 1440) % 1440) + clock; while (m <= after) m += 1440; return m; };
       const nowR = RT && n.endedAtMs ? rEnd + (Date.now() - n.endedAtMs) / 60000 : nextClock(rEnd + 60, 9 * 60 + 30);
+      const mid = sim(1), lo = sim(0.8), hi = sim(1.2);
       const lastDrinkT = doses.length ? doses[doses.length - 1].t : null;
       return { nextClock: nextClock, n: n, RS: RS, rEnd: rEnd, drinksN: drinksR.length, watersN: watersR, mid: mid, lo: lo, hi: hi, nowR: nowR, lastDrinkT: lastDrinkT, drank: mid.peak >= 0.005 };
     })();
@@ -3299,9 +3346,21 @@ class Component extends DCLogic {
       // Getting ready shows the card until a day and a half after the night (sample nights: always).
       const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 36 * 3600 * 1000;
       const waterLeft = Math.max(0, waterTarget - had);
-      const cardBits = [!R.drank ? 'No alcohol left to clear' : atZero ? 'Back to zero since about ' + f5(R.mid.zero) : 'Back to zero around ' + f5(R.mid.zero), waterLeft ? waterLeft + ' more ' + (waterLeft === 1 ? 'glass' : 'glasses') + ' of water' : 'Water done'];
+      // Rings: how much of the night's alcohol is cleared, and water against what last night needs.
+      const recPct = !R.drank ? 100 : Math.max(0, Math.min(100, Math.round(100 * (1 - R.mid.levelNow / R.mid.peak))));
+      const hydPct = Math.max(0, Math.min(100, Math.round(100 * (R.watersN + had) / (R.watersN + waterTarget))));
+      const ring = (pct) => (pct / 100 * 245.04).toFixed(1) + ' 245.04';
+      const sleeping = !morningReady;
+      const cardBits = sleeping ? ['Ready after ' + pad(MORNING_H) + ':00', 'sleep well first'] : [!R.drank ? 'No alcohol left to clear' : atZero ? 'Back to zero since about ' + f5(R.mid.zero) : 'Back to zero around ' + f5(R.mid.zero), waterLeft ? waterLeft + ' more ' + (waterLeft === 1 ? 'glass' : 'glasses') + ' of water' : 'Water done'];
       return {
         recCardOnTonight: recRecent,
+        recSleeping: sleeping,
+        recAwake: !sleeping,
+        recPct: recPct + '%', recDash: ring(recPct),
+        hydPct: hydPct + '%', hydDash: ring(hydPct),
+        recRingNote: recPct >= 100 ? 'Alcohol cleared' : 'Of the alcohol cleared',
+        hydRingNote: hydPct >= 100 ? 'Fully topped up' : 'Of the water you need',
+        recRingsAria: 'Recovery ' + recPct + ' percent. Hydration ' + hydPct + ' percent.',
         recCardKicker: 'After ' + (/night$/i.test(n.day || n.title || '') ? (n.day || n.title) : (n.day || n.title || 'last') + ' night'),
         recCardSub: cardBits.join(' · '),
         recCardAria: 'Your recovery plan. ' + cardBits.join('. '),
@@ -4389,7 +4448,7 @@ class Component extends DCLogic {
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
       endNight: () => shortNight ? this.setState({ endAsk: false, active: false, screen: 'home', entries: [], tick: 0, rideBooked: false, banner: { id: Date.now(), title: 'Night not saved', body: 'It was under 10 minutes, so it won\'t show in your nights.' } }) : this.setState({
-        endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'home',
+        endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'drink',
         nights: [{
           title: new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
           date: [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-'),
