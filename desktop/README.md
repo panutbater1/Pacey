@@ -42,7 +42,7 @@ Opens with the prototype's sample nights and sped-up time (one second is one min
 Without any settings, the account screen only pretends to sign in. To make it real:
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the project, open **Project Settings › API** and copy the **Project URL** and the **anon public** key.
+2. In the project, copy the **Project URL** (`https://<project-id>.supabase.co`) and the **publishable** key (`sb_publishable_…`, under **Project Settings › API Keys**). The older **anon public** key works too.
 3. Paste them into `desktop/pacey.config.json`:
 
    ```json
@@ -52,7 +52,7 @@ Without any settings, the account screen only pretends to sign in. To make it re
    }
    ```
 
-   Both are meant to be public. Never put the **service_role** key here.
+   Both are meant to be public. Never put the **secret** (`sb_secret_…`) or **service_role** key here.
 4. So that people can delete their own account (Settings › Profile › Delete my account), open **SQL Editor** in Supabase and run:
 
    ```sql
