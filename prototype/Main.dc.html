@@ -101,11 +101,14 @@ button{font-family:Outfit,system-ui,sans-serif}
         </button>
         <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">I agree to the <button onClick="{{openTermsSheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Terms and conditions</button> and the <button onClick="{{openPrivacySheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Privacy policy</button>.</div>
       </div>
-      <button onClick="{{confirmAge}}" aria-disabled="{{termsButtonDisabled}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: {{termsButtonBg}}; color: {{termsButtonFg}}; font-size: 18px; font-weight: 700; cursor: pointer">I'm 18 or older</button>
+      <button onClick="{{confirmAge}}" aria-disabled="{{termsButtonDisabled}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: {{termsButtonBg}}; color: {{termsButtonFg}}; font-size: 18px; font-weight: 700; cursor: pointer">I'm {{ageMin}} or older</button>
       <sc-if value="{{showTickHint}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="margin-top: -12px; text-align: center; font-size: 14px; color: #FFC56B; font-weight: 600">Tick the box to agree before you continue.</div>
       </sc-if>
-      <button style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">I'm under 18</button>
+      <button onClick="{{sayUnderAge}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">I'm under {{ageMin}}</button>
+      <sc-if value="{{underAgeShow}}" hint-placeholder-val="{{false}}">
+        <div role="alert" style="flex-shrink: 0; background: #262628; border-radius: 20px; padding: 14px 16px; font-size: 15px; color: #B8B8BE; line-height: 1.45">{{underAgeText}}</div>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1230,7 +1233,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45; padding: 0 4px">Only used to fill in your taxi app. It stays on this phone. Pacey can't see or confirm the booking.</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 0 18px; min-height: 56px; display: flex; align-items: center; justify-content: space-between">
           <div style="font-size: 16px; font-weight: 600">Age</div>
-          <div style="font-size: 15px; color: #9A9AA0">Confirmed · 18 or older</div>
+          <div style="font-size: 15px; color: #9A9AA0">Confirmed · {{ageMin}} or older</div>
         </div>
         <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px; margin-top: 4px">For your blood alcohol estimate</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px 14px; display: flex; flex-direction: column; gap: 4px">
@@ -1418,10 +1421,16 @@ button{font-family:Outfit,system-ui,sans-serif}
 
       <sc-if value="{{subSafety}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
-          <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="font-size: 16px; font-weight: 600">Emergency number</div>
-            <div style="font-size: 15px; color: #9A9AA0">112</div>
-          </div>
+          <button onClick="{{openCountryPick}}" aria-label="{{countryAria}}" style="min-height: 64px; border: none; background: none; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 600">Emergency number</span>
+              <span style="font-size: 13px; color: #9A9AA0">{{countryName}}</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 8px">
+              <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A9AA0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+            </span>
+          </button>
           <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
             <div style="font-size: 16px; font-weight: 600">Trusted friend</div>
             <div style="font-size: 15px; color: #9A9AA0">{{friendLabel}}</div>
@@ -1431,7 +1440,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
           Open Need help
         </button>
-        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Safety features are always free.</div>
+        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">{{countrySourceNote}} Calls use your phone's own calling, so they work without the internet but need a phone signal. Safety features are always free.</div>
       </sc-if>
 
       <sc-if value="{{subPrivacy}}" hint-placeholder-val="{{false}}">
@@ -1735,11 +1744,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 14px">
 
-      <button style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #C93A3F; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
+      <button onClick="{{callEmergency}}" aria-label="{{callAria}}" style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #C93A3F; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>
         <span style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 19px; font-weight: 700">Call emergency services</span>
-          <span style="font-size: 14px; font-weight: 500">Calls 112</span>
+          <span style="font-size: 14px; font-weight: 500">{{callSub}}</span>
         </span>
       </button>
 
@@ -2153,6 +2162,39 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{countryPickOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closeCountryPick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="Where are you?" style="position: relative; height: 78%; background: #262628; border-radius: 28px 28px 0 0; display: flex; flex-direction: column">
+        <div style="flex-shrink: 0; padding: 12px 24px 12px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #353538">
+          <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <div style="font-size: 20px; font-weight: 800">Where are you?</div>
+              <div style="font-size: 13px; color: #9A9AA0">Sets the emergency number and drinking age</div>
+            </div>
+            <button onClick="{{closeCountryPick}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+          </div>
+        </div>
+        <div role="radiogroup" aria-label="Country" style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 4px 24px 30px; display: flex; flex-direction: column">
+          <sc-for list="{{countryOptions}}" as="c" hint-placeholder-count="8">
+            <button role="radio" aria-checked="{{c.checked}}" onClick="{{c.pick}}" style="min-height: 52px; border: none; border-top: 1px solid {{c.divider}}; background: none; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+              <span style="font-size: 16px; font-weight: {{c.weight}}">{{c.name}}</span>
+              <span style="display: flex; align-items: center; gap: 10px">
+                <span style="font-size: 14px; color: #9A9AA0">{{c.number}} · {{c.age}}+</span>
+                <span style="width: 20px; display: flex; justify-content: center">
+                  <sc-if value="{{c.on}}" hint-placeholder-val="{{false}}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+                  </sc-if>
+                </span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{bigPlanAsk}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{keepTen}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2433,6 +2475,31 @@ class Component extends DCLogic {
     const EMPTY_NIGHT = { title: 'No nights yet', day: '', date: nowDate.toISOString().slice(0, 10), plan: 4, endTick: 0, entries: [], start: START };
     const startOf = (n) => (n && n.start != null ? n.start : 21 * 60 + 5);
     const rides = ['Taxi', 'Rideshare', 'Public transport', 'Lift from a friend', 'Walking'];
+    // Emergency number (the medical one where it differs) and legal drinking age by country.
+    const COUNTRIES = [
+      ['AR', 'Argentina', '107', 18], ['AU', 'Australia', '000', 18], ['AT', 'Austria', '112', 18], ['BE', 'Belgium', '112', 18],
+      ['BR', 'Brazil', '192', 18], ['CA', 'Canada', '911', 19], ['DK', 'Denmark', '112', 18], ['FI', 'Finland', '112', 18],
+      ['FR', 'France', '112', 18], ['DE', 'Germany', '112', 18], ['GR', 'Greece', '112', 18], ['HK', 'Hong Kong', '999', 18],
+      ['IN', 'India', '112', 21], ['IE', 'Ireland', '112', 18], ['IT', 'Italy', '112', 18], ['JP', 'Japan', '119', 20],
+      ['MX', 'Mexico', '911', 18], ['NL', 'Netherlands', '112', 18], ['NZ', 'New Zealand', '111', 18], ['NO', 'Norway', '113', 18],
+      ['PH', 'Philippines', '911', 18], ['PL', 'Poland', '112', 18], ['PT', 'Portugal', '112', 18], ['SG', 'Singapore', '995', 18],
+      ['ZA', 'South Africa', '112', 18], ['KR', 'South Korea', '119', 19], ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18],
+      ['CH', 'Switzerland', '112', 18], ['TH', 'Thailand', '1669', 20], ['AE', 'United Arab Emirates', '998', 21], ['GB', 'United Kingdom', '999', 18],
+      ['US', 'United States', '911', 21], ['XX', 'Somewhere else', '112', 18]
+    ];
+    // The phone's region (e.g. en-GB -> GB) picks the country until the person changes it in Settings.
+    let regionCode = null;
+    try {
+      const loc = (typeof navigator !== 'undefined' && ((navigator.languages && navigator.languages[0]) || navigator.language)) || '';
+      const m = String(loc).match(/[-_]([A-Za-z]{2})(?:$|[-_])/);
+      regionCode = m ? m[1].toUpperCase() : null;
+    } catch (e) { regionCode = null; }
+    const detectedCountry = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    const country = COUNTRIES.find((c) => c[0] === s.country) || detectedCountry;
+    const emergencyNumber = country[2];
+    const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
+    const countryIn = country[0] === 'XX' ? '' : ' in ' + (THE.indexOf(country[0]) !== -1 ? 'the ' : '') + country[1];
+    const ageMin = country[3];
     const pad = (n) => String(n).padStart(2, '0');
     // Drink types: the person can pick several; one of them is the current drink in Drink mode.
     const dtDefs = [
@@ -3750,6 +3817,32 @@ class Component extends DCLogic {
         label: a[1], checked: rideApp === a[0] ? 'true' : 'false',
         bg: rideApp === a[0] ? '#6EE7C1' : '#353538', fg: rideApp === a[0] ? '#1A1A1C' : '#FFFFFF',
         pick: () => this.setState({ rideApp: a[0] })
+      })),
+      ageMin: ageMin,
+      countryName: country[1],
+      emergencyNumber: emergencyNumber,
+      countryAria: 'Emergency number ' + emergencyNumber + ', ' + country[1] + '. Change country',
+      countrySourceNote: s.country ? 'You chose ' + country[1] + '.' : (country[0] === 'XX' ? 'Pacey couldn\'t tell where you are, so it uses 112, which works on most mobile phones. Tap to choose your country.' : 'Pacey picked ' + country[1] + ' from your phone\'s region. Tap to change it.'),
+      callAria: 'Call emergency services, ' + emergencyNumber,
+      // Calls straight away: in an emergency there's no confirmation step. The laptop app hands tel: links to the computer.
+      callEmergency: () => {
+        if (RT && typeof window !== 'undefined' && window.open) window.open('tel:' + emergencyNumber, '_blank');
+        const id = Date.now();
+        this.setState({ banner: { id: id, title: 'Calling ' + emergencyNumber, body: RT ? 'Opening your phone app. Stay on the line and tell them where you are.' : 'In the real app this calls ' + emergencyNumber + ' straight away.' } });
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 5000);
+      },
+      underAgeShow: !!s.underAge,
+      underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
+      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]),
+      sayUnderAge: () => this.setState({ underAge: true }),
+      countryPickOpen: !!s.countryPick,
+      openCountryPick: () => this.setState({ countryPick: true }),
+      closeCountryPick: () => this.setState({ countryPick: false }),
+      countryOptions: COUNTRIES.map((c, i) => ({
+        name: c[1], number: c[2], age: c[3], on: c[0] === country[0], checked: c[0] === country[0] ? 'true' : 'false',
+        weight: c[0] === country[0] ? '800' : '600', divider: i === 0 ? 'transparent' : '#353538',
+        pick: () => this.setState({ country: c[0] })
       })),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
