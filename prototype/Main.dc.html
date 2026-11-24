@@ -404,12 +404,15 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isRecovery}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
-      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <button onClick="{{closeRecovery}}" aria-label="Back" style="align-self: flex-start; min-height: 44px; margin-left: -6px; padding: 0 10px 0 4px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 0; display: flex; flex-direction: column">
+      <div style="flex-shrink: 0; display: flex">
+        <button onClick="{{closeRecovery}}" aria-label="Back" style="min-height: 44px; margin-left: -6px; padding: 0 10px 0 4px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
           Back
         </button>
+      </div>
+    <div style="flex-grow: 1; min-height: 0; margin: 0 -24px; padding: 4px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{recAfter}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">recovery</span></div>
       </div>
@@ -578,6 +581,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time lowers your blood alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. Everything here is an estimate from what you logged, not medical advice.</div>
         </sc-if>
       </sc-if>
+    </div>
     </div>
   </sc-if>
 
@@ -1398,9 +1402,9 @@ button{font-family:Outfit,system-ui,sans-serif}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
           Settings
         </button>
-        <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{subTitle}}</div>
       </div>
-      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 12px; display: flex; flex-direction: column; gap: 16px">
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: -6px -24px 0; padding: 0 24px 12px; display: flex; flex-direction: column; gap: 16px">
+        <div style="flex-shrink: 0; font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{subTitle}}</div>
 
       <sc-if value="{{subProfile}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
@@ -1760,14 +1764,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         <button aria-label="Back" onClick="{{done}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
         </button>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+      </div>
+
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin-top: -8px; display: flex; flex-direction: column; gap: 14px">
+        <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-bottom: 4px">
           <div style="font-size: 18px; font-weight: 700">Night summary</div>
           <div style="font-size: 13px; font-weight: 500; color: #9A9AA0">{{dateLine}}</div>
         </div>
-        <div style="width: 44px; height: 44px"></div>
-      </div>
-
-      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 14px">
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px">
         <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
