@@ -1625,9 +1625,12 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
               <div style="font-size: 16px; font-weight: 600">Size</div>
               <div style="display: flex; align-items: center; gap: 10px">
-                <button aria-label="{{z.volLessLabel}}" onClick="{{z.volLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-                <div style="font-size: 17px; font-weight: 800; min-width: 68px; text-align: center">{{z.vol}}</div>
-                <button aria-label="{{z.volMoreLabel}}" onClick="{{z.volMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+                <button aria-label="{{z.volLessLabel}}" onClick="{{z.volLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; opacity: {{z.volLessOff}}; cursor: pointer">−</button>
+                <div style="min-width: 104px; display: flex; flex-direction: column; align-items: center; gap: 1px; text-align: center">
+                  <span style="font-size: 17px; font-weight: 800">{{z.vol}}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: #9A9AA0; white-space: nowrap">{{z.volName}}</span>
+                </div>
+                <button aria-label="{{z.volMoreLabel}}" onClick="{{z.volMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; opacity: {{z.volMoreOff}}; cursor: pointer">+</button>
               </div>
             </div>
             <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
@@ -2831,21 +2834,38 @@ class Component extends DCLogic {
       next.abv = Math.max(0.5, Math.min(60, Math.round(next.abv * 2) / 2));
       this.setState({ sizes: Object.assign({}, s.sizes || {}, { [k]: next }) });
     };
+    // The sizes people actually get served, smallest to biggest. − and + step through these.
+    const SERVES = {
+      shot: [[25, 'UK single'], [30, 'Single'], [35, 'Large single'], [44, 'US shot · 1.5 oz'], [50, 'Double'], [60, 'Large double']],
+      wine: [[100, 'Small pour'], [125, 'Small glass'], [150, 'Standard glass'], [175, 'Medium glass'], [250, 'Large glass']],
+      beer: [[250, 'Small glass'], [284, 'Half pint'], [330, 'Bottle'], [355, 'Can · 12 oz'], [440, 'Tall can'], [473, 'US pint · 16 oz'], [500, 'Large can'], [568, 'Pint'], [1000, 'Stein · 1 litre']],
+      cocktail: [[90, 'Short, like a martini'], [120, 'Small'], [150, 'Standard'], [200, 'Tall'], [250, 'Large'], [300, 'Very large']],
+      mixed: [[150, 'Small'], [200, 'Highball'], [250, 'Standard'], [330, 'Bottle'], [440, 'Tall can'], [500, 'Large']]
+    };
+    const serveStep = (k, ml, dir) => {
+      const list = (SERVES[k] || SERVES.mixed).map((x) => x[0]);
+      if (dir > 0) { const up = list.find((v) => v > ml); return up == null ? ml : up; }
+      const down = list.slice().reverse().find((v) => v < ml); return down == null ? ml : down;
+    };
+    const serveName = (k, ml) => { const hit = (SERVES[k] || SERVES.mixed).find((x) => x[0] === Math.round(ml)); return hit ? hit[1] : 'Your size'; };
     const sizeRows = selDefs.map((d) => {
       const z = sizeOf(d.k);
-      const step = d.k === 'shot' ? 5 : d.k === 'beer' ? 10 : 25;
+      const list = (SERVES[d.k] || SERVES.mixed).map((x) => x[0]);
       const abvStep = z.abv < 10 ? 0.5 : 1;
       return {
         name: d.label,
         vol: volText(z.ml),
+        volName: serveName(d.k, z.ml),
+        volLessOff: z.ml <= list[0] ? '0.35' : '1',
+        volMoreOff: z.ml >= list[list.length - 1] ? '0.35' : '1',
         abv: z.abv + '%',
         alc: volText(z.ml * z.abv / 100),
         volLessLabel: 'Smaller ' + d.one,
         volMoreLabel: 'Bigger ' + d.one,
         abvLessLabel: 'Weaker ' + d.one,
         abvMoreLabel: 'Stronger ' + d.one,
-        volLess: () => setSize(d.k, { ml: z.ml - step }),
-        volMore: () => setSize(d.k, { ml: z.ml + step }),
+        volLess: () => setSize(d.k, { ml: serveStep(d.k, z.ml, -1) }),
+        volMore: () => setSize(d.k, { ml: serveStep(d.k, z.ml, 1) }),
         abvLess: () => setSize(d.k, { abv: z.abv - abvStep }),
         abvMore: () => setSize(d.k, { abv: z.abv + abvStep })
       };
