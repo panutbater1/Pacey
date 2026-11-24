@@ -51,10 +51,41 @@ function downloadElectron() {
   return result.status;
 }
 
+// On some Node versions Electron's own unzip step stops halfway without an error, leaving a
+// half-unpacked app. On a Mac, unzip the downloaded file with the built-in ditto tool instead.
+function unzipElectronOnMac() {
+  if (process.platform !== 'darwin') return false;
+  const os = require('os');
+  const version = require(path.join(desktop, 'node_modules', 'electron', 'package.json')).version;
+  const cache = path.join(os.homedir(), 'Library', 'Caches', 'electron');
+  const want = 'electron-v' + version + '-darwin-' + process.arch + '.zip';
+  let zip = null;
+  const walk = (dir, depth) => {
+    if (zip || depth > 3 || !fs.existsSync(dir)) return;
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      if (name === want) { zip = full; return; }
+      try { if (fs.statSync(full).isDirectory()) walk(full, depth + 1); } catch (e) { /* skip */ }
+    }
+  };
+  walk(cache, 0);
+  if (!zip) return false;
+  console.log('Pacey: unpacking Electron with the Mac\'s own unzip tool...');
+  const electronDir = path.join(desktop, 'node_modules', 'electron');
+  const dist = path.join(electronDir, 'dist');
+  fs.rmSync(dist, { recursive: true, force: true });
+  const r = spawnSync('ditto', ['-x', '-k', zip, dist], { stdio: 'inherit' });
+  if (r.status !== 0) return false;
+  fs.writeFileSync(path.join(electronDir, 'path.txt'), 'Electron.app/Contents/MacOS/Electron');
+  delete require.cache[require.resolve(path.join(desktop, 'node_modules', 'electron'))];
+  return true;
+}
+
 let electron = findElectron();
 if (!electron.path) {
   const status = downloadElectron();
   electron = findElectron();
+  if (!electron.path && unzipElectronOnMac()) electron = findElectron();
   if (!electron.path) {
     console.error('');
     console.error('Pacey: Electron did not download (exit code ' + status + ').');
