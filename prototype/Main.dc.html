@@ -420,7 +420,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       <sc-if value="{{recNone}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 18px; font-weight: 700">Nothing to recover from yet</div>
-          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">The morning after a night out, this shows when you're likely back to zero, how much water to catch up on, what to eat and what to avoid, all worked out from what you logged.</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">The morning after a night out, this shows how much water to catch up on, what to eat and what to avoid, all worked out from what you logged.</div>
         </div>
       </sc-if>
 
@@ -452,18 +452,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </sc-if>
         <sc-if value="{{recAwake}}" hint-placeholder-val="{{true}}">
-        <div role="img" aria-label="{{recRingsAria}}" style="flex-shrink: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
-            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
-              <div style="position: relative; width: 104px; height: 104px">
-                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
-                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
-                  <circle cx="48" cy="48" r="39" fill="none" stroke="#6EE7C1" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{recDash}}" transform="rotate(-90 48 48)"></circle>
-                </svg>
-                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{recPct}}</span>
-              </div>
-              <span style="font-size: 16px; font-weight: 700; color: #6EE7C1">Recovery</span>
-              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{recRingNote}}</span>
-            </div>
+        <div role="img" aria-label="{{recRingsAria}}" style="flex-shrink: 0; display: grid; grid-template-columns: 1fr; gap: 10px">
             <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
               <div style="position: relative; width: 104px; height: 104px">
                 <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
@@ -478,31 +467,12 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
 
 
-        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recZeroKicker}}</div>
-          <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
-            <span style="font-size: 44px; font-weight: 800; line-height: 1; color: {{recZeroColor}}">{{recZeroTime}}</span>
-            <span style="font-size: 15px; font-weight: 600; color: #B8B8BE">{{recZeroRange}}</span>
-          </div>
-          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recZeroText}}</div>
-          <sc-if value="{{recDrank}}" hint-placeholder-val="{{true}}">
-            <div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: #1F1F21">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8A3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
-              <span style="font-size: 14px; color: #E0E0E4; line-height: 1.4">Don't drive until well after this. Your real level can be higher than Pacey's estimate. If in doubt, don't.</span>
-            </div>
-          </sc-if>
+        <sc-if value="{{recDrank}}" hint-placeholder-val="{{true}}">
+        <div style="flex-shrink: 0; display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 22px; background: #262628">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8A3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+          <span style="font-size: 15px; color: #E0E0E4; line-height: 1.45">Don't drive today until you're sure the alcohol has worn off. Pacey can't tell you when that is. If in doubt, don't.</span>
         </div>
-
-        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; align-items: center; gap: 14px">
-          <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
-          </span>
-          <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
-            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recHangKicker}}</span>
-            <span style="font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -0.4px; color: {{recHangColor}}">{{recHangTime}}</span>
-            <span style="font-size: 13px; color: #9A9AA0">A rough guide. Water, food and sleep help.</span>
-          </span>
-        </div>
+        </sc-if>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 18px; font-weight: 700">Your day</div>
@@ -578,7 +548,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-if>
         </div>
 
-        <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time lowers your blood alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. Everything here is an estimate from what you logged, not medical advice.</div>
+        <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time clears alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. This is a guide from what you logged, not medical advice.</div>
         </sc-if>
       </sc-if>
     </div>
@@ -1333,25 +1303,25 @@ button{font-family:Outfit,system-ui,sans-serif}
         </span>
       </div>
       </sc-if>
-      <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
-      <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
-        <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
-        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-          <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="3">
-            <button onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 48px; border-radius: 24px; border: 2px solid {{f.ring}}; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{f.label}}</button>
-          </sc-for>
+      <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your plan vs your night</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <div style="background: #353538; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Planned</span>
+            <span style="font-size: 30px; font-weight: 800; line-height: 1.1">{{lnPlan}}</span>
+          </div>
+          <div style="background: #353538; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">You had</span>
+            <span style="font-size: 30px; font-weight: 800; line-height: 1.1; color: {{lnVerdictColor}}">{{lnDrinks}}</span>
+          </div>
         </div>
-        <sc-if value="{{hasFeel}}" hint-placeholder-val="{{false}}">
-          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{feelMessage}}</div>
-        </sc-if>
+        <div role="status" style="font-size: 18px; font-weight: 700; line-height: 1.3; color: {{lnVerdictColor}}">{{lnVerdict}}</div>
       </div>
-      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
         <div style="display: flex; flex-direction: column; gap: 4px">
-          <div style="font-size: 18px; font-weight: 700">Forgot to log something?</div>
-          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.4">Fix the count here so your summary is right.</div>
+          <div style="font-size: 18px; font-weight: 700">Fill the gaps</div>
+          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.4">Add anything you missed so the comparison above is right.</div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center">
           <div style="display: flex; align-items: center; gap: 12px">
@@ -1380,6 +1350,21 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
       </div>
+
+      <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
+        <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="3">
+            <button onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 48px; border-radius: 24px; border: 2px solid {{f.ring}}; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{f.label}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{hasFeel}}" hint-placeholder-val="{{false}}">
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{feelMessage}}</div>
+        </sc-if>
+      </div>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
         <div style="font-size: 15px; font-weight: 600; line-height: 1.35">{{lastSub}}</div>
@@ -1502,24 +1487,6 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="font-size: 16px; font-weight: 600">Age</div>
           <div style="font-size: 15px; color: #9A9AA0">Confirmed · {{ageMin}} or older</div>
         </div>
-        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px; margin-top: 4px">For your blood alcohol estimate</div>
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px 14px; display: flex; flex-direction: column; gap: 4px">
-          <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-            <div style="font-size: 16px; font-weight: 600">Weight</div>
-            <div style="display: flex; align-items: center; gap: 10px">
-              <button aria-label="Lower weight" onClick="{{weightLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-              <div style="font-size: 17px; font-weight: 800; min-width: 64px; text-align: center">{{weightLabel}}</div>
-              <button aria-label="Raise weight" onClick="{{weightMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
-            </div>
-          </div>
-          <div style="font-size: 16px; font-weight: 600; padding-top: 6px; border-top: 1px solid #353538">Body type</div>
-          <div role="radiogroup" aria-label="Body type" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 6px">
-            <sc-for list="{{bodyOptions}}" as="o" hint-placeholder-count="3">
-              <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 44px; border-radius: 22px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Used only on this phone to estimate blood alcohol in your night summary.</div>
       </sc-if>
 
       <sc-if value="{{subPlan}}" hint-placeholder-val="{{false}}">
@@ -1758,18 +1725,6 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <sc-if value="{{subPrivacy}}" hint-placeholder-val="{{false}}">
-        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Your choices</div>
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 0 18px; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <div style="display: flex; flex-direction: column; gap: 2px">
-            <div style="font-size: 16px; font-weight: 600">Use my weight and body type</div>
-            <div style="font-size: 13px; color: #9A9AA0">For the blood alcohol estimate, on this phone only</div>
-          </div>
-          <button role="switch" aria-checked="{{bodyConsentChecked}}" aria-label="Use my weight and body type" onClick="{{toggleBodyConsent}}" style="width: 56px; height: 44px; flex-shrink: 0; padding: 6px 0; border: none; background: none; cursor: pointer">
-            <span style="display: block; width: 56px; height: 32px; border-radius: 16px; background: {{bodyConsentBg}}; transition: background 0.2s ease">
-              <span style="display: block; width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; position: relative; top: 3px; left: {{bodyConsentKnob}}; transition: left 0.2s ease"></span>
-            </span>
-          </button>
-        </div>
         <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px; margin-top: 4px">Privacy policy · updated {{legalUpdated}}</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 16px">
           <sc-for list="{{privacySections}}" as="x" hint-placeholder-count="4">
@@ -1916,36 +1871,6 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </div>
 
-      <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
-          <div style="font-size: 15px; font-weight: 600">Estimated blood alcohol</div>
-          <span style="padding: 4px 10px; border-radius: 12px; background: #353538; font-size: 12px; font-weight: 700; color: #B8B8BE">Estimate only</span>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 2px">
-          <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.5px">{{bacRange}}</div>
-          <div style="font-size: 14px; color: #9A9AA0">{{bacPeakNote}}</div>
-        </div>
-        <svg width="100%" height="84" viewBox="0 0 300 84" preserveAspectRatio="none" role="img" aria-label="{{bacAria}}">
-          <defs>
-            <linearGradient id="pcBacFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#6EE7C1" stop-opacity="0.45"></stop>
-              <stop offset="1" stop-color="#6EE7C1" stop-opacity="0"></stop>
-            </linearGradient>
-          </defs>
-          <path d="M0 80 L300 80" stroke="#353538" stroke-width="1"></path>
-          <path d="{{bacArea}}" fill="url(#pcBacFill)"></path>
-          <path d="{{bacLine}}" fill="none" stroke="#6EE7C1" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-        </svg>
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #9A9AA0; margin-top: -6px">
-          <span>{{bacStart}}</span>
-          <span>{{bacEnd}}</span>
-        </div>
-        <div style="padding: 12px 14px; border-radius: 16px; background: #2F2F32; font-size: 13px; color: #B8B8BE; line-height: 1.45">A rough guess from your drinks, sizes, weight and body type. Alcohol takes 30 to 90 minutes to reach its highest level, so it can keep rising after your last drink. Your real level can be much higher. It can't tell you if you're safe to drive, so don't drive after drinking.</div>
-        <sc-if value="{{bacNeedsProfile}}" hint-placeholder-val="{{false}}">
-          <button onClick="{{goProfileFromSummary}}" style="min-height: 44px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer">Using an average body. Add your weight in Profile for a better estimate</button>
-        </sc-if>
-      </div>
-
       <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
         <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3-1-5 1-8z"></path></svg>
@@ -2057,7 +1982,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 14px">
 
-      <button onClick="{{callEmergency}}" aria-label="{{callAria}}" style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #C93A3F; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
+      <button onClick="{{callEmergency}}" aria-label="{{callAria}}" style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #E5484D; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>
         <span style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 19px; font-weight: 700">Call emergency services</span>
@@ -2805,8 +2730,8 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
   renderVals() {
     const s = this.state;
-    const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
-    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, home address, taxi app, weight and body type you add in Profile."}, {"h": "Weight and body type", "b": "These are optional. If you add them, they are used only on your phone to work out the blood alcohol estimate in your night summary. You can turn this off below."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: [YOUR CONTACT EMAIL]"}];
+    const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes and alcohol amounts are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: [YOUR CONTACT EMAIL]"}];
+    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: [YOUR CONTACT EMAIL]"}];
     // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
     const RT = !!this.props.realtime;
     const nowDate = new Date();
@@ -2892,11 +2817,6 @@ class Component extends DCLogic {
     };
     const nightKcal = (n) => n.entries.reduce((a, e) => a + kcalOf(e), 0);
     const kcalText = (v) => Math.round(v).toLocaleString('en-GB') + ' kcal';
-    // Body details for the blood alcohol estimate (Settings > Profile).
-    const useBody = s.bodyConsent !== false;
-    const weightKg = (useBody && s.weightKg) || 70;
-    const bodyR = (useBody && { female: 0.55, male: 0.68 }[s.body]) || 0.6;
-    const weightLabel = oz ? Math.round(weightKg * 2.2046) + ' lb' : weightKg + ' kg';
     const selDefs = dtDefs.filter((d) => sel.indexOf(d.k) !== -1);
     const cur = selDefs.find((d) => d.k === s.currentType) || selDefs[0];
     const typeOf = (k) => dtDefs.find((d) => d.k === k);
@@ -3437,10 +3357,21 @@ class Component extends DCLogic {
     const lastExpired = !!lastNight.endedAtMs && Date.now() - lastNight.endedAtMs > 24 * 3600 * 1000 && !lastTouched;
     const showLastNight = !!s.morningAfter && s.nights.length > 0 && !lastExpired;
     const morningReady = !lastNight.endedAtMs || !!lastNight.morningSkip || Date.now() >= morningAtMs;
-    const feelMessages = {
-      Great: 'Good to hear. Pacing did its job.',
-      OK: 'Not bad. A big glass of water and some breakfast will help.',
-      Rough: 'Sorry it is a rough one. Water, food and rest today. A lower limit next time might feel better.'
+    // Morning check-in: compare last night's plan with what was logged, then tie how you feel to it.
+    const lnDrinkN = lastNight.entries.filter((e) => e.kind === 'drink').length;
+    const lnHeld = lnDrinkN <= lastNight.plan;
+    const lnDiff = Math.abs(lnDrinkN - lastNight.plan);
+    const lnVerdict = lnDrinkN === lastNight.plan ? 'Your plan held. Right on it.'
+      : lnHeld ? 'Your plan held, with ' + lnDiff + ' to spare.'
+      : lnDiff + ' over your plan. That happens. Your plan is there for next time.';
+    const feelMessages = lnHeld ? {
+      Great: 'Good to hear. Sticking to your plan paid off.',
+      OK: 'Not bad. Water, food and some rest will help.',
+      Rough: 'Sorry it is a rough one. Water, food, rest and time are what help.'
+    } : {
+      Great: 'Good to hear. Your plan is still there for next time.',
+      OK: 'Water, food and rest will help. Staying on plan next time might make the morning easier.',
+      Rough: 'Sorry it is a rough one. Water, food, rest and time are what help. Staying on plan next time might make the morning easier.'
     };
     const feelOptions = ['Great', 'OK', 'Rough'].map((label) => ({
       label: label,
@@ -3456,34 +3387,14 @@ class Component extends DCLogic {
       const rEnd = RS + n.endTick;
       const drinksR = n.entries.filter((e) => e.kind === 'drink');
       const watersR = n.entries.filter((e) => e.kind === 'water').length;
-      const doses = drinksR.map((e) => {
-        const z = drinkSize(e);
-        return { t: Math.min(e.t, rEnd), pct: z.ml * z.abv / 100 * 0.789 / (weightKg * 1000 * bodyR) * 100 };
-      }).sort((a, b) => a.t - b.t);
-      // Same absorption model as the night summary. Returns the peak and the first minute back at zero.
-      const sim = (k) => {
-        const ABSORB = 1 - Math.exp(-1 / 20);
-        const ELIM = 0.015 / 60;
-        let stomach = 0, level = 0, peak = 0, next = 0, levelNow = 0;
-        const lastT = doses.length ? doses[doses.length - 1].t : RS;
-        for (let t = RS; t <= lastT + 48 * 60; t += 1) {
-          while (next < doses.length && doses[next].t <= t) { stomach += doses[next].pct * k; next += 1; }
-          const a = stomach * ABSORB;
-          stomach -= a;
-          level = Math.max(0, level + a - ELIM);
-          if (level > peak) peak = level;
-          if (t === Math.floor(nowR)) levelNow = level;
-          if (t > lastT && level === 0 && stomach < 0.0005) return { peak: peak, zero: t, levelNow: t > nowR ? levelNow : 0 };
-        }
-        return { peak: peak, zero: lastT + 48 * 60, levelNow: levelNow };
-      };
+      // Alcohol logged that night, in grams, from the drink sizes. No blood alcohol estimate.
+      const grams = drinksR.reduce((a, e) => { const z = drinkSize(e); return a + z.ml * z.abv / 100 * 0.789; }, 0);
       // Where "now" is on the night's clock. The prototype pretends it's 09:30 the next morning.
       // The next given clock time (minutes after midnight) after a point on the night's clock.
       const nextClock = (after, clock) => { let m = after - (((after % 1440) + 1440) % 1440) + clock; while (m <= after) m += 1440; return m; };
       const nowR = RT && n.endedAtMs ? rEnd + (Date.now() - n.endedAtMs) / 60000 : nextClock(rEnd + 60, 9 * 60 + 30);
-      const mid = sim(1), lo = sim(0.8), hi = sim(1.2);
-      const lastDrinkT = doses.length ? doses[doses.length - 1].t : null;
-      return { nextClock: nextClock, n: n, RS: RS, rEnd: rEnd, drinksN: drinksR.length, watersN: watersR, mid: mid, lo: lo, hi: hi, nowR: nowR, lastDrinkT: lastDrinkT, drank: mid.peak >= 0.005 };
+      const lastDrinkT = drinksR.length ? Math.min(drinksR[drinksR.length - 1].t, rEnd) : null;
+      return { nextClock: nextClock, n: n, RS: RS, rEnd: rEnd, drinksN: drinksR.length, watersN: watersR, grams: grams, nowR: nowR, lastDrinkT: lastDrinkT, drank: drinksR.length > 0 };
     })();
     const recVals = (() => {
       if (!recovery) return { recHas: false, recNone: true, recAfter: 'The morning after' };
@@ -3491,26 +3402,18 @@ class Component extends DCLogic {
       // Estimates rounded to 5 minutes: the earliest rounds down and the latest rounds up.
       const f5 = (m) => fmt(Math.round(m / 5) * 5), f5lo = (m) => fmt(Math.floor(m / 5) * 5), f5hi = (m) => fmt(Math.ceil(m / 5) * 5);
       const n = R.n;
-      const atZero = !R.drank || R.nowR >= R.mid.zero;
       const NAP_END = R.nextClock(R.rEnd, 15 * 60);
       const stepDefs = [];
       if (R.lastDrinkT != null) stepDefs.push([R.lastDrinkT, 'Last drink', R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' and ' + R.watersN + ' ' + (R.watersN === 1 ? 'water' : 'waters') + ' in total']);
       stepDefs.push([R.rEnd, 'Night ended', R.lastDrinkT != null && R.rEnd - R.lastDrinkT >= 60 ? 'You stopped drinking ' + Math.round((R.rEnd - R.lastDrinkT) / 60 * 10) / 10 + ' h before this' : 'Close to your last drink']);
-      if (R.drank) stepDefs.push([R.mid.zero, 'Back to zero (estimate)', 'Somewhere between ' + f5lo(R.lo.zero) + ' and ' + f5hi(R.hi.zero)]);
       stepDefs.push([Math.max(R.nowR, R.rEnd + 1), 'Eat and drink water', 'Within an hour of waking, then water through the day']);
-      // Hangover: usually worst around back-to-zero and fading over the next hours, longer after more drinks
-      // (2 to 10 hours after zero). Not before 08:00 the next morning, and gone within a day of the last drink.
-      // A very low peak (under 0.03%) usually means no hangover.
-      const hangEnd = R.mid.peak < 0.03 ? null : Math.min((R.lastDrinkT || R.rEnd) + 24 * 60, Math.max(R.nextClock(R.rEnd, 8 * 60), R.mid.zero + Math.min(10, Math.max(2, R.drinksN * 1.5)) * 60));
-      const hangGone = hangEnd == null || R.nowR >= hangEnd;
-      if (hangEnd != null) stepDefs.push([hangEnd, 'No hangover (estimate)', '']);
       if (NAP_END > R.rEnd + 4 * 60) stepDefs.push([NAP_END, 'Last good time for a nap', 'Keep it to about 20 minutes so tonight\'s sleep isn\'t worse']);
       stepDefs.sort((a, b) => a[0] - b[0]);
       const recSteps = stepDefs.map((d, i) => {
         const past = d[0] < R.nowR - 1 && d[1] !== 'Eat and drink water';
         const isNow = d[1] === 'Eat and drink water';
         return {
-          time: isNow ? 'Now' : d[1] === 'Back to zero (estimate)' ? f5(d[0]) : d[1] === 'No hangover (estimate)' ? fmt(Math.round(d[0] / 30) * 30) : fmt(Math.round(d[0])), label: d[1], sub: d[2],
+          time: isNow ? 'Now' : fmt(Math.round(d[0])), label: d[1], sub: d[2],
           dot: past ? '#4A4A4E' : isNow ? '#6EE7C1' : 'transparent', ring: past ? '#4A4A4E' : '#6EE7C1',
           line: i === stepDefs.length - 1 ? 'transparent' : '#353538',
           fg: past ? '#9A9AA0' : '#FFFFFF', timeFg: past ? '#9A9AA0' : '#6EE7C1'
@@ -3521,8 +3424,6 @@ class Component extends DCLogic {
       const GLASS = 250;
       const waterTarget = Math.min(12, Math.max(2, 3 + Math.max(0, R.drinksN - R.watersN)));
       const mlText = (ml) => oz ? volText(ml) : Math.round(ml).toLocaleString('en-GB') + ' ml';
-      // Food: a rough daily guide from weight (about 30 kcal per kg, a little less for a female body).
-      const kcalNeed = Math.round(weightKg * (useBody && s.body === 'female' ? 27 : 30) / 50) * 50;
       // Sleep: 8 hours, plus a little more after more drinks because alcohol makes sleep lighter (up to 9½).
       const sleepH = 8 + Math.min(1.5, Math.round(R.drinksN * 0.15 * 2) / 2);
       const hText = (h) => Math.floor(h) + ' h' + (h % 1 ? ' 30 min' : '');
@@ -3535,38 +3436,25 @@ class Component extends DCLogic {
       // The recovery plan goes away 24 hours after the night ended (sample nights: always shown).
       const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 24 * 3600 * 1000;
       const waterLeft = Math.max(0, waterTarget - had);
-      // Rings: how much of the night's alcohol is cleared, and water against what last night needs.
-      const recPct = !R.drank ? 100 : Math.max(0, Math.min(100, Math.round(100 * (1 - R.mid.levelNow / R.mid.peak))));
+      // Ring: water against what last night needs.
       const hydPct = Math.max(0, Math.min(100, Math.round(100 * (R.watersN + had) / (R.watersN + waterTarget))));
       const ring = (pct) => (pct / 100 * 245.04).toFixed(1) + ' 245.04';
       const sleeping = !morningReady;
-      const cardBits = sleeping ? ['Ready after ' + pad(MORNING_H) + ':00', 'sleep well first'] : [!R.drank ? 'No alcohol left to clear' : atZero ? 'Back to zero since about ' + f5(R.mid.zero) : 'Back to zero around ' + f5(R.mid.zero), waterLeft ? mlText(waterLeft * GLASS) + ' of water to go' : 'Water done'];
+      const cardBits = sleeping ? ['Ready after ' + pad(MORNING_H) + ':00', 'sleep well first'] : [R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' logged', waterLeft ? mlText(waterLeft * GLASS) + ' of water to go' : 'Water done'];
       return {
         recCardOnTonight: recRecent,
         recSleeping: sleeping,
         recAwake: !sleeping,
-        recPct: recPct + '%', recDash: ring(recPct),
         hydPct: hydPct + '%', hydDash: ring(hydPct),
-        recRingNote: recPct >= 100 ? 'Alcohol cleared' : 'Of the alcohol cleared',
         hydRingNote: hydPct >= 100 ? 'Fully topped up' : 'Of the water you need',
-        recRingsAria: 'Recovery ' + recPct + ' percent. Hydration ' + hydPct + ' percent.',
+        recRingsAria: 'Hydration ' + hydPct + ' percent.',
         recCardKicker: 'After ' + (/night$/i.test(n.day || n.title || '') ? (n.day || n.title) : (n.day || n.title || 'last') + ' night'),
         recCardSub: cardBits.join(' · '),
         recCardAria: 'Your recovery plan. ' + cardBits.join('. '),
         recHas: true, recNone: false,
         recAfter: 'After ' + (/night$/i.test(dayName) ? dayName : dayName + ' night'),
-        recHeavy: R.mid.peak >= 0.2,
-        recDrank: R.drank && !atZero,
-        recHangKicker: hangGone ? 'Hangover' : 'Feeling normal again around',
-        recHangTime: hangEnd == null ? 'None expected' : hangGone ? 'Should be gone' : fmt(Math.round(hangEnd / 30) * 30),
-        recHangColor: hangGone ? '#6EE7C1' : '#FFC56B',
-        recZeroKicker: !R.drank ? 'Blood alcohol' : atZero ? 'Back to zero since about' : 'Back to zero around',
-        recZeroTime: !R.drank ? 'Zero' : f5(R.mid.zero),
-        recZeroColor: atZero ? '#6EE7C1' : '#FFFFFF',
-        recZeroRange: R.drank ? '(' + f5lo(R.lo.zero) + '–' + f5hi(R.hi.zero) + ')' : '',
-        recZeroText: !R.drank ? 'You had very little alcohol, so there\'s nothing left to clear.'
-          : atZero ? 'Your estimated blood alcohol has reached zero. You may still feel tired or off for a while.'
-          : 'Your body clears about one drink an hour, and nothing speeds that up. The range allows for how much bodies differ.',
+        recHeavy: R.grams >= 84,
+        recDrank: R.drank,
         recSteps: recSteps,
         recWaterCount: mlText(had * GLASS) + ' of ' + mlText(waterTarget * GLASS),
         recWaterBig: mlText(Math.max(0, waterTarget - had) * GLASS) + (had >= waterTarget ? '' : ' to go'),
@@ -3577,7 +3465,7 @@ class Component extends DCLogic {
         recWaterMore: () => setRecWater(had + 1),
         recWaterLess: () => setRecWater(had - 1),
         recFoodTitle: 'Eat today',
-        recFoodBig: 'About ' + kcalNeed.toLocaleString('en-GB') + ' kcal',
+        recFoodBig: 'A proper breakfast',
         recFoodText: 'Eggs, toast, porridge, a banana or soup.',
         recSleepBig: hText(sleepH),
         recSleepText: (sleepH > 8 ? 'A bit more than usual, because alcohol made last night\'s sleep lighter. ' : '') + 'For a 07:00 alarm, be in bed by ' + fmt(bedMin) + '.' + (gap != null && gap < 60 ? ' If you\'re tired before then, a short nap before 15:00 helps.' : ''),
@@ -3804,56 +3692,6 @@ class Component extends DCLogic {
         color: isDrink ? '#6EE7C1' : '#5CC8F5'
       };
     });
-    // Rough Widmark-style estimate. Each drink is absorbed gradually rather than all at once:
-    // the stomach passes on about 5% of what's left every minute (a 20-minute time constant),
-    // so a drink's effect rises over roughly 30 to 90 minutes. The body clears about 0.015% an hour.
-    const bac = (() => {
-      const TAU = 20;
-      const ABSORB = 1 - Math.exp(-1 / TAU);
-      const ELIM = 0.015 / 60;
-      const doses = vEntries.filter((e) => e.kind === 'drink').map((e) => {
-        const z = drinkSize(e);
-        const grams = z.ml * z.abv / 100 * 0.789;
-        return { t: Math.min(e.t, end), pct: grams / (weightKg * 1000 * bodyR) * 100 };
-      }).sort((x, y) => x.t - y.t);
-      const lastDose = doses.length ? doses[doses.length - 1].t : VSTART;
-      // Show the curve until the end of the night, or long enough after the last drink to see where it peaks.
-      const plotEnd = Math.max(end, Math.min(lastDose + 90, end + 120));
-      const pts = [];
-      let stomach = 0;
-      let level = 0;
-      let peak = 0;
-      let peakT = VSTART;
-      let next = 0;
-      for (let t = VSTART; t <= plotEnd + 0.001; t += 1) {
-        while (next < doses.length && doses[next].t <= t) { stomach += doses[next].pct; next += 1; }
-        const absorbed = stomach * ABSORB;
-        stomach -= absorbed;
-        level = Math.max(0, level + absorbed - ELIM);
-        if (level > peak) { peak = level; peakT = t; }
-        if ((t - VSTART) % 2 === 0) pts.push(level);
-      }
-      const top = Math.max(0.08, peak * 1.25);
-      const span = Math.max(1, pts.length - 1);
-      const xy = pts.map((v, i) => (i / span * 300).toFixed(1) + ' ' + (80 - v / top * 72).toFixed(1));
-      const line = 'M' + xy.join(' L');
-      const area = line + ' L300 80 L0 80 Z';
-      const endLevel = pts[pts.length - 1] || 0;
-      const clearAt = plotEnd + Math.ceil(endLevel / 0.015 * 60);
-      const f2 = (v) => v.toFixed(2);
-      if (peak < 0.005) {
-        return { plotEnd: plotEnd, range: 'Below 0.01%', note: 'Very little alcohol that night', line: line, area: area, clear: fmt(end), aria: 'Estimated blood alcohol stayed close to zero' };
-      }
-      return {
-        range: f2(peak * 0.8) + '–' + f2(peak * 1.2) + '%',
-        note: 'Highest point, around ' + fmt(peakT) + (peakT > end ? ', after the night ended' : ''),
-        plotEnd: plotEnd,
-        line: line,
-        area: area,
-        clear: fmt(clearAt),
-        aria: 'Estimated blood alcohol peaked around ' + fmt(peakT) + ' at ' + f2(peak * 0.8) + ' to ' + f2(peak * 1.2) + ' percent'
-      };
-    })();
     // Line icons for each drink type (24 x 24), used on Home and in night summaries.
     const DRINK_ICON = {
       shot: 'M7 6h10l-1.5 13h-7zM7.6 11h8.8',
@@ -4305,7 +4143,10 @@ class Component extends DCLogic {
       openRecovery: () => this.setState({ screen: 'recovery', recoveryFrom: s.screen }),
       closeRecovery: () => this.setState({ screen: s.recoveryFrom || 'drink' }),
       lnTime: fmt(LSTART) + ' to ' + fmt(LSTART + lastNight.endTick),
-      lnDrinks: lastNight.entries.filter((e) => e.kind === 'drink').length,
+      lnDrinks: lnDrinkN,
+      lnPlan: lastNight.plan,
+      lnVerdict: lnVerdict,
+      lnVerdictColor: lnHeld ? '#6EE7C1' : '#FF8A3D',
       lnWater: lastNight.entries.filter((e) => e.kind === 'water').length,
       feelOptions: feelOptions,
       hasFeel: !!lastNight.feel,
@@ -4355,7 +4196,7 @@ class Component extends DCLogic {
       subSafety: sp === 'safety',
       subPrivacy: sp === 'privacy',
       subTerms: sp === 'terms',
-      legalUpdated: '18 November 2026',
+      legalUpdated: '24 November 2026',
       termsSections: TERMS,
       privacySections: PRIVACY,
       legalSheetTitle: s.legalSheet === 'privacy' ? 'Privacy policy' : 'Terms and conditions',
@@ -4375,10 +4216,6 @@ class Component extends DCLogic {
       goTerms: () => this.setState({ settingsPage: 'terms' }),
       goPrivacy: () => this.setState({ settingsPage: 'privacy' }),
       goPrivacyFromTerms: () => this.setState({ settingsPage: 'privacy' }),
-      bodyConsentChecked: useBody ? 'true' : 'false',
-      bodyConsentBg: useBody ? '#6EE7C1' : '#4A4A4E',
-      bodyConsentKnob: useBody ? '27px' : '3px',
-      toggleBodyConsent: () => this.setState({ bodyConsent: !useBody }),
       nightsDeleted: !!s.nightsDeleted,
       deleteNights: () => this.setState({ nightsDeleted: true }),
       subAbout: sp === 'about',
@@ -4407,23 +4244,6 @@ class Component extends DCLogic {
       volLabel: volText(totals(s.entries).vol),
       sumVol: volText(totals(vEntries).vol),
       sumAlc: volText(totals(vEntries).alc),
-      bacRange: bac.range,
-      bacPeakNote: bac.note,
-      bacLine: bac.line,
-      bacArea: bac.area,
-      bacAria: bac.aria,
-      bacStart: fmt(VSTART),
-      bacEnd: fmt(bac.plotEnd || end),
-      bacClear: bac.clear,
-      bacNeedsProfile: !s.weightKg && useBody,
-      goProfileFromSummary: () => this.setState({ screen: 'settings', settingsPage: 'profile' }),
-      weightLabel: weightLabel,
-      weightLess: () => this.setState({ weightKg: Math.max(35, (s.weightKg || 70) - 1) }),
-      weightMore: () => this.setState({ weightKg: Math.min(200, (s.weightKg || 70) + 1) }),
-      bodyOptions: [['female', 'Female'], ['male', 'Male'], ['', 'Not set']].map((b) => {
-        const on = (s.body || '') === b[0];
-        return { label: b[1], checked: on ? 'true' : 'false', bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState({ body: b[0] }) };
-      }),
       drinkTypes: drinkTypes,
       nounCap: nounMany.charAt(0).toUpperCase() + nounMany.slice(1),
       nounMany: nounMany,
