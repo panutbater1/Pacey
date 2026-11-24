@@ -4210,7 +4210,8 @@ class Component extends DCLogic {
           pick: () => this.setState({ currentType: d.k, drinkSel: sel.indexOf(d.k) === -1 ? sel.concat([d.k]) : sel, planDrinkOpen: false })
         };
       }),
-      greeting: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long' }) + ' ' + (nowDate.getHours() < 5 ? 'night' : nowDate.getHours() < 12 ? 'morning' : nowDate.getHours() < 17 ? 'afternoon' : nowDate.getHours() < 22 ? 'evening' : 'night') : 'Friday evening',
+      // Today's day and part of the day from the phone's clock, e.g. Tuesday afternoon.
+      greeting: nowDate.toLocaleDateString('en-GB', { weekday: 'long' }) + ' ' + (nowDate.getHours() < 5 ? 'night' : nowDate.getHours() < 12 ? 'morning' : nowDate.getHours() < 17 ? 'afternoon' : nowDate.getHours() < 22 ? 'evening' : 'night'),
       lockDate: RT ? nowDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Friday 20 November',
       hasNights: s.nights.length > 0,
       checklist: checklist,
