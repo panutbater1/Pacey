@@ -235,6 +235,21 @@
 
   window.paceyAuth = {
     enabled: authOn,
+    // Google sign-in: only in the laptop app, and only once it's switched on in pacey.config.json.
+    google: authOn && !!cfg.googleSignIn && !!(window.paceyNative && window.paceyNative.googleSignIn),
+    async signInWithGoogle(data) {
+      const r = await window.paceyNative.googleSignIn({ supabaseUrl: cfg.supabaseUrl, anonKey: cfg.supabaseAnonKey });
+      if (!r || r.error) return { error: (r && r.error) || 'Google sign-in didn\'t finish. Try again.' };
+      const sess = keep(r.session);
+      let user = userOut(sess.user);
+      // A new account gets the plan; an existing one keeps the plan it already has.
+      if (!user.plan && data) {
+        const u = await call('/auth/v1/user', { data: data }, sess.access, 'PUT');
+        if (u.ok && u.json) { sess.user = u.json; writeSession(sess); user = userOut(u.json); }
+        return { user: user, isNew: true };
+      }
+      return { user: user, isNew: false };
+    },
     async signUp(email, password, data) {
       const r = await call('/auth/v1/signup', { email: email, password: password, data: data || {} });
       if (!r.ok) return { error: r.error };
