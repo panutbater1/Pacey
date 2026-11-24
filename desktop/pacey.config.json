@@ -1,5 +1,6 @@
 {
   "_help": "Real sign-in. Your Supabase Project URL and publishable key (Supabase dashboard > Project Settings > API Keys; the older 'anon public' key works too). Both are safe to share; never put the secret or service_role key here. Leave them empty to keep the pretend sign-in.",
   "supabaseUrl": "https://jhggxjztcslvpbdormny.supabase.co",
-  "supabaseAnonKey": "sb_publishable_PJMxTZTCFrlXmnUvcUuSwQ_4rz5BNh6"
+  "supabaseAnonKey": "sb_publishable_PJMxTZTCFrlXmnUvcUuSwQ_4rz5BNh6",
+  "googleSignIn": true
 }

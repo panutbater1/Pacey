@@ -77,5 +77,18 @@ What it does:
 - **Create account** and **Sign in** with email and password, with clear messages for a wrong password, an email that's already registered, or an unconfirmed email.
 - Saves the person's plan (their limit and usual night) with the account, and brings it back when they sign in on another computer.
 - **Sign out** and **Delete my account** in Settings › Profile.
-- Apple and Google sign-in aren't connected yet, so those buttons are hidden when real sign-in is on.
+- **Continue with Google** works once it's set up (see below). Apple sign-in isn't connected yet, so its button is hidden when real sign-in is on.
 - Only the laptop app connects. The prototype link keeps the pretend sign-in.
+
+## Google sign-in
+
+The laptop app opens Google in your own browser, then catches the reply on this computer at `http://127.0.0.1:53682/auth/callback`.
+
+1. In [Google Cloud Console](https://console.cloud.google.com), create a project, then **APIs & Services › OAuth consent screen**: app name Pacey, your email as support and developer contact, audience **External**.
+2. **APIs & Services › Credentials › Create credentials › OAuth client ID**, type **Web application**. Under **Authorised redirect URIs** add your Supabase callback, `https://<project-id>.supabase.co/auth/v1/callback`. Create it and keep the **Client ID** and **Client secret**.
+3. In Supabase, **Authentication › Sign In / Providers › Google**: turn it on and paste the Client ID and Client secret. Save.
+4. In Supabase, **Authentication › URL Configuration › Redirect URLs**: add `http://127.0.0.1:53682/auth/callback`.
+5. In `desktop/pacey.config.json`, set `"googleSignIn": true`, then start Pacey again.
+
+The client secret only goes into Supabase, never into this folder.
+
