@@ -1636,9 +1636,9 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
               <div style="font-size: 16px; font-weight: 600">Strength</div>
               <div style="display: flex; align-items: center; gap: 10px">
-                <button aria-label="{{z.abvLessLabel}}" onClick="{{z.abvLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
-                <div style="font-size: 17px; font-weight: 800; min-width: 68px; text-align: center">{{z.abv}}</div>
-                <button aria-label="{{z.abvMoreLabel}}" onClick="{{z.abvMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+                <button aria-label="{{z.abvLessLabel}}" onClick="{{z.abvLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; opacity: {{z.abvLessOff}}; cursor: pointer">−</button>
+                <div style="font-size: 17px; font-weight: 800; min-width: 104px; text-align: center">{{z.abv}}</div>
+                <button aria-label="{{z.abvMoreLabel}}" onClick="{{z.abvMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; opacity: {{z.abvMoreOff}}; cursor: pointer">+</button>
               </div>
             </div>
           </div>
@@ -2831,7 +2831,7 @@ class Component extends DCLogic {
       const cur = sizeOf(k);
       const next = Object.assign({}, cur, patch);
       next.ml = Math.max(10, Math.min(1000, next.ml));
-      next.abv = Math.max(0.5, Math.min(60, Math.round(next.abv * 2) / 2));
+      next.abv = Math.max(0.5, Math.min(60, Math.round(next.abv * 10) / 10));
       this.setState({ sizes: Object.assign({}, s.sizes || {}, { [k]: next }) });
     };
     // The sizes people actually get served, smallest to biggest. − and + step through these.
@@ -2847,17 +2847,31 @@ class Component extends DCLogic {
       if (dir > 0) { const up = list.find((v) => v > ml); return up == null ? ml : up; }
       const down = list.slice().reverse().find((v) => v < ml); return down == null ? ml : down;
     };
+    // Typical strengths (% alcohol) for each drink type, weakest to strongest. − and + step through these.
+    const STRENGTHS = {
+      shot: [15, 20, 25, 30, 35, 37.5, 40, 43, 47, 50, 57],
+      wine: [5.5, 8, 9, 10, 11, 12, 12.5, 13, 13.5, 14, 15, 17, 20],
+      beer: [0.5, 2.8, 3.5, 4, 4.2, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 12],
+      cocktail: [5, 8, 10, 12, 15, 18, 20, 25, 30],
+      mixed: [4, 4.5, 5, 6, 7, 8, 10, 12]
+    };
+    const listStep = (list, v, dir) => {
+      if (dir > 0) { const up = list.find((x) => x > v + 0.001); return up == null ? v : up; }
+      const down = list.slice().reverse().find((x) => x < v - 0.001); return down == null ? v : down;
+    };
     const serveName = (k, ml) => { const hit = (SERVES[k] || SERVES.mixed).find((x) => x[0] === Math.round(ml)); return hit ? hit[1] : 'Your size'; };
     const sizeRows = selDefs.map((d) => {
       const z = sizeOf(d.k);
       const list = (SERVES[d.k] || SERVES.mixed).map((x) => x[0]);
-      const abvStep = z.abv < 10 ? 0.5 : 1;
+      const abvList = STRENGTHS[d.k] || STRENGTHS.mixed;
       return {
         name: d.label,
         vol: volText(z.ml),
         volName: serveName(d.k, z.ml),
         volLessOff: z.ml <= list[0] ? '0.35' : '1',
         volMoreOff: z.ml >= list[list.length - 1] ? '0.35' : '1',
+        abvLessOff: z.abv <= abvList[0] ? '0.35' : '1',
+        abvMoreOff: z.abv >= abvList[abvList.length - 1] ? '0.35' : '1',
         abv: z.abv + '%',
         alc: volText(z.ml * z.abv / 100),
         volLessLabel: 'Smaller ' + d.one,
@@ -2866,8 +2880,8 @@ class Component extends DCLogic {
         abvMoreLabel: 'Stronger ' + d.one,
         volLess: () => setSize(d.k, { ml: serveStep(d.k, z.ml, -1) }),
         volMore: () => setSize(d.k, { ml: serveStep(d.k, z.ml, 1) }),
-        abvLess: () => setSize(d.k, { abv: z.abv - abvStep }),
-        abvMore: () => setSize(d.k, { abv: z.abv + abvStep })
+        abvLess: () => setSize(d.k, { abv: listStep(abvList, z.abv, -1) }),
+        abvMore: () => setSize(d.k, { abv: listStep(abvList, z.abv, 1) })
       };
     });
     const unitOptions = [['ml', 'Millilitres (ml)'], ['oz', 'Fluid ounces (oz)']].map((u) => {
