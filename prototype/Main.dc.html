@@ -546,21 +546,6 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-          <div style="font-size: 18px; font-weight: 700">Best avoided today</div>
-          <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
-            <sc-for list="{{recAvoid}}" as="a" hint-placeholder-count="4">
-              <li style="display: flex; gap: 10px; align-items: flex-start">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8F8F" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M6 6l12 12M18 6L6 18"></path></svg>
-                <span style="display: flex; flex-direction: column; gap: 2px">
-                  <span style="font-size: 15px; font-weight: 700">{{a.t}}</span>
-                  <span style="font-size: 14px; color: #9A9AA0; line-height: 1.4">{{a.b}}</span>
-                </span>
-              </li>
-            </sc-for>
-          </ul>
-        </div>
-
-        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
           <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
             <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
@@ -3335,13 +3320,6 @@ class Component extends DCLogic {
       const setRecWater = (v) => this.setState({ nights: [Object.assign({}, n, { recWater: Math.max(0, Math.min(12, v)) })].concat(s.nights.slice(1)) });
       const ate = n.ate;
       const gap = R.lastDrinkT != null ? R.rEnd - R.lastDrinkT : null;
-      const foodNow = !atZero;
-      const recAvoid = [];
-      if (R.drank) recAvoid.push({ t: 'Driving, cycling or swimming', b: atZero ? 'Your estimate is back to zero, but if you still feel off, wait longer.' : 'Not until well after ' + f5hi(R.hi.zero) + '. Alcohol may still be in your body.' });
-      recAvoid.push({ t: 'A "hair of the dog" drink', b: 'It only puts the hangover off and adds more for your body to clear.' });
-      recAvoid.push({ t: 'Paracetamol while alcohol is still in your body', b: 'If you need a painkiller, ibuprofen with food is usually the gentler choice. Check with a pharmacist if you\'re not sure.' });
-      recAvoid.push({ t: 'Lots of coffee on its own', b: 'One is fine. Have a glass of water with it.' });
-      if (R.drinksN > (n.plan || 0)) recAvoid.push({ t: 'Another night out straight away', b: 'You went over your plan of ' + n.plan + '. A couple of alcohol-free days gives your body time to reset.' });
       const dayName = n.day || n.title || 'last';
       // The recovery plan goes away 24 hours after the night ended (sample nights: always shown).
       const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 24 * 3600 * 1000;
@@ -3382,12 +3360,9 @@ class Component extends DCLogic {
         recWaterDots: Array.from({ length: Math.max(waterTarget, had) }, (_, i) => ({ fill: i < had ? '#5CC8F5' : 'transparent', ring: i < had ? '#5CC8F5' : '#4A4A4E' })),
         recWaterMore: () => setRecWater(had + 1),
         recWaterLess: () => setRecWater(had - 1),
-        recFoodTitle: ate === false ? 'Food first today' : 'Eat something proper',
-        recFoodText: (ate === false ? 'You hadn\'t ticked "Eaten a proper meal" before going out, so food matters more today. ' : ate === true ? 'You ate before going out, which helps. ' : '')
-          + 'Have something within an hour of waking: eggs, toast, porridge, a banana or soup. Salty and starchy food helps you hold on to water.' + (foodNow ? ' Food won\'t lower your blood alcohol, but it settles your stomach.' : ''),
-        recSleepText: (gap == null ? '' : gap < 60 ? 'Your last drink was only ' + Math.max(0, Math.round(gap)) + ' minutes before the night ended, so your sleep was probably lighter than usual. ' : 'You stopped ' + Math.round(gap / 60 * 10) / 10 + ' hours before the night ended, which helps your sleep. ')
-          + 'If you\'re tired, a 20-minute nap before 15:00 helps. A long or late nap can make tonight\'s sleep worse.',
-        recAvoid: recAvoid,
+        recFoodTitle: 'Eat something',
+        recFoodText: ate === false ? 'You didn\'t have a proper meal before going out, so eat soon. Eggs, toast or soup are good picks.' : 'Have a proper breakfast soon. Eggs, toast or soup are good picks.',
+        recSleepText: (gap != null && gap < 60 ? 'You drank close to the end of the night, so you may feel more tired. ' : '') + 'Take it easy today. A short nap before 15:00 helps.',
         morningWaiting: !morningReady
       };
     })();
