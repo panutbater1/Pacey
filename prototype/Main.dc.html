@@ -490,6 +490,17 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-if>
         </div>
 
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recHangKicker}}</span>
+            <span style="font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -0.4px; color: {{recHangColor}}">{{recHangTime}}</span>
+            <span style="font-size: 13px; color: #9A9AA0">A rough guide. Water, food and sleep help.</span>
+          </span>
+        </div>
+
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 18px; font-weight: 700">Your day</div>
           <ol aria-label="Recovery timeline" style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column">
@@ -3303,13 +3314,19 @@ class Component extends DCLogic {
       stepDefs.push([R.rEnd, 'Night ended', R.lastDrinkT != null && R.rEnd - R.lastDrinkT >= 60 ? 'You stopped drinking ' + Math.round((R.rEnd - R.lastDrinkT) / 60 * 10) / 10 + ' h before this' : 'Close to your last drink']);
       if (R.drank) stepDefs.push([R.mid.zero, 'Back to zero (estimate)', 'Somewhere between ' + f5lo(R.lo.zero) + ' and ' + f5hi(R.hi.zero)]);
       stepDefs.push([Math.max(R.nowR, R.rEnd + 1), 'Eat and drink water', 'Within an hour of waking, then water through the day']);
+      // Hangover: usually worst around back-to-zero and fading over the next hours, longer after more drinks
+      // (2 to 10 hours after zero). Not before 08:00 the next morning, and gone within a day of the last drink.
+      // A very low peak (under 0.03%) usually means no hangover.
+      const hangEnd = R.mid.peak < 0.03 ? null : Math.min((R.lastDrinkT || R.rEnd) + 24 * 60, Math.max(R.nextClock(R.rEnd, 8 * 60), R.mid.zero + Math.min(10, Math.max(2, R.drinksN * 1.5)) * 60));
+      const hangGone = hangEnd == null || R.nowR >= hangEnd;
+      if (hangEnd != null) stepDefs.push([hangEnd, 'No hangover (estimate)', '']);
       if (NAP_END > R.rEnd + 4 * 60) stepDefs.push([NAP_END, 'Last good time for a nap', 'Keep it to about 20 minutes so tonight\'s sleep isn\'t worse']);
       stepDefs.sort((a, b) => a[0] - b[0]);
       const recSteps = stepDefs.map((d, i) => {
         const past = d[0] < R.nowR - 1 && d[1] !== 'Eat and drink water';
         const isNow = d[1] === 'Eat and drink water';
         return {
-          time: isNow ? 'Now' : d[1] === 'Back to zero (estimate)' ? f5(d[0]) : fmt(Math.round(d[0])), label: d[1], sub: d[2],
+          time: isNow ? 'Now' : d[1] === 'Back to zero (estimate)' ? f5(d[0]) : d[1] === 'No hangover (estimate)' ? fmt(Math.round(d[0] / 30) * 30) : fmt(Math.round(d[0])), label: d[1], sub: d[2],
           dot: past ? '#4A4A4E' : isNow ? '#6EE7C1' : 'transparent', ring: past ? '#4A4A4E' : '#6EE7C1',
           line: i === stepDefs.length - 1 ? 'transparent' : '#353538',
           fg: past ? '#9A9AA0' : '#FFFFFF', timeFg: past ? '#9A9AA0' : '#6EE7C1'
@@ -3356,6 +3373,9 @@ class Component extends DCLogic {
         recAfter: 'After ' + (/night$/i.test(dayName) ? dayName : dayName + ' night'),
         recHeavy: R.mid.peak >= 0.2,
         recDrank: R.drank && !atZero,
+        recHangKicker: hangGone ? 'Hangover' : 'Feeling normal again around',
+        recHangTime: hangEnd == null ? 'None expected' : hangGone ? 'Should be gone' : fmt(Math.round(hangEnd / 30) * 30),
+        recHangColor: hangGone ? '#6EE7C1' : '#FFC56B',
         recZeroKicker: !R.drank ? 'Blood alcohol' : atZero ? 'Back to zero since about' : 'Back to zero around',
         recZeroTime: !R.drank ? 'Zero' : f5(R.mid.zero),
         recZeroColor: atZero ? '#6EE7C1' : '#FFFFFF',
