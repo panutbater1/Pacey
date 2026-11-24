@@ -948,6 +948,9 @@ button{font-family:Outfit,system-ui,sans-serif}
           <sc-if value="{{showRecommend}}" hint-placeholder-val="{{false}}">
             <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">First night? We picked {{recommendName}}</span>
           </sc-if>
+          <sc-if value="{{showDayPick}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 13px; font-weight: 700; color: #6EE7C1">{{dayPickText}}</span>
+          </sc-if>
         </div>
         <div style="display: flex; align-items: center; gap: 12px">
           <button onClick="{{useQuick}}" onPointerDown="{{quickDown}}" onPointerUp="{{quickUp}}" onPointerLeave="{{quickUp}}" onPointerCancel="{{quickUp}}" onContextMenu="{{quickMenu}}" aria-label="{{quickAria}}" aria-pressed="{{quickPressed}}" style="-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; height: 48px; flex-shrink: 0; padding: 0 18px 0 14px; border-radius: 24px; border: none; background: {{quickBg}}; color: {{quickFg}}; box-shadow: inset 0 0 0 {{quickRing}}; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; white-space: nowrap; cursor: pointer">
@@ -975,7 +978,10 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 16px">
-        <div style="font-size: 15px; font-weight: 600">Tonight's plan</div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px">
+          <span style="font-size: 15px; font-weight: 600">Tonight's plan</span>
+          <span style="font-size: 13px; font-weight: 700; color: {{weekLineColor}}">{{weekLine}}</span>
+        </div>
         <div style="display: flex; justify-content: space-between; align-items: center">
           <div style="display: flex; align-items: center; gap: 12px">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
@@ -1026,7 +1032,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 
   <sc-if value="{{isDrink}}" hint-placeholder-val="{{false}}">
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 12px 24px 8px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
-      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">{{clockLabel}} · home by {{homeByLabel}}</div>
+      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">{{clockLabel}} · home by {{homeByLabel}}{{lastCallLine}}</div>
 
       <sc-if value="{{notReached}}" hint-placeholder-val="{{true}}">
         <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Nice and <span style="color: #6EE7C1">steady</span></div>
@@ -1063,9 +1069,15 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-if>
         </div>
       </sc-if>
+      <sc-if value="{{lastCallPassed}}" hint-placeholder-val="{{false}}">
+        <div style="background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 20px; font-weight: 700; color: #5CC8F5">Last call has passed</div>
+          <div style="font-size: 16px; color: #B8B8BE; line-height: 1.4">{{lastCallText}}</div>
+        </div>
+      </sc-if>
       <sc-if value="{{waiting}}" hint-placeholder-val="{{false}}">
         <div style="background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 8px">
-          <div style="font-size: 15px; font-weight: 600; color: #9A9AA0">Your next drink fits your plan in</div>
+          <div style="font-size: 15px; font-weight: 600; color: #9A9AA0">{{waitTitle}}</div>
           <div style="font-size: 44px; font-weight: 800; line-height: 1">{{countdown}}</div>
           <div style="height: 10px; border-radius: 5px; background: #353538; overflow: hidden">
             <div style="height: 10px; width: {{progressW}}; border-radius: 5px; background: linear-gradient(90deg, #6EE7C1, #5CC8F5)"></div>
@@ -1555,6 +1567,57 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
 
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Weekly limit</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <div style="display: flex; align-items: baseline; gap: 8px">
+              <span style="font-size: 40px; font-weight: 800; line-height: 1; color: {{weekLimitColor}}">{{weekLimitBig}}</span>
+              <span style="font-size: 17px; font-weight: 600; color: #B8B8BE">{{weekLimitUnit}}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button aria-label="Lower your weekly limit" onClick="{{weekLess}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
+              <button aria-label="Raise your weekly limit" onClick="{{weekMore}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+            </div>
+          </div>
+          <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">{{weekLimitNote}}</div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 600">Time between drinks</div>
+            <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">{{gapNote}}</div>
+          </div>
+          <div role="radiogroup" aria-label="Time between drinks" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{gapOptions}}" as="o" hint-placeholder-count="5">
+              <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 48px; padding: 0; border-radius: 24px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 600">Slow start</div>
+            <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">{{slowNote}}</div>
+          </div>
+          <div role="radiogroup" aria-label="Slow start" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{slowOptions}}" as="o" hint-placeholder-count="4">
+              <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 48px; padding: 0; border-radius: 24px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 600">Last call</div>
+            <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">{{lastCallNote}}</div>
+          </div>
+          <div role="radiogroup" aria-label="Last call" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{lastCallOptions}}" as="o" hint-placeholder-count="4">
+              <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="height: 48px; padding: 0; border-radius: 24px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{o.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">Your limit is a most, not a target. Home by times and getting home are set in Quick start.</div>
       </sc-if>
 
@@ -1597,6 +1660,15 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
               <div style="font-size: 16px; font-weight: 600">Getting home</div>
               <button onClick="{{q.editRide}}" aria-label="{{q.rideAria}}" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 17px; font-weight: 700; cursor: pointer">{{q.rideLabel}}</button>
+            </div>
+            <div style="border-top: 1px solid #353538; padding: 12px 0 10px; display: flex; flex-direction: column; gap: 8px">
+              <div style="font-size: 16px; font-weight: 600">Usual days</div>
+              <div role="group" aria-label="Usual days" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
+                <sc-for list="{{q.days}}" as="dy" hint-placeholder-count="7">
+                  <button onClick="{{dy.toggle}}" aria-label="{{dy.aria}}" aria-pressed="{{dy.pressed}}" style="height: 40px; padding: 0; border-radius: 20px; border: none; background: {{dy.bg}}; color: {{dy.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{dy.label}}</button>
+                </sc-for>
+              </div>
+              <div style="font-size: 13px; color: #9A9AA0; line-height: 1.4">{{q.daysNote}}</div>
             </div>
           </div>
         </sc-for>
@@ -2280,7 +2352,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="width: 56px; height: 56px; border-radius: 18px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
         </div>
-        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">A bit <span style="color: #6EE7C1">early?</span></div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{earlyT1}} <span style="color: #6EE7C1">{{earlyT2}}</span></div>
         <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{earlyBody}}</div>
         <button onClick="{{earlyWater}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Log a water instead</button>
         <button onClick="{{earlyDrink}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Log the {{curOne}} anyway</button>
@@ -2683,6 +2755,24 @@ class Component extends DCLogic {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
     }, 8000);
   }
+  // At last call (Settings > Pace plan): one reminder to switch to water.
+  checkLastCall() {
+    const s = this.state;
+    if (!s.active || s.lastCallNudged || !s.lastCall) return;
+    const start = this.props.realtime ? (s.startMin != null ? s.startMin : 0) : 21 * 60 + 5;
+    let home = s.homeH * 60 + s.homeMi * 5;
+    if (home <= start) home += 24 * 60;
+    if (start + s.tick < home - s.lastCall) return;
+    const title = 'Last call';
+    const body = 'That\'s your last call for tonight. Water from here helps you sleep and feel better tomorrow.';
+    const id = Date.now();
+    this.setState({ lastCallNudged: true, banner: { id: id, title: title, body: body } });
+    if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
+    clearTimeout(this.bannerTimer);
+    this.bannerTimer = setTimeout(() => {
+      if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
+    }, 6000);
+  }
   playAnim(type, title, sub) {
     clearTimeout(this.animTimer);
     clearTimeout(this.animStart);
@@ -2706,6 +2796,7 @@ class Component extends DCLogic {
         if (tick !== this.state.tick || minute !== this.lastMinute) { this.lastMinute = minute; this.setState({ tick: tick }); }
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
       this.checkRideNudge();
+      this.checkLastCall();
     }, 1000);
   }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
@@ -2939,6 +3030,18 @@ class Component extends DCLogic {
     const setPreset = (k, patch) => this.setState({ quick: Object.assign({}, quick, { [k]: Object.assign({}, presetOf(k), patch) }) });
     // Quick start: one chip on Home showing the current (or last used) preset; tap it to pick another.
     const matchDef = presetDefs.find((d) => { const p = presetOf(d[0]); return s.plan === p.n && s.homeH === p.h && s.homeMi === p.mi && s.rideIdx === p.ride; });
+    // Usual days (Settings > Quick start): a quick start can belong to days of the week, and Home picks it
+    // by itself the first time it's opened on one of those days.
+    const DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const DAY_LONG = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const todayDow = (nowDate.getDay() + 6) % 7;
+    const todayISO = [nowDate.getFullYear(), pad(nowDate.getMonth() + 1), pad(nowDate.getDate())].join('-');
+    const dayDef = presetDefs.find((d) => (presetOf(d[0]).days || []).indexOf(todayDow) !== -1);
+    if (dayDef && !s.active && s.screen === 'home' && s.dayApplied !== todayISO && !this._dayApplying) {
+      this._dayApplying = true;
+      const dp = presetOf(dayDef[0]);
+      setTimeout(() => { this._dayApplying = false; this.setState({ plan: dp.n, homeH: dp.h, homeMi: dp.mi, rideIdx: dp.ride, lastPreset: dayDef[0], dayApplied: todayISO }); }, 0);
+    }
     const shownDef = matchDef || presetDefs.find((d) => d[0] === s.lastPreset) || presetDefs[1];
     const shownP = presetOf(shownDef[0]);
     // Where the held chip sits on the phone screen, so the pop-up can point at it.
@@ -2988,6 +3091,26 @@ class Component extends DCLogic {
         value: p.n,
         timeLabel: t,
         rideLabel: rides[p.ride],
+        days: DAY_SHORT.map((dn, i) => {
+          const on = (p.days || []).indexOf(i) !== -1;
+          const other = presetDefs.find((o) => o[0] !== d[0] && (presetOf(o[0]).days || []).indexOf(i) !== -1);
+          return {
+            label: dn.charAt(0), aria: DAY_LONG[i], pressed: on ? 'true' : 'false',
+            bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : (other ? '#6A6A70' : '#FFFFFF'),
+            // A day belongs to one quick start: picking it here takes it away from the other one.
+            toggle: () => {
+              const next = Object.assign({}, quick);
+              presetDefs.forEach((o) => {
+                const op = presetOf(o[0]);
+                let ds = (op.days || []).filter((x) => x !== i);
+                if (o[0] === d[0] && !on) ds = ds.concat([i]).sort();
+                next[o[0]] = Object.assign({}, op, { days: ds });
+              });
+              this.setState({ quick: next });
+            }
+          };
+        }),
+        daysNote: (p.days || []).length ? 'Picked by itself on ' + (p.days || []).map((i) => DAY_LONG[i]).join(', ').replace(/, ([^,]*)$/, ' and $1') + '.' : 'Not tied to a day.',
         timeAria: 'Change home by time for ' + d[1] + ', now ' + t,
         rideAria: 'Change how you get home for ' + d[1] + ', now ' + rides[p.ride],
         lessLabel: 'Fewer for ' + d[1],
@@ -3432,10 +3555,24 @@ class Component extends DCLogic {
     const drinks = s.entries.filter((e) => e.kind === 'drink');
     const waters = s.entries.filter((e) => e.kind === 'water');
     const reached = drinks.length >= s.plan;
-    const interval = Math.max(30, Math.round((homeBy - START) / s.plan));
+    // Pace rules (Settings > Pace plan): a minimum gap between drinks, a slow start before the
+    // first drink, and a last call before home by. The plain plan spreads drinks evenly.
+    const minGap = s.minGap || 0;
+    const slowStart = s.slowStart || 0;
+    const lastCallMins = s.lastCall || 0;
+    const interval = Math.max(30, Math.round((homeBy - START) / s.plan), minGap);
+    const lastCallAt = lastCallMins ? homeBy - lastCallMins : null;
+    const afterLastCall = lastCallAt != null && now >= lastCallAt;
     const last = drinks.length ? drinks[drinks.length - 1].t : null;
-    const remaining = last === null ? 0 : last + interval - now;
-    const waiting = !reached && remaining > 0;
+    const inSlowStart = last === null && slowStart > 0 && now < START + slowStart;
+    const remaining = last === null ? (inSlowStart ? START + slowStart - now : 0) : last + interval - now;
+    const waitTotal = last === null ? Math.max(1, slowStart) : interval;
+    const waiting = !reached && !afterLastCall && remaining > 0;
+    // Weekly limit: drinks in saved nights since Monday, plus tonight's.
+    const weekLimit = s.weekLimit || 0;
+    const weekStartISO = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); })();
+    const weekSaved = s.nights.filter((n) => (n.date || '') >= weekStartISO).reduce((a, n) => a + n.entries.filter((e) => e.kind === 'drink').length, 0);
+    const weekDrinks = weekSaved + (s.active ? drinks.length : 0);
     const add = (kind, silent) => () => {
       const entry = kind === 'drink' ? { kind: kind, t: now, type: cur.k } : { kind: kind, t: now };
       const entries = s.entries.concat([entry]);
@@ -3476,7 +3613,7 @@ class Component extends DCLogic {
     };
 
     // Starting a night: check the home by time makes sense from now.
-    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, startedAtMs: Date.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
+    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, lastCallNudged: false, startedAtMs: Date.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
     const gapTo = (h, mi) => { let g = h * 60 + mi * 5 - START; if (g <= 0) g += 24 * 60; return g; };
     const beginNight = (patch) => {
       const pl = Object.assign({ homeH: s.homeH, homeMi: s.homeMi, plan: s.plan }, patch || {});
@@ -3813,7 +3950,19 @@ class Component extends DCLogic {
       if (typeof requestAnimationFrame === 'function') requestAnimationFrame(reset); else setTimeout(reset, 0);
     }
     this._scrollKey = scrollKey;
+    const radio = (o, curV, key) => ({
+      label: o[1], checked: curV === o[0] ? 'true' : 'false',
+      bg: curV === o[0] ? '#6EE7C1' : '#353538', fg: curV === o[0] ? '#1A1A1C' : '#FFFFFF',
+      pick: () => this.setState({ [key]: o[0] })
+    });
+    const WEEK_STEPS = [0, 5, 7, 10, 12, 14, 17, 21, 28];
+    const stepIn = (list, v, dir) => {
+      if (dir > 0) { const up = list.find((x) => x > v); return up == null ? v : up; }
+      const down = list.slice().reverse().find((x) => x < v); return down == null ? v : down;
+    };
     return Object.assign({}, recVals, {
+      showDayPick: !!dayDef && !!matchDef && matchDef[0] === dayDef[0],
+      dayPickText: 'Your ' + DAY_LONG[todayDow] + ' plan',
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       isAccount: s.screen === 'account',
@@ -4007,7 +4156,7 @@ class Component extends DCLogic {
         delete c.icon; delete c.name;
         this.setState({ iconPickFor: null, quick: Object.assign({}, quick, { [k]: c }) });
       },
-      showRecommend: s.nights.length === 0,
+      showRecommend: s.nights.length === 0 && !(dayDef && matchDef && matchDef[0] === dayDef[0]),
       recommendName: presetDefs[1][1],
       planNoun: cur.label,
       planIcon: DRINK_ICON[cur.k] || DRINK_ICON.mixed,
@@ -4333,6 +4482,20 @@ class Component extends DCLogic {
       limitSource: s.nights.length >= 3 ? 'Based on your quiz answers and your last ' + Math.min(5, s.nights.length) + ' nights.' : 'Based on your quiz answers.',
       limitLess: () => { syncPlan(Math.max(1, limitN - 1), avgNow); this.setState({ usualPlan: Math.max(1, limitN - 1), plan: s.active ? s.plan : Math.min(s.plan, Math.max(1, limitN - 1)) }); },
       limitMore: () => { if (limitN >= LIMIT_MAX) return; const n = limitN + 1; syncPlan(n, Math.max(avgNow, n)); this.setState({ usualPlan: n, avgDrinks: Math.max(avgNow, n) }); },
+      gapOptions: [[0, 'Auto'], [30, '30m'], [45, '45m'], [60, '1h'], [90, '1½h']].map((o) => radio(o, minGap, 'minGap')),
+      gapNote: minGap ? 'At least ' + (minGap >= 60 ? (minGap === 60 ? 'an hour' : '1½ hours') : minGap + ' minutes') + ' between drinks, even if your plan would allow one sooner.' : 'Pacey spreads your limit evenly until your home by time.',
+      slowOptions: [[0, 'Off'], [15, '15 min'], [30, '30 min'], [45, '45 min']].map((o) => radio(o, slowStart, 'slowStart')),
+      slowNote: slowStart ? 'No drink for the first ' + slowStart + ' minutes of the night. Start with water or a soft drink.' : 'Have your first drink whenever you like.',
+      lastCallOptions: [[0, 'Off'], [30, '30 min'], [60, '1 hour'], [90, '90 min']].map((o) => radio(o, lastCallMins, 'lastCall')),
+      lastCallNote: lastCallMins ? 'No drinks in the last ' + (lastCallMins === 60 ? 'hour' : lastCallMins + ' minutes') + ' before home by. Pacey reminds you at last call.' : 'Drinks can fit right up to your home by time.',
+      weekLimitBig: weekLimit ? String(weekLimit) : 'Off',
+      weekLimitUnit: weekLimit ? 'drinks a week' : '',
+      weekLimitColor: weekLimit ? '#6EE7C1' : '#9A9AA0',
+      weekLimitNote: weekLimit ? 'This week so far: ' + weekDrinks + ' of ' + weekLimit + '. Weeks start on Monday.' : 'Set a most for the whole week, across all your nights.',
+      weekLess: () => this.setState({ weekLimit: stepIn(WEEK_STEPS, weekLimit, -1) }),
+      weekMore: () => this.setState({ weekLimit: weekLimit ? stepIn(WEEK_STEPS, weekLimit, 1) : WEEK_STEPS[1] }),
+      weekLine: !weekLimit ? '' : weekDrinks >= weekLimit ? 'Weekly limit reached' : weekDrinks + s.plan > weekLimit ? 'Takes you to ' + (weekDrinks + s.plan) + ' of ' + weekLimit + ' this week' : weekDrinks + ' of ' + weekLimit + ' this week',
+      weekLineColor: weekLimit && weekDrinks + s.plan > weekLimit ? '#FF8A3D' : '#9A9AA0',
       waterHabitOptions: [1, 2, 3].map((k) => ({
         label: k === 1 ? 'Every drink' : 'Every ' + k,
         checked: waterEvery === k ? 'true' : 'false',
@@ -4384,9 +4547,13 @@ class Component extends DCLogic {
       reached: reached,
       notReached: !reached,
       waiting: waiting,
-      ready: !reached && !waiting,
+      ready: !reached && !waiting && !afterLastCall,
       countdown: remaining + ' min',
-      progressW: Math.max(4, Math.min(100, Math.round((1 - remaining / interval) * 100))) + '%',
+      progressW: Math.max(4, Math.min(100, Math.round((1 - remaining / waitTotal) * 100))) + '%',
+      waitTitle: inSlowStart ? 'Slow start: your first drink fits in' : 'Your next drink fits your plan in',
+      lastCallPassed: afterLastCall && !reached,
+      lastCallText: 'It was at ' + (lastCallAt != null ? fmt(lastCallAt) : '') + ', ' + (lastCallMins >= 60 ? (lastCallMins === 60 ? 'an hour' : (lastCallMins / 60) + ' hours') : lastCallMins + ' min') + ' before home by. Water from here helps you sleep and feel better tomorrow.',
+      lastCallLine: lastCallAt != null ? ' · last call ' + fmt(lastCallAt) : '',
       // The water cup fills towards one water per drink.
       waterFillH: (Math.floor(drinks.length / waterEvery) === 0 ? (waters.length ? 100 : 0) : Math.round(Math.min(1, waters.length / Math.floor(drinks.length / waterEvery)) * 100)) + '%',
       waterAria: waters.length + ' water for ' + drinks.length + (drinks.length === 1 ? ' drink' : ' drinks') + '. Your habit: one after every ' + (waterEvery === 1 ? 'drink' : waterEvery + ' drinks'),
@@ -4453,7 +4620,11 @@ class Component extends DCLogic {
       keepTimeAsk: () => this.setState(startFresh),
       cancelTimeAsk: () => this.setState({ timeAsk: null }),
       earlyAskOpen: !!s.earlyAsk,
-      earlyBody: 'Your next ' + cur.one + ' fits your plan in ' + Math.max(1, remaining) + ' min. A water now keeps you on pace.',
+      earlyT1: s.earlyAsk === 'lastcall' ? 'After last' : 'A bit',
+      earlyT2: s.earlyAsk === 'lastcall' ? 'call' : 'early?',
+      earlyBody: s.earlyAsk === 'lastcall' ? 'Last call was ' + (lastCallAt != null ? fmt(lastCallAt) : '') + ', so you\'ll sleep better with water from here. You can still log it.'
+        : inSlowStart ? 'Your slow start has ' + Math.max(1, remaining) + ' min to go. A water first sets a good pace.'
+        : 'Your next ' + cur.one + ' fits your plan in ' + Math.max(1, remaining) + ' min. A water now keeps you on pace.',
       earlyWater: () => { this.setState({ earlyAsk: false }); add('water')(); },
       earlyDrink: () => { this.setState({ earlyAsk: false }); add('drink')(); },
       earlyCancel: () => this.setState({ earlyAsk: false }),
@@ -4469,6 +4640,7 @@ class Component extends DCLogic {
         if (s.waterFirstOn !== false && drinks.length >= s.plan) this.setState({ waterFirst: true, typeMenu: false });
         // Pace check: a drink more than 5 minutes before the timer ends gets a gentle question first.
         // Up to 5 minutes early is close enough, so it logs straight away.
+        else if (s.earlyCheck !== false && afterLastCall) this.setState({ earlyAsk: 'lastcall', typeMenu: false });
         else if (s.earlyCheck !== false && waiting && remaining > 5) this.setState({ earlyAsk: true, typeMenu: false });
         else { this.setState({ typeMenu: false }); add('drink')(); }
       },
@@ -4487,7 +4659,7 @@ class Component extends DCLogic {
       islandNextLabel: reached ? 'Plan reached' : 'Next drink fits',
       islandStatus: reached ? 'Plan reached · water' : waiting ? 'Next in ' + remaining + ' min' : 'Next fits now',
       islandTitle: reached ? 'Plan reached · switch to water' : 'Nice and steady',
-      islandProgress: reached ? '100%' : waiting ? Math.max(4, Math.min(100, Math.round((1 - remaining / interval) * 100))) + '%' : '100%',
+      islandProgress: reached ? '100%' : waiting ? Math.max(4, Math.min(100, Math.round((1 - remaining / waitTotal) * 100))) + '%' : '100%',
       islandAria: drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : waiting ? 'Next drink fits in ' + remaining + ' minutes.' : 'Next drink fits now.') + ' Expand',
       lockGaugeAria: drinks.length + ' of ' + s.plan + ' drinks',
       gaugeDash: (Math.min(1, drinks.length / s.plan) * 194.8).toFixed(1) + ' 194.8',
