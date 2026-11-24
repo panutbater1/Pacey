@@ -62,7 +62,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 <div data-pacey-root="1" style="width: 390px; height: 844px; box-sizing: border-box; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
   <sc-if value="{{showTabs}}" hint-placeholder-val="{{false}}">
-    <div style="flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; justify-content: space-between; align-items: center; overflow: hidden; max-height: {{topBarMax}}; opacity: {{topBarOpacity}}; transition: max-height 0.2s ease, opacity 0.15s ease">
+    <div style="flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; justify-content: space-between; align-items: center">
       <sc-if value="{{showBrand}}" hint-placeholder-val="{{true}}">
         <div style="display: flex; align-items: center; gap: 10px">
           <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
@@ -3785,26 +3785,11 @@ class Component extends DCLogic {
     // scroll the page areas back up. The time wheels are left alone.
     const scrollKey = [s.screen, s.settingsPage || '', nv, showLastNight ? 'last' : '', s.viewIdx, s.active ? 'on' : ''].join('|');
     if (this._scrollKey !== undefined && this._scrollKey !== scrollKey && typeof document !== 'undefined') {
-      const reset = () => { document.querySelectorAll('div[style*="overflow-y: auto"]').forEach((el) => { el.scrollTop = 0; }); if (this.state.topHidden) this.setState({ topHidden: false }); };
+      const reset = () => { document.querySelectorAll('div[style*="overflow-y: auto"]').forEach((el) => { el.scrollTop = 0; }); };
       if (typeof requestAnimationFrame === 'function') requestAnimationFrame(reset); else setTimeout(reset, 0);
     }
     this._scrollKey = scrollKey;
-    // The pacey. bar at the top only shows at the top of a page: it folds away once you scroll down
-    // a page that's long enough, and comes back when you're at the top again. It stays during a night.
-    if (!this._topHook && typeof document !== 'undefined') {
-      this._topHook = true;
-      document.addEventListener('scroll', (e) => {
-        const el = e.target;
-        if (!el || !el.getAttribute || (el.getAttribute('style') || '').indexOf('overflow-y: auto') === -1) return;
-        const room = el.scrollHeight - el.clientHeight;
-        if (el.scrollTop > 24 && room > 120 && !this.state.topHidden) this.setState({ topHidden: true });
-        else if (el.scrollTop <= 4 && this.state.topHidden) this.setState({ topHidden: false });
-      }, true);
-    }
-    const topHidden = !!s.topHidden && !s.active;
     return Object.assign({}, recVals, {
-      topBarMax: topHidden ? '24px' : '120px',
-      topBarOpacity: topHidden ? '0' : '1',
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       isAccount: s.screen === 'account',
