@@ -1,5 +1,5 @@
 {
-  "updated": "18 November 2026",
+  "updated": "24 November 2026",
   "terms": [
     [
       "What Pacey is",
@@ -11,7 +11,7 @@
     ],
     [
       "Not medical advice",
-      "Pacey is not medical advice. Drink sizes, alcohol amounts and the blood alcohol figure are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol, and your real level can be much higher."
+      "Pacey is not medical advice. Drink sizes and alcohol amounts are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol."
     ],
     [
       "Never drive after drinking",
@@ -49,19 +49,15 @@
   "privacy": [
     [
       "The short version",
-      "Your nights stay on your phone. Your Pacey account only holds your email or sign-in and your plan from the quiz. There are no ads and no tracking, and we don't sell or share your data."
+      "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."
     ],
     [
       "Your account",
-      "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details and your suggested plan, so you can restore them on a new phone. You can sign out or delete your account at any time in Settings › Profile."
+      "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."
     ],
     [
       "What Pacey stores on your phone",
-      "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, weight and body type you add in Profile."
-    ],
-    [
-      "Weight and body type",
-      "These are optional. If you add them, they are used only on your phone to work out the blood alcohol estimate in your night summary. You can turn this off below."
+      "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name and trusted friend you add in Profile."
     ],
     [
       "Location",

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pacey need help</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#9A9AA0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 56px 24px 24px; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Need <span style="color: #6EE7C1">help?</span></div>
+    <a href="Main.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 22px; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </a>
+  </div>
+
+  <button style="min-height: 84px; flex-shrink: 0; padding: 0 22px; border-radius: 28px; border: none; background: #E5484D; color: #FFFFFF; display: flex; align-items: center; gap: 14px; text-align: left; font-family: Outfit, sans-serif; cursor: pointer">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>
+    <span style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 19px; font-weight: 700">Call emergency services</span>
+      <span style="font-size: 14px; font-weight: 500">Calls {{emergencyNumber}}</span>
+    </span>
+  </button>
+
+  <button style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; font-family: Outfit, sans-serif; cursor: pointer">
+    <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+    </span>
+    <span style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 16px; font-weight: 600">Send my location to a friend</span>
+      <span style="font-size: 14px; color: #9A9AA0">Opens a message you can send</span>
+    </span>
+  </button>
+
+  <button style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; font-family: Outfit, sans-serif; cursor: pointer">
+    <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
+    </span>
+    <span style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 16px; font-weight: 600">Get a ride home</span>
+      <span style="font-size: 14px; color: #9A9AA0">Find a taxi nearby</span>
+    </span>
+  </button>
+
+  <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 16px; font-weight: 700">Signs someone needs urgent help</div>
+    <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: #B8B8BE; line-height: 1.35">
+      <li>Can't be woken up, or keeps passing out</li>
+      <li>Slow or irregular breathing</li>
+      <li>Being sick while drowsy or unconscious</li>
+      <li>Pale, bluish or cold, clammy skin</li>
+    </ul>
+  </div>
+
+  <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 16px; font-weight: 700">While you wait for help</div>
+    <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: #B8B8BE; line-height: 1.35">
+      <li>Stay with them. Never leave them alone.</li>
+      <li>If they're lying down, roll them onto their side.</li>
+      <li>Keep them warm, and offer sips of water if awake.</li>
+      <li>No coffee, no cold shower, no more alcohol.</li>
+    </ul>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Sample value. The app uses the local emergency number for the user's country.
+    return { emergencyNumber: '112' };
+  }
+}
+</script>
+</body>
+</html>

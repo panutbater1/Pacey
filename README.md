@@ -41,7 +41,7 @@ See [`desktop/README.md`](desktop/README.md) for more.
   - The morning after: a check-in and a fix-up for anything you forgot to log.
   - Any other time: Getting ready (before-you-go checklist, tonight's reason, your usual plan, a tip from your history).
 - **Nights:** a list of nights, plus Weeks and Months views with a calendar and stats. Each night opens its summary.
-- **Night summary:** plan circles, how long the night lasted, total drunk and alcohol, estimated blood alcohol (range and curve, clearly marked as an estimate), pace, hour-by-hour bars and everything logged.
+- **Night summary:** plan circles, how long the night lasted, total drunk and alcohol, pace, hour-by-hour bars and everything logged.
 - **Settings:** profile and account, pace plan, quick start, drink types, drink sizes (ml or fl oz), reminders, emergency and safety, terms and conditions, data and privacy, about.
 - **Lock screen and Dynamic Island:** lock screen widgets and a Live Activity that log drinks without opening the app, and a Dynamic Island with the pacer and drink count during a night.
 - **Need help?** in the top bar during a night: call emergency services, send your location, get a ride home, signs someone needs urgent help.
@@ -57,7 +57,7 @@ These are for testing and are not part of the app:
 
 ## Other folders
 
-- `design/` — the original HTML mockups and logo options (the tilted glass, `LogoTilt.dc.html`, is the chosen logo; `LogoLockup.dc.html` shows the "pacey." wordmark).
+- `design/` — the HTML mockups for the four v1 screens and the app's logo, the tilted glass (`LogoTilt.dc.html`).
 - `docs/PACEY_BRIEF.md` — the original product brief.
 - `docs/legal-text.json` — the Terms and conditions and Privacy policy text used in the prototype. It's a plain-English draft, not legal advice: fill in `[YOUR CONTACT EMAIL]` and have it reviewed before release.
 - `docs/app-icon.png` — the app icon (1024 × 1024).

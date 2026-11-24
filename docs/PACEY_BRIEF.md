@@ -35,6 +35,7 @@ Paste this whole file into Claude Code (or drop it into the project folder), tog
 
 ## 4. Tech direction
 
+- **Build order (Aaron's decision, 24 November 2026):** build a **web prototype first** (`prototype/Main.dc.html`, which runs on a laptop with `npm start`), then rebuild it as the native SwiftUI app below.
 - **Native iPhone app in SwiftUI** (native is needed later for widgets, Live Activities / Dynamic Island and Back Tap).
 - Local storage (SwiftData or similar) for v1.
 - Local notifications for pacing reminders.
@@ -66,8 +67,7 @@ Paste this whole file into Claude Code (or drop it into the project folder), tog
 
 ## 6. Logo
 
-Options are in `design/` (LogoTilt, LogoHalf, LogoRing, LogoApp, LogoLockup, LogoTipped, LogoTippedApp).
-- Chosen logo: **Logo A — tilted glass** (`LogoTilt.dc.html`): white tilted cocktail glass, mint drink, two mint bubbles on charcoal. Used for the app icon and in-app logo.
+- The logo: **tilted glass** (`design/LogoTilt.dc.html`): white tilted cocktail glass, mint drink, two mint bubbles on charcoal. Used for the app icon and in-app logo.
 - Note: it was based on a reference image — check that image's licence or change the design enough before using it officially.
 
 ## 7. Design files
@@ -77,7 +77,7 @@ Options are in `design/` (LogoTilt, LogoHalf, LogoRing, LogoApp, LogoLockup, Log
 - `Drink.dc.html` — Drink mode
 - `Summary.dc.html` — Night summary
 - `Help.dc.html` — Need help
-- `Logo*.dc.html` — logo options
+- `LogoTilt.dc.html` — the logo
 - `canvas.json` — layout of the design canvas
 
 They are written in a canvas mockup format (inline styles, a small script block at the bottom with sample data). Use them for layout, spacing, colours and copy — rebuild them natively in SwiftUI rather than embedding the HTML.
