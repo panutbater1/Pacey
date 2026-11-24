@@ -61,7 +61,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 </helmet>
 <div data-pacey-root="1" style="width: 390px; height: 844px; box-sizing: border-box; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
-  <sc-if value="{{showTabs}}" hint-placeholder-val="{{false}}">
+  <sc-if value="{{showTopBar}}" hint-placeholder-val="{{false}}">
     <div style="flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; justify-content: space-between; align-items: center">
       <sc-if value="{{showBrand}}" hint-placeholder-val="{{true}}">
         <div style="display: flex; align-items: center; gap: 10px">
@@ -586,7 +586,13 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
       <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
@@ -1134,7 +1140,13 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isReady}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">For your next night out</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Getting <span style="color: #6EE7C1">ready</span></div>
@@ -1272,7 +1284,13 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isDrinkEmpty}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{lastTitle}} · {{lnTime}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your last <span style="color: #6EE7C1">night</span></div>
@@ -1361,7 +1379,13 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isSettingsMain}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px; flex-shrink: 0">Your <span style="color: #6EE7C1">settings</span></div>
 
       <button onClick="{{goProfile}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 26px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
@@ -1396,7 +1420,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isSettingsSub}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 0; display: flex; flex-direction: column; gap: 16px">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 56px 24px 0; display: flex; flex-direction: column; gap: 16px">
       <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
         <button onClick="{{settingsBack}}" style="height: 44px; padding: 0 14px 0 8px; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 700; cursor: pointer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
@@ -4088,6 +4112,10 @@ class Component extends DCLogic {
       elapsedLabel: elapsedLabel,
       startLabel: fmt(START),
       showBrand: !(s.screen === 'drink' && s.active),
+      // The logo bar is fixed only on Home and during a night. Other tabs have the logo inside the page, so it scrolls away.
+      brandInPage: !s.active,
+      pageTopPad: s.active ? '16px' : '48px',
+      showTopBar: (s.screen === 'home' || s.active) && (s.screen === 'home' || s.screen === 'drink' || s.screen === 'settings' || s.screen === 'history'),
       drinkTabLabel: 'Tonight',
       isRecovery: s.screen === 'recovery',
       openRecovery: () => this.setState({ screen: 'recovery', recoveryFrom: s.screen }),
