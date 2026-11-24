@@ -61,7 +61,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 </helmet>
 <div data-pacey-root="1" style="width: 390px; height: 844px; box-sizing: border-box; background: #1A1A1C; color: #FFFFFF; font-family: Outfit, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
-  <sc-if value="{{showTabs}}" hint-placeholder-val="{{false}}">
+  <sc-if value="{{showTopBar}}" hint-placeholder-val="{{false}}">
     <div style="flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; justify-content: space-between; align-items: center">
       <sc-if value="{{showBrand}}" hint-placeholder-val="{{true}}">
         <div style="display: flex; align-items: center; gap: 10px">
@@ -403,8 +403,196 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{isRecovery}}" hint-placeholder-val="{{false}}">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 0; display: flex; flex-direction: column">
+      <div style="flex-shrink: 0; display: flex">
+        <button onClick="{{closeRecovery}}" aria-label="Back" style="min-height: 44px; margin-left: -6px; padding: 0 10px 0 4px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+          Back
+        </button>
+      </div>
+    <div style="flex-grow: 1; min-height: 0; margin: 0 -24px; padding: 4px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{recAfter}}</div>
+        <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">recovery</span></div>
+      </div>
+
+      <sc-if value="{{recNone}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 18px; font-weight: 700">Nothing to recover from yet</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">The morning after a night out, this shows when you're likely back to zero, how much water to catch up on, what to eat and what to avoid, all worked out from what you logged.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{recHas}}" hint-placeholder-val="{{true}}">
+        <sc-if value="{{recHeavy}}" hint-placeholder-val="{{false}}">
+          <div role="alert" style="flex-shrink: 0; background: #3A2224; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-size: 17px; font-weight: 700; color: #FF9B8F">That was a very heavy night</div>
+            <div style="font-size: 15px; color: #E8D0CE; line-height: 1.45">If you or someone with you can't stay awake, keeps being sick, or is breathing slowly, get help now.</div>
+            <button onClick="{{openHelp}}" style="height: 48px; border-radius: 24px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Open Need help</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{recSleeping}}" hint-placeholder-val="{{false}}">
+          <div style="flex-grow: 1; min-height: 360px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 12px 8px">
+            <div style="position: relative; width: 132px; height: 132px; border-radius: 66px; background: radial-gradient(circle at 50% 45%, rgba(185, 164, 255, 0.22), rgba(185, 164, 255, 0) 70%); display: flex; align-items: center; justify-content: center">
+              <svg width="76" height="76" viewBox="0 0 24 24" fill="#B9A4FF" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg>
+              <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true" style="position: absolute; left: 0; top: 0"><circle cx="24" cy="30" r="2" fill="#B9A4FF"></circle><circle cx="108" cy="22" r="1.6" fill="#B9A4FF"></circle><circle cx="114" cy="96" r="2.2" fill="#B9A4FF"></circle><circle cx="16" cy="100" r="1.4" fill="#B9A4FF"></circle></svg>
+            </div>
+            <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.6px">Time to <span style="color: #B9A4FF">sleep</span></div>
+            <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; max-width: 300px">Your recovery plan will be ready after {{morningAt}}. Rest is the best thing you can do right now.</div>
+            <div style="align-self: stretch; margin-top: 6px; background: #262628; border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+              <div style="font-size: 15px; font-weight: 700">Before you sleep</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">A big glass of water, and another by the bed.</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">Phone on charge, alarm set if you need one.</div>
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">If you feel sick, sleep on your side.</div>
+            </div>
+            <sc-if value="{{showSkipMorning}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{skipToMorning}}" style="min-height: 40px; padding: 0 14px; border-radius: 20px; border: 1.5px dashed #FFC56B; background: none; color: #FFC56B; font-size: 13px; font-weight: 700; cursor: pointer">Prototype only · skip to the morning</button>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{recAwake}}" hint-placeholder-val="{{true}}">
+        <div role="img" aria-label="{{recRingsAria}}" style="flex-shrink: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="position: relative; width: 104px; height: 104px">
+                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#6EE7C1" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{recDash}}" transform="rotate(-90 48 48)"></circle>
+                </svg>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{recPct}}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 700; color: #6EE7C1">Recovery</span>
+              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{recRingNote}}</span>
+            </div>
+            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="position: relative; width: 104px; height: 104px">
+                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#5CC8F5" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{hydDash}}" transform="rotate(-90 48 48)"></circle>
+                </svg>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{hydPct}}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 700; color: #5CC8F5">Hydration</span>
+              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{hydRingNote}}</span>
+            </div>
+        </div>
+
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recZeroKicker}}</div>
+          <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+            <span style="font-size: 44px; font-weight: 800; line-height: 1; color: {{recZeroColor}}">{{recZeroTime}}</span>
+            <span style="font-size: 15px; font-weight: 600; color: #B8B8BE">{{recZeroRange}}</span>
+          </div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recZeroText}}</div>
+          <sc-if value="{{recDrank}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: #1F1F21">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8A3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+              <span style="font-size: 14px; color: #E0E0E4; line-height: 1.4">Don't drive until well after this. Your real level can be higher than Pacey's estimate. If in doubt, don't.</span>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">{{recHangKicker}}</span>
+            <span style="font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -0.4px; color: {{recHangColor}}">{{recHangTime}}</span>
+            <span style="font-size: 13px; color: #9A9AA0">A rough guide. Water, food and sleep help.</span>
+          </span>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 18px; font-weight: 700">Your day</div>
+          <ol aria-label="Recovery timeline" style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column">
+            <sc-for list="{{recSteps}}" as="st" hint-placeholder-count="4">
+              <li style="display: flex; gap: 14px; align-items: stretch">
+                <span aria-hidden="true" style="width: 14px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0">
+                  <span style="width: 12px; height: 12px; border-radius: 6px; margin-top: 5px; background: {{st.dot}}; border: 2px solid {{st.ring}}; box-sizing: border-box; flex-shrink: 0"></span>
+                  <span style="flex-grow: 1; width: 2px; background: {{st.line}}"></span>
+                </span>
+                <span style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 14px; min-width: 0">
+                  <span style="font-size: 16px; font-weight: 700; color: {{st.fg}}"><span style="color: {{st.timeFg}}">{{st.time}}</span> · {{st.label}}</span>
+                </span>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+            <span style="font-size: 18px; font-weight: 700">Water to catch up</span>
+            <span style="font-size: 14px; font-weight: 700; color: {{recWaterCountColor}}">{{recWaterCount}}</span>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #5CC8F5">{{recWaterBig}}</div>
+          <div aria-hidden="true" style="display: flex; gap: 6px; flex-wrap: wrap">
+            <sc-for list="{{recWaterDots}}" as="d" hint-placeholder-count="6">
+              <span style="width: 26px; height: 32px; border-radius: 4px 4px 8px 8px; border: 2px solid {{d.ring}}; background: {{d.fill}}; box-sizing: border-box"></span>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 52px 1fr; gap: 8px">
+            <button onClick="{{recWaterLess}}" aria-label="{{recWaterLessAria}}" style="height: 48px; border-radius: 24px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
+            <button onClick="{{recWaterMore}}" style="height: 48px; border-radius: 24px; border: none; background: #5CC8F5; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">{{recWaterAddLabel}}</button>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #353538; color: #F5B83D; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0z"></path><path d="M9 4c0 2 2 2 2 4M14 4c0 2 2 2 2 4"></path></svg>
+            </span>
+            <span style="font-size: 18px; font-weight: 700">{{recFoodTitle}}</span>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #F5B83D">{{recFoodBig}}</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recFoodText}}</div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="width: 40px; height: 40px; border-radius: 12px; background: #353538; color: #A99BFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg>
+            </span>
+            <span style="font-size: 18px; font-weight: 700">Sleep tonight</span>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #B9A4FF">{{recSleepBig}}</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recSleepText}}</div>
+        </div>
+
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
+          <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
+            <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="3">
+                <button onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 48px; border-radius: 24px; border: 2px solid {{f.ring}}; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{f.label}}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{hasFeel}}" hint-placeholder-val="{{false}}">
+              <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{feelMessage}}</div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{morningWaiting}}" hint-placeholder-val="{{false}}">
+            <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Get some sleep. Pacey will ask how you're feeling after {{morningAt}}.</div>
+          </sc-if>
+        </div>
+
+        <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time lowers your blood alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. Everything here is an estimate from what you logged, not medical advice.</div>
+        </sc-if>
+      </sc-if>
+    </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
       <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
@@ -952,11 +1140,28 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isReady}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">For your next night out</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Getting <span style="color: #6EE7C1">ready</span></div>
       </div>
+      <sc-if value="{{recCardOnTonight}}" hint-placeholder-val="{{true}}">
+      <button onClick="{{openRecovery}}" aria-label="{{recCardAria}}" style="flex-shrink: 0; border: none; border-radius: 26px; padding: 18px; background: linear-gradient(135deg, #6EE7C1 0%, #4FD1C5 100%); color: #1A1A1C; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer; box-shadow: 0 8px 24px rgba(110, 231, 193, 0.18)">
+        <span style="width: 52px; height: 52px; border-radius: 16px; background: rgba(26, 26, 28, 0.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; opacity: 0.75">{{recCardKicker}}</span>
+          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15">Your recovery plan</span>
+          <span style="font-size: 14px; font-weight: 600; line-height: 1.35">{{recCardSub}}</span>
+        </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px 8px; display: flex; flex-direction: column">
         <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-bottom: 6px">
@@ -1079,11 +1284,28 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isDrinkEmpty}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
         <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">{{lastTitle}} · {{lnTime}}</div>
         <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your last <span style="color: #6EE7C1">night</span></div>
       </div>
+      <sc-if value="{{recCardOnTonight}}" hint-placeholder-val="{{true}}">
+      <button onClick="{{openRecovery}}" aria-label="{{recCardAria}}" style="flex-shrink: 0; border: none; border-radius: 26px; padding: 18px; background: linear-gradient(135deg, #6EE7C1 0%, #4FD1C5 100%); color: #1A1A1C; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer; box-shadow: 0 8px 24px rgba(110, 231, 193, 0.18)">
+        <span style="width: 52px; height: 52px; border-radius: 16px; background: rgba(26, 26, 28, 0.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"></path><path d="M7 18a5 5 0 0 1 10 0"></path><path d="M12 4v4M4.9 8.9l2.1 2.1M19.1 8.9L17 11"></path></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; opacity: 0.75">{{recCardKicker}}</span>
+          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15">Your recovery plan</span>
+          <span style="font-size: 14px; font-weight: 600; line-height: 1.35">{{recCardSub}}</span>
+        </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+      </sc-if>
 
       <sc-if value="{{morningWait}}" hint-placeholder-val="{{false}}">
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; gap: 14px; align-items: flex-start">
@@ -1157,7 +1379,13 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isSettingsMain}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: {{pageTopPad}} 24px 12px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+      <sc-if value="{{brandInPage}}" hint-placeholder-val="{{true}}">
+      <div style="flex-shrink: 0; height: 44px; display: flex; align-items: center; gap: 10px">
+          <svg width="40" height="40" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"></path></g></svg>
+          <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
+      </div>
+      </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px; flex-shrink: 0">Your <span style="color: #6EE7C1">settings</span></div>
 
       <button onClick="{{goProfile}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 26px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
@@ -1192,15 +1420,15 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isSettingsSub}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 24px 0; display: flex; flex-direction: column; gap: 16px">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 56px 24px 0; display: flex; flex-direction: column; gap: 16px">
       <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
         <button onClick="{{settingsBack}}" style="height: 44px; padding: 0 14px 0 8px; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 700; cursor: pointer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
           Settings
         </button>
-        <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{subTitle}}</div>
       </div>
-      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 12px; display: flex; flex-direction: column; gap: 16px">
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: -6px -24px 0; padding: 0 24px 12px; display: flex; flex-direction: column; gap: 16px">
+        <div style="flex-shrink: 0; font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{subTitle}}</div>
 
       <sc-if value="{{subProfile}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
@@ -1560,14 +1788,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         <button aria-label="Back" onClick="{{done}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
         </button>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+      </div>
+
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin-top: -8px; display: flex; flex-direction: column; gap: 14px">
+        <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-bottom: 4px">
           <div style="font-size: 18px; font-weight: 700">Night summary</div>
           <div style="font-size: 13px; font-weight: 500; color: #9A9AA0">{{dateLine}}</div>
         </div>
-        <div style="width: 44px; height: 44px"></div>
-      </div>
-
-      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 14px">
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px">
         <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
@@ -3064,6 +3291,142 @@ class Component extends DCLogic {
       pressed: lastNight.feel === label ? 'true' : 'false',
       pick: () => setLast({ feel: label })
     }));
+    // ----- Recovery: the morning after the latest night, from what was logged.
+    const recovery = (() => {
+      const n = s.nights[0];
+      if (!n) return null;
+      const RS = startOf(n);
+      const rEnd = RS + n.endTick;
+      const drinksR = n.entries.filter((e) => e.kind === 'drink');
+      const watersR = n.entries.filter((e) => e.kind === 'water').length;
+      const doses = drinksR.map((e) => {
+        const z = drinkSize(e);
+        return { t: Math.min(e.t, rEnd), pct: z.ml * z.abv / 100 * 0.789 / (weightKg * 1000 * bodyR) * 100 };
+      }).sort((a, b) => a.t - b.t);
+      // Same absorption model as the night summary. Returns the peak and the first minute back at zero.
+      const sim = (k) => {
+        const ABSORB = 1 - Math.exp(-1 / 20);
+        const ELIM = 0.015 / 60;
+        let stomach = 0, level = 0, peak = 0, next = 0, levelNow = 0;
+        const lastT = doses.length ? doses[doses.length - 1].t : RS;
+        for (let t = RS; t <= lastT + 48 * 60; t += 1) {
+          while (next < doses.length && doses[next].t <= t) { stomach += doses[next].pct * k; next += 1; }
+          const a = stomach * ABSORB;
+          stomach -= a;
+          level = Math.max(0, level + a - ELIM);
+          if (level > peak) peak = level;
+          if (t === Math.floor(nowR)) levelNow = level;
+          if (t > lastT && level === 0 && stomach < 0.0005) return { peak: peak, zero: t, levelNow: t > nowR ? levelNow : 0 };
+        }
+        return { peak: peak, zero: lastT + 48 * 60, levelNow: levelNow };
+      };
+      // Where "now" is on the night's clock. The prototype pretends it's 09:30 the next morning.
+      // The next given clock time (minutes after midnight) after a point on the night's clock.
+      const nextClock = (after, clock) => { let m = after - (((after % 1440) + 1440) % 1440) + clock; while (m <= after) m += 1440; return m; };
+      const nowR = RT && n.endedAtMs ? rEnd + (Date.now() - n.endedAtMs) / 60000 : nextClock(rEnd + 60, 9 * 60 + 30);
+      const mid = sim(1), lo = sim(0.8), hi = sim(1.2);
+      const lastDrinkT = doses.length ? doses[doses.length - 1].t : null;
+      return { nextClock: nextClock, n: n, RS: RS, rEnd: rEnd, drinksN: drinksR.length, watersN: watersR, mid: mid, lo: lo, hi: hi, nowR: nowR, lastDrinkT: lastDrinkT, drank: mid.peak >= 0.005 };
+    })();
+    const recVals = (() => {
+      if (!recovery) return { recHas: false, recNone: true, recAfter: 'The morning after' };
+      const R = recovery;
+      // Estimates rounded to 5 minutes: the earliest rounds down and the latest rounds up.
+      const f5 = (m) => fmt(Math.round(m / 5) * 5), f5lo = (m) => fmt(Math.floor(m / 5) * 5), f5hi = (m) => fmt(Math.ceil(m / 5) * 5);
+      const n = R.n;
+      const atZero = !R.drank || R.nowR >= R.mid.zero;
+      const NAP_END = R.nextClock(R.rEnd, 15 * 60);
+      const stepDefs = [];
+      if (R.lastDrinkT != null) stepDefs.push([R.lastDrinkT, 'Last drink', R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' and ' + R.watersN + ' ' + (R.watersN === 1 ? 'water' : 'waters') + ' in total']);
+      stepDefs.push([R.rEnd, 'Night ended', R.lastDrinkT != null && R.rEnd - R.lastDrinkT >= 60 ? 'You stopped drinking ' + Math.round((R.rEnd - R.lastDrinkT) / 60 * 10) / 10 + ' h before this' : 'Close to your last drink']);
+      if (R.drank) stepDefs.push([R.mid.zero, 'Back to zero (estimate)', 'Somewhere between ' + f5lo(R.lo.zero) + ' and ' + f5hi(R.hi.zero)]);
+      stepDefs.push([Math.max(R.nowR, R.rEnd + 1), 'Eat and drink water', 'Within an hour of waking, then water through the day']);
+      // Hangover: usually worst around back-to-zero and fading over the next hours, longer after more drinks
+      // (2 to 10 hours after zero). Not before 08:00 the next morning, and gone within a day of the last drink.
+      // A very low peak (under 0.03%) usually means no hangover.
+      const hangEnd = R.mid.peak < 0.03 ? null : Math.min((R.lastDrinkT || R.rEnd) + 24 * 60, Math.max(R.nextClock(R.rEnd, 8 * 60), R.mid.zero + Math.min(10, Math.max(2, R.drinksN * 1.5)) * 60));
+      const hangGone = hangEnd == null || R.nowR >= hangEnd;
+      if (hangEnd != null) stepDefs.push([hangEnd, 'No hangover (estimate)', '']);
+      if (NAP_END > R.rEnd + 4 * 60) stepDefs.push([NAP_END, 'Last good time for a nap', 'Keep it to about 20 minutes so tonight\'s sleep isn\'t worse']);
+      stepDefs.sort((a, b) => a[0] - b[0]);
+      const recSteps = stepDefs.map((d, i) => {
+        const past = d[0] < R.nowR - 1 && d[1] !== 'Eat and drink water';
+        const isNow = d[1] === 'Eat and drink water';
+        return {
+          time: isNow ? 'Now' : d[1] === 'Back to zero (estimate)' ? f5(d[0]) : d[1] === 'No hangover (estimate)' ? fmt(Math.round(d[0] / 30) * 30) : fmt(Math.round(d[0])), label: d[1], sub: d[2],
+          dot: past ? '#4A4A4E' : isNow ? '#6EE7C1' : 'transparent', ring: past ? '#4A4A4E' : '#6EE7C1',
+          line: i === stepDefs.length - 1 ? 'transparent' : '#353538',
+          fg: past ? '#9A9AA0' : '#FFFFFF', timeFg: past ? '#9A9AA0' : '#6EE7C1'
+        };
+      });
+      // Water: about one glass for every drink that wasn't matched by a water, plus two, up to 8.
+      // Water: 750 ml, plus a 250 ml glass for every drink that wasn't matched by a water (500 to 3,000 ml).
+      const GLASS = 250;
+      const waterTarget = Math.min(12, Math.max(2, 3 + Math.max(0, R.drinksN - R.watersN)));
+      const mlText = (ml) => oz ? volText(ml) : Math.round(ml).toLocaleString('en-GB') + ' ml';
+      // Food: a rough daily guide from weight (about 30 kcal per kg, a little less for a female body).
+      const kcalNeed = Math.round(weightKg * (useBody && s.body === 'female' ? 27 : 30) / 50) * 50;
+      // Sleep: 8 hours, plus a little more after more drinks because alcohol makes sleep lighter (up to 9½).
+      const sleepH = 8 + Math.min(1.5, Math.round(R.drinksN * 0.15 * 2) / 2);
+      const hText = (h) => Math.floor(h) + ' h' + (h % 1 ? ' 30 min' : '');
+      const bedMin = (7 * 60 - sleepH * 60 + 1440) % 1440;
+      const had = n.recWater || 0;
+      const setRecWater = (v) => this.setState({ nights: [Object.assign({}, n, { recWater: Math.max(0, Math.min(12, v)) })].concat(s.nights.slice(1)) });
+      const ate = n.ate;
+      const gap = R.lastDrinkT != null ? R.rEnd - R.lastDrinkT : null;
+      const dayName = n.day || n.title || 'last';
+      // The recovery plan goes away 24 hours after the night ended (sample nights: always shown).
+      const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 24 * 3600 * 1000;
+      const waterLeft = Math.max(0, waterTarget - had);
+      // Rings: how much of the night's alcohol is cleared, and water against what last night needs.
+      const recPct = !R.drank ? 100 : Math.max(0, Math.min(100, Math.round(100 * (1 - R.mid.levelNow / R.mid.peak))));
+      const hydPct = Math.max(0, Math.min(100, Math.round(100 * (R.watersN + had) / (R.watersN + waterTarget))));
+      const ring = (pct) => (pct / 100 * 245.04).toFixed(1) + ' 245.04';
+      const sleeping = !morningReady;
+      const cardBits = sleeping ? ['Ready after ' + pad(MORNING_H) + ':00', 'sleep well first'] : [!R.drank ? 'No alcohol left to clear' : atZero ? 'Back to zero since about ' + f5(R.mid.zero) : 'Back to zero around ' + f5(R.mid.zero), waterLeft ? mlText(waterLeft * GLASS) + ' of water to go' : 'Water done'];
+      return {
+        recCardOnTonight: recRecent,
+        recSleeping: sleeping,
+        recAwake: !sleeping,
+        recPct: recPct + '%', recDash: ring(recPct),
+        hydPct: hydPct + '%', hydDash: ring(hydPct),
+        recRingNote: recPct >= 100 ? 'Alcohol cleared' : 'Of the alcohol cleared',
+        hydRingNote: hydPct >= 100 ? 'Fully topped up' : 'Of the water you need',
+        recRingsAria: 'Recovery ' + recPct + ' percent. Hydration ' + hydPct + ' percent.',
+        recCardKicker: 'After ' + (/night$/i.test(n.day || n.title || '') ? (n.day || n.title) : (n.day || n.title || 'last') + ' night'),
+        recCardSub: cardBits.join(' · '),
+        recCardAria: 'Your recovery plan. ' + cardBits.join('. '),
+        recHas: true, recNone: false,
+        recAfter: 'After ' + (/night$/i.test(dayName) ? dayName : dayName + ' night'),
+        recHeavy: R.mid.peak >= 0.2,
+        recDrank: R.drank && !atZero,
+        recHangKicker: hangGone ? 'Hangover' : 'Feeling normal again around',
+        recHangTime: hangEnd == null ? 'None expected' : hangGone ? 'Should be gone' : fmt(Math.round(hangEnd / 30) * 30),
+        recHangColor: hangGone ? '#6EE7C1' : '#FFC56B',
+        recZeroKicker: !R.drank ? 'Blood alcohol' : atZero ? 'Back to zero since about' : 'Back to zero around',
+        recZeroTime: !R.drank ? 'Zero' : f5(R.mid.zero),
+        recZeroColor: atZero ? '#6EE7C1' : '#FFFFFF',
+        recZeroRange: R.drank ? '(' + f5lo(R.lo.zero) + '–' + f5hi(R.hi.zero) + ')' : '',
+        recZeroText: !R.drank ? 'You had very little alcohol, so there\'s nothing left to clear.'
+          : atZero ? 'Your estimated blood alcohol has reached zero. You may still feel tired or off for a while.'
+          : 'Your body clears about one drink an hour, and nothing speeds that up. The range allows for how much bodies differ.',
+        recSteps: recSteps,
+        recWaterCount: mlText(had * GLASS) + ' of ' + mlText(waterTarget * GLASS),
+        recWaterBig: mlText(Math.max(0, waterTarget - had) * GLASS) + (had >= waterTarget ? '' : ' to go'),
+        recWaterAddLabel: '+ ' + mlText(GLASS) + ' glass',
+        recWaterLessAria: 'Remove a ' + mlText(GLASS) + ' glass',
+        recWaterCountColor: had >= waterTarget ? '#5CC8F5' : '#9A9AA0',
+        recWaterDots: Array.from({ length: Math.max(waterTarget, had) }, (_, i) => ({ fill: i < had ? '#5CC8F5' : 'transparent', ring: i < had ? '#5CC8F5' : '#4A4A4E' })),
+        recWaterMore: () => setRecWater(had + 1),
+        recWaterLess: () => setRecWater(had - 1),
+        recFoodTitle: 'Eat today',
+        recFoodBig: 'About ' + kcalNeed.toLocaleString('en-GB') + ' kcal',
+        recFoodText: 'Eggs, toast, porridge, a banana or soup.',
+        recSleepBig: hText(sleepH),
+        recSleepText: (sleepH > 8 ? 'A bit more than usual, because alcohol made last night\'s sleep lighter. ' : '') + 'For a 07:00 alarm, be in bed by ' + fmt(bedMin) + '.' + (gap != null && gap < 60 ? ' If you\'re tired before then, a short nap before 15:00 helps.' : ''),
+        morningWaiting: !morningReady
+      };
+    })();
     const elapsedH = Math.floor(s.tick / 60);
     const elapsedLabel = elapsedH + ':' + pad(s.tick % 60);
     const drinks = s.entries.filter((e) => e.kind === 'drink');
@@ -3113,7 +3476,7 @@ class Component extends DCLogic {
     };
 
     // Starting a night: check the home by time makes sense from now.
-    const startFresh = { screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, startedAtMs: Date.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
+    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, startedAtMs: Date.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
     const gapTo = (h, mi) => { let g = h * 60 + mi * 5 - START; if (g <= 0) g += 24 * 60; return g; };
     const beginNight = (patch) => {
       const pl = Object.assign({ homeH: s.homeH, homeMi: s.homeMi, plan: s.plan }, patch || {});
@@ -3442,7 +3805,15 @@ class Component extends DCLogic {
       ? 'That is under your usual, which is the point: a steadier night and an easier morning.'
       : 'That fits how you usually go out. Pacey spreads it evenly across your night.';
 
-    return {
+    // Every page opens at the top: when the screen (or a sub-page or view inside it) changes,
+    // scroll the page areas back up. The time wheels are left alone.
+    const scrollKey = [s.screen, s.settingsPage || '', nv, showLastNight ? 'last' : '', s.viewIdx, s.active ? 'on' : ''].join('|');
+    if (this._scrollKey !== undefined && this._scrollKey !== scrollKey && typeof document !== 'undefined') {
+      const reset = () => { document.querySelectorAll('div[style*="overflow-y: auto"]').forEach((el) => { el.scrollTop = 0; }); };
+      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(reset); else setTimeout(reset, 0);
+    }
+    this._scrollKey = scrollKey;
+    return Object.assign({}, recVals, {
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       isAccount: s.screen === 'account',
@@ -3741,7 +4112,14 @@ class Component extends DCLogic {
       elapsedLabel: elapsedLabel,
       startLabel: fmt(START),
       showBrand: !(s.screen === 'drink' && s.active),
+      // The logo bar is fixed only on Home and during a night. Other tabs have the logo inside the page, so it scrolls away.
+      brandInPage: !s.active,
+      pageTopPad: s.active ? '16px' : '48px',
+      showTopBar: (s.screen === 'home' || s.active) && (s.screen === 'home' || s.screen === 'drink' || s.screen === 'settings' || s.screen === 'history'),
       drinkTabLabel: 'Tonight',
+      isRecovery: s.screen === 'recovery',
+      openRecovery: () => this.setState({ screen: 'recovery', recoveryFrom: s.screen }),
+      closeRecovery: () => this.setState({ screen: s.recoveryFrom || 'drink' }),
       lnTime: fmt(LSTART) + ' to ' + fmt(LSTART + lastNight.endTick),
       lnDrinks: lastNight.entries.filter((e) => e.kind === 'drink').length,
       lnWater: lastNight.entries.filter((e) => e.kind === 'water').length,
@@ -4118,12 +4496,12 @@ class Component extends DCLogic {
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
       endNight: () => shortNight ? this.setState({ endAsk: false, active: false, screen: 'home', entries: [], tick: 0, rideBooked: false, banner: { id: Date.now(), title: 'Night not saved', body: 'It was under 10 minutes, so it won\'t show in your nights.' } }) : this.setState({
-        endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'home',
+        endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'drink',
         nights: [{
           title: new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
           date: [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-'),
           day: new Date().toLocaleDateString('en-GB', { weekday: 'long' }),
-          plan: s.plan, entries: s.entries, endTick: s.tick, start: START, endedAtMs: Date.now() }].concat(s.nights),
+          plan: s.plan, entries: s.entries, endTick: s.tick, start: START, endedAtMs: Date.now(), ate: s.ateBefore == null ? null : s.ateBefore }].concat(s.nights),
         morningAfter: true,
         rideBooked: false
       }),
@@ -4152,7 +4530,7 @@ class Component extends DCLogic {
       },
       openHelp: () => this.setState({ screen: 'help', helpFrom: s.screen }),
       closeHelp: () => this.setState({ screen: s.helpFrom })
-    };
+    });
   }
 }
 </script>
