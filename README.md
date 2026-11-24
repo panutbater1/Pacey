@@ -59,7 +59,7 @@ These are for testing and are not part of the app:
 
 - `design/` — the HTML mockups for the four v1 screens and the app's logo, the tilted glass (`LogoTilt.dc.html`).
 - `docs/PACEY_BRIEF.md` — the original product brief.
-- `docs/legal-text.json` — the Terms and conditions and Privacy policy text used in the prototype. It's a plain-English draft, not legal advice: fill in `[YOUR CONTACT EMAIL]` and have it reviewed before release.
+- `docs/legal-text.json` — the Terms and conditions and Privacy policy text used in the prototype. It's a plain-English draft, not legal advice: have it reviewed by a lawyer before release.
 - `docs/app-icon.png` — the app icon (1024 × 1024).
 
 ## Design
