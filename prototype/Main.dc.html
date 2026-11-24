@@ -513,7 +513,6 @@ button{font-family:Outfit,system-ui,sans-serif}
             <span style="font-size: 14px; font-weight: 700; color: {{recWaterCountColor}}">{{recWaterCount}}</span>
           </div>
           <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #5CC8F5">{{recWaterBig}}</div>
-          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recWaterText}}</div>
           <div aria-hidden="true" style="display: flex; gap: 6px; flex-wrap: wrap">
             <sc-for list="{{recWaterDots}}" as="d" hint-placeholder-count="6">
               <span style="width: 26px; height: 32px; border-radius: 4px 4px 8px 8px; border: 2px solid {{d.ring}}; background: {{d.fill}}; box-sizing: border-box"></span>
@@ -3325,7 +3324,7 @@ class Component extends DCLogic {
       const kcalNeed = Math.round(weightKg * (useBody && s.body === 'female' ? 27 : 30) / 50) * 50;
       // Sleep: 8 hours, plus a little more after more drinks because alcohol makes sleep lighter (up to 9½).
       const sleepH = 8 + Math.min(1.5, Math.round(R.drinksN * 0.15 * 2) / 2);
-      const hText = (h) => Math.floor(h) + (h % 1 ? '½' : '') + ' hours';
+      const hText = (h) => Math.floor(h) + ' h' + (h % 1 ? ' 30 min' : '');
       const bedMin = (7 * 60 - sleepH * 60 + 1440) % 1440;
       const had = n.recWater || 0;
       const setRecWater = (v) => this.setState({ nights: [Object.assign({}, n, { recWater: Math.max(0, Math.min(12, v)) })].concat(s.nights.slice(1)) });
@@ -3370,13 +3369,12 @@ class Component extends DCLogic {
         recWaterAddLabel: '+ ' + mlText(GLASS) + ' glass',
         recWaterLessAria: 'Remove a ' + mlText(GLASS) + ' glass',
         recWaterCountColor: had >= waterTarget ? '#5CC8F5' : '#9A9AA0',
-        recWaterText: had >= waterTarget ? 'Nicely done. Keep sipping when you\'re thirsty.' : 'You had ' + R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' and ' + R.watersN + ' ' + (R.watersN === 1 ? 'water' : 'waters') + '. Aim for about ' + mlText(waterTarget * GLASS) + ' today, spread out rather than all at once.',
         recWaterDots: Array.from({ length: Math.max(waterTarget, had) }, (_, i) => ({ fill: i < had ? '#5CC8F5' : 'transparent', ring: i < had ? '#5CC8F5' : '#4A4A4E' })),
         recWaterMore: () => setRecWater(had + 1),
         recWaterLess: () => setRecWater(had - 1),
         recFoodTitle: 'Eat today',
         recFoodBig: 'About ' + kcalNeed.toLocaleString('en-GB') + ' kcal',
-        recFoodText: (ate === false ? 'You didn\'t have a proper meal before going out, so don\'t skip breakfast. ' : '') + 'Spread it over proper meals, starting soon with eggs, toast or soup. A rough guide from your weight.',
+        recFoodText: 'Eggs, toast, porridge, a banana or soup.',
         recSleepBig: hText(sleepH),
         recSleepText: (sleepH > 8 ? 'A bit more than usual, because alcohol made last night\'s sleep lighter. ' : '') + 'For a 07:00 alarm, be in bed by ' + fmt(bedMin) + '.' + (gap != null && gap < 60 ? ' If you\'re tired before then, a short nap before 15:00 helps.' : ''),
         morningWaiting: !morningReady
