@@ -3778,6 +3778,14 @@ class Component extends DCLogic {
       ? 'That is under your usual, which is the point: a steadier night and an easier morning.'
       : 'That fits how you usually go out. Pacey spreads it evenly across your night.';
 
+    // Every page opens at the top: when the screen (or a sub-page or view inside it) changes,
+    // scroll the page areas back up. The time wheels are left alone.
+    const scrollKey = [s.screen, s.settingsPage || '', nv, showLastNight ? 'last' : '', s.viewIdx, s.active ? 'on' : ''].join('|');
+    if (this._scrollKey !== undefined && this._scrollKey !== scrollKey && typeof document !== 'undefined') {
+      const reset = () => document.querySelectorAll('div[style*="overflow-y: auto"]').forEach((el) => { el.scrollTop = 0; });
+      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(reset); else setTimeout(reset, 0);
+    }
+    this._scrollKey = scrollKey;
     return Object.assign({}, recVals, {
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
