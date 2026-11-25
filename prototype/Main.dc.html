@@ -346,26 +346,14 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div role="group" aria-label="Days" style="display: flex; flex-wrap: wrap; gap: 8px">
           <sc-for list="{{dayChips}}" as="x" hint-placeholder-count="7"><button onClick="{{x.pick}}" aria-pressed="{{x.pressed}}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{x.bg}}; color: {{x.fg}}; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">{{x.label}}</button></sc-for>
         </div>
-        <div style="background: #262628; border-radius: 20px; padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px">
-          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Time</span>
-          <div style="position: relative; height: 200px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
-            <div style="position: absolute; left: 0; right: 0; top: 80px; height: 40px; border-radius: 12px; background: #353538"></div>
-            <div style="position: absolute; left: 50%; top: 80px; height: 40px; width: 8px; margin-left: -4px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800">:</div>
-            <div class="wheel" ref="{{preHourRef}}" onScroll="{{preHourScroll}}" aria-label="Reminder hour" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
-              <div style="height: 80px"></div>
-              <sc-for list="{{preHourItems}}" as="it" hint-placeholder-count="5">
-                <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
-              </sc-for>
-              <div style="height: 80px"></div>
+        <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
             </div>
-            <div class="wheel" ref="{{preMinRef}}" onScroll="{{preMinScroll}}" aria-label="Reminder minutes" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
-              <div style="height: 80px"></div>
-              <sc-for list="{{preMinItems}}" as="it" hint-placeholder-count="5">
-                <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
-              </sc-for>
-              <div style="height: 80px"></div>
-            </div>
+            <div style="font-size: 16px; font-weight: 600">Time</div>
           </div>
+          <button onClick="{{openPreSheet}}" aria-expanded="{{preSheetExpanded}}" aria-label="Change reminder time" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 17px; font-weight: 700; cursor: pointer">{{preTime}}</button>
         </div>
         <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
           <span style="font-size: 13px; color: #9A9AA0; font-weight: 600">Preview</span>
@@ -2689,6 +2677,37 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{preSheetOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closePreSheet}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="Reminder time" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 16px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 20px; font-weight: 800">Reminder time</div>
+          <button onClick="{{closePreSheet}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+        </div>
+          <div style="position: relative; height: 200px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <div style="position: absolute; left: 0; right: 0; top: 80px; height: 40px; border-radius: 12px; background: #353538"></div>
+        <div style="position: absolute; left: 50%; top: 80px; height: 40px; width: 8px; margin-left: -4px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800">:</div>
+        <div class="wheel" ref="{{preHourRef}}" onScroll="{{preHourScroll}}" aria-label="Reminder hour" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+          <div style="height: 80px"></div>
+          <sc-for list="{{preHourItems}}" as="it" hint-placeholder-count="5">
+            <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+          </sc-for>
+          <div style="height: 80px"></div>
+        </div>
+        <div class="wheel" ref="{{preMinRef}}" onScroll="{{preMinScroll}}" aria-label="Reminder minutes" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+          <div style="height: 80px"></div>
+          <sc-for list="{{preMinItems}}" as="it" hint-placeholder-count="5">
+            <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+          </sc-for>
+          <div style="height: 80px"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{pickerOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{closePicker}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -4143,13 +4162,17 @@ class Component extends DCLogic {
         const sel = (s.preMi != null ? s.preMi : 0) === i;
         return { label: label, aria: label + ' minutes', color: sel ? '#FFFFFF' : '#9A9AA0', size: sel ? '22px' : '18px', pick: () => this.preWheelTo('m', i) };
       }),
+      preSheetOpen: !!s.preSheet,
+      preSheetExpanded: s.preSheet ? 'true' : 'false',
+      openPreSheet: () => this.setState({ preSheet: true }),
+      closePreSheet: () => this.setState({ preSheet: false }),
       // Swipe right (or drag with the mouse) to go back a step.
       mkPointerDown: (e) => { this.mkSwipe = { x: e.clientX, y: e.clientY }; },
       mkPointerUp: (e) => {
         const st = this.mkSwipe; this.mkSwipe = null;
         if (!st) return;
         const dx = e.clientX - st.x, dy = e.clientY - st.y;
-        if (dx > 70 && Math.abs(dy) < 60) this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' });
+        if (dx > 70 && Math.abs(dy) < 60 && !s.preSheet) this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' });
       },
       mkBack: () => this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' }),
       mkBackAria: (s.mkStep || 0) > 0 ? 'Back to step ' + (s.mkStep || 0) : 'Back to your plan',
