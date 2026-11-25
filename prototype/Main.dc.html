@@ -69,6 +69,14 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
         </div>
       </sc-if>
+      <sc-if value="{{isHomePlan}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openProfile}}" aria-label="{{profileAria}}" style="position: relative; width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+          <sc-if value="{{profileDot}}" hint-placeholder-val="{{true}}">
+            <span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 5px; background: #6EE7C1; border: 2px solid #262628"></span>
+          </sc-if>
+        </button>
+      </sc-if>
       <sc-if value="{{isDrink}}" hint-placeholder-val="{{false}}">
         <button onClick="{{askEnd}}" style="height: 44px; padding: 0 18px; border-radius: 22px; border: none; background: #FF9588; color: #1A1A1C; font-size: 15px; font-weight: 700; cursor: pointer">End my night</button>
       </sc-if>
@@ -283,7 +291,8 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600">Saved to your account · {{accountShort}}</div>
       </sc-if>
 
-      <button onClick="{{openMakeIt}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Make it yours →</button>
+      <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Start with this plan</button>
+      <button onClick="{{openMakeIt}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px"><span>Make it stick →</span><span style="font-size: 13px; font-weight: 500; color: #9A9AA0">Add your reason and a reminder · 30 sec</span></button>
       <button onClick="{{retakeQuiz}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Change my answers</button>
     </div>
   </sc-if>
@@ -296,7 +305,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div aria-hidden="true" style="display: flex; gap: 6px; flex-shrink: 0">
         <sc-for list="{{mkSteps}}" as="st" hint-placeholder-count="3"><span style="flex: 1; height: 5px; border-radius: 3px; background: {{st.bg}}"></span></sc-for>
       </div>
-      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">Make it yours · {{mkStepLabel}}</div>
+      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">Make it stick · {{mkStepLabel}}</div>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 0 24px 4px; display: flex; flex-direction: column; gap: 14px">
       <sc-if value="{{mkReason}}" hint-placeholder-val="{{true}}">
         <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px">Why does this <span style="color: #6EE7C1">matter</span> to you?</div>
@@ -409,7 +418,7 @@ button{font-family:Outfit,system-ui,sans-serif}
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 72px 24px 28px; display: flex; flex-direction: column; gap: 18px">
       <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 21h4"></path></svg></div>
       <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Gentle <span style="color: #6EE7C1">nudges</span></div>
-      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Pacey can remind you during a night out, so you don't have to keep checking the app. For example:</div>
+      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Allow notifications so Pacey can remind you during the night, and you don't have to keep checking the app. For example:</div>
       <div aria-hidden="true" style="display: flex; flex-direction: column; gap: 10px">
         <sc-for list="{{notifyExamples}}" as="ne" hint-placeholder-count="3">
           <div style="border-radius: 20px; background: #262628; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px">
@@ -692,6 +701,13 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
+      <sc-if value="{{showNightsSave}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openSignupHistory}}" style="flex-shrink: 0; min-height: 52px; border-radius: 18px; border: none; background: #262628; color: #FFFFFF; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7z"></path></svg>
+          <span style="flex-grow: 1; font-size: 15px; color: #B8B8BE; line-height: 1.35">Your nights are only saved on this phone.</span>
+          <span style="font-size: 15px; font-weight: 700; color: #6EE7C1; white-space: nowrap">Save them →</span>
+        </button>
+      </sc-if>
       <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
           <button onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 40px; padding: 0; border-radius: 20px; border: none; background: {{t.bg}}; color: {{t.fg}}; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer">{{t.label}}</button>
@@ -1217,6 +1233,16 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <div style="flex-grow: 1"></div>
+
+      <sc-if value="{{showPlusTip}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="background: #6EE7C1; color: #1A1A1C; border-radius: 20px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 800">Tap + when you have a drink</div>
+            <div style="font-size: 14px; line-height: 1.4">Tap + Water for water too. Pacey keeps your pace from there.</div>
+          </div>
+          <button onClick="{{hidePlusTip}}" style="min-height: 44px; flex-shrink: 0; padding: 0 14px; border-radius: 22px; border: none; background: #1A1A1C; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Got it</button>
+        </div>
+      </sc-if>
 
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
         <button onClick="{{addWater}}" style="height: 76px; border-radius: 38px; border: none; background: {{waterBg}}; color: {{waterFg}}; font-size: 22px; font-weight: 700; cursor: pointer">+ Water</button>
@@ -1985,6 +2011,19 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-for>
         </div>
       </div>
+
+      <sc-if value="{{showSaveNight}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; background: #262628; border: 2px solid #6EE7C1; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 18px; font-weight: 800">{{saveNightLine}}</div>
+            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.4">Free account, takes 10 seconds. Get your nights back on a new phone.</div>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button onClick="{{openSignupSummary}}" style="flex-grow: 1; height: 50px; border-radius: 25px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Save my nights</button>
+            <button onClick="{{skipSaveNight}}" style="height: 50px; padding: 0 18px; border-radius: 25px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Not now</button>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
         <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
@@ -3738,7 +3777,7 @@ class Component extends DCLogic {
         this.countGlass.getBoundingClientRect();
         this.countGlass.classList.add('is-filling');
       }
-      this.setState({ entries: entries });
+      this.setState({ entries: entries, plusTipSeen: true });
       if (kind === 'drink' && s.remLimit !== false && count >= s.plan) this.notifyLimit(count - s.plan);
       // Water habit: a gentle nudge when a drink completes the habit (the plan nudges take over at the plan).
       else if (kind === 'drink' && !silent && s.remWater !== false && count % (s.waterEvery || 2) === 0) {
@@ -4001,9 +4040,7 @@ class Component extends DCLogic {
     else summaryMessage = vDrinks + ' drinks on a plan of ' + view.plan + '. It happens, and tomorrow is a fresh start. ' + water;
 
     const questions = [
-      { plain: 'How often do you', accent: 'go out?', hint: 'There are no wrong answers. This only sets your starting plan.', options: [
-        ['Rarely', 'A few times a year'], ['Now and then', 'Once or twice a month'], ['Most weekends', 'Around once a week'], ['More often', 'More than once a week']] },
-      { plain: 'On a usual night, how', accent: 'many drinks?', hint: 'A rough guess is fine.', options: [
+      { plain: 'On a usual night, how', accent: 'many drinks?', hint: 'A rough guess is fine. This only sets your starting plan.', options: [
         ['1 to 2', 'A couple over the evening'], ['3 to 4', 'A few through the night'], ['5 to 6', 'A fair few'], ['7 or more', 'A big night']] },
       { plain: 'What matters most', accent: 'on a night out?', hint: 'Pick the one that fits you best.', options: [
         ['Staying sharp', 'I want to feel fully in control'], ['Feeling fine tomorrow', 'A good night without the rough morning'], ['Just keeping track', 'I want to see my pace']] },
@@ -4020,7 +4057,9 @@ class Component extends DCLogic {
     const signingIn = s.accountMode === 'signin';
     // Keep the plan saved with a real account up to date, so it comes back on a new device.
     const syncPlan = (plan, avg) => { if (AUTH && s.account && s.account.real) AUTH.savePlan({ plan: plan, avg: avg }); };
-    const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'result' };
+    // Where sign-up returns to: wherever it was opened from.
+    const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' }
+      : ['summary', 'history', 'home'].indexOf(s.accountFrom) !== -1 ? { screen: s.accountFrom } : { screen: 'result' };
     const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
     const quizSel = s.quizDrinks || [];
     const finishQuiz = (extra) => this.setState(Object.assign({ screen: 'result', accountStep: 'choose' }, extra));
@@ -4043,12 +4082,12 @@ class Component extends DCLogic {
       }
     }));
     // The suggestion never goes above 4 drinks and never above what the person usually has.
-    const usual = ans[1] === null ? 1 : ans[1];
+    const usual = ans[0] === null ? 1 : ans[0];
     let suggested = [2, 4, 4, 4][usual];
-    if (ans[2] === 0) suggested -= 1;
+    if (ans[1] === 0) suggested -= 1;
     // "Make it yours" can lower the plan (never raise it).
     const planChoice = Math.max(1, Math.min(suggested, s.mkPlan || suggested));
-    const level = ans[1] === null ? 'Not set' : usual === 0 ? 'Light' : (usual >= 2 || ans[0] >= 2) ? 'Regular' : 'Social';
+    const level = ans[0] === null ? 'Not set' : usual === 0 ? 'Light' : usual >= 2 ? 'Regular' : 'Social';
     const resultMessage = usual >= 2
       ? 'That is under your usual, which is the point: a steadier night and an easier morning.'
       : 'That fits how you usually go out. Pacey spreads it evenly across your night.';
@@ -4077,9 +4116,9 @@ class Component extends DCLogic {
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       // ---------- "Your suggested plan" hook and "Make it yours"
-      builtAroundYou: ans[2] === 0 ? 'You said staying sharp matters most, so this plan keeps your night steady.'
-        : ans[2] === 1 ? 'You said feeling fine tomorrow matters most. This plan is built for that.'
-        : ans[2] === 2 ? 'You said you want to see your pace. Pacey shows it live as you go.'
+      builtAroundYou: ans[1] === 0 ? 'You said staying sharp matters most, so this plan keeps your night steady.'
+        : ans[1] === 1 ? 'You said feeling fine tomorrow matters most. This plan is built for that.'
+        : ans[1] === 2 ? 'You said you want to see your pace. Pacey shows it live as you go.'
         : usual >= 2 ? 'It\'s set a little under your usual night, for an easier morning.' : 'It fits how you usually go out.',
       ...(() => {
         const START_G = 20 * 60;
@@ -4117,12 +4156,12 @@ class Component extends DCLogic {
       mkNext: () => {
         if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
         syncPlan(planChoice, [2, 4, 6, 8][usual]);
-        this.setState({ preOn: true, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+        this.setState({ preOn: true, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: s.notifyAllowed == null ? 'notify' : 'home', notifyThen: 'home', tipStep: 1 });
       },
       mkSkip: () => {
         if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
         syncPlan(planChoice, [2, 4, 6, 8][usual]);
-        this.setState({ preOn: false, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+        this.setState({ preOn: false, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'home', tipStep: 1 });
       },
       reasonChips: ['Feel good tomorrow', 'Save money', 'Stay in control', 'Get home safe', 'Sleep better'].map((label) => {
         const on = (s.reason || '') === label;
@@ -4180,6 +4219,16 @@ class Component extends DCLogic {
       isAccount: s.screen === 'account',
       resultOfferAccount: !s.account,
       resultSaved: !!s.account,
+      // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
+      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
+      saveNightLine: streak >= 2 ? 'Save tonight and your ' + streak + '-night streak.' : 'Save tonight so you don\'t lose it.',
+      skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
+      showNightsSave: !s.account,
+      profileDot: !s.account,
+      profileAria: s.account ? 'Your profile' : 'Create a free account',
+      openSignupSummary: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'summary', emailErr: '', accountNote: '', googleErr: '' }),
+      openSignupHistory: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'history', emailErr: '', accountNote: '', googleErr: '' }),
+      openProfile: () => this.setState(s.account ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
       accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
       openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
       consentMore: !!s.consentMore,
@@ -4201,7 +4250,7 @@ class Component extends DCLogic {
       accountChoose: (s.accountStep || 'choose') === 'choose',
       accountEmail: s.accountStep === 'email',
       // Back: to the sign-up choices, to Settings (when opened from Profile), or to the quiz.
-      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
+      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null })),
       signApple: () => { if (!s.dataConsent) { this.setState({ consentHint: true }); return; } this.setState({ account: { method: 'apple', label: 'Signed in with Apple' }, dataConsentAt: Date.now(), screen: 'result' }); },
       signGoogle: () => {
         if (!s.dataConsent) { this.setState({ consentHint: true }); return; }
@@ -4319,6 +4368,8 @@ class Component extends DCLogic {
       finishTry: () => this.setState({ screen: 'notify', anim: null }),
       // Notification screen
       isNotify: s.screen === 'notify',
+      showPlusTip: s.screen === 'drink' && !s.plusTipSeen && s.entries.length === 0,
+      hidePlusTip: () => this.setState({ plusTipSeen: true }),
       notifyExamples: [
         { t: 'Water time', b: 'A glass of water now keeps the night feeling good.' },
         { t: 'Your next drink fits your plan now', b: 'No rush. Whenever you\'re ready.' },
@@ -4326,9 +4377,13 @@ class Component extends DCLogic {
       ],
       allowNotify: () => {
         if (typeof window !== 'undefined' && typeof window.paceyRequestNotify === 'function') window.paceyRequestNotify();
-        this.setState({ notifyAllowed: true, screen: 'home', tipStep: 1 });
+        if (s.notifyThen === 'night') beginNight({ notifyAllowed: true, notifyThen: null, screen: 'home' });
+        else this.setState({ notifyAllowed: true, notifyThen: null, screen: 'home' });
       },
-      skipNotify: () => this.setState({ notifyAllowed: false, screen: 'home', tipStep: 1 }),
+      skipNotify: () => {
+        if (s.notifyThen === 'night') beginNight({ notifyAllowed: false, notifyThen: null, screen: 'home' });
+        else this.setState({ notifyAllowed: false, notifyThen: null, screen: 'home' });
+      },
       // First-visit tips on Home
       showTips: s.screen === 'home' && !s.active && (s.tipStep || 0) > 0,
       tipStep: s.tipStep || 0,
@@ -4350,7 +4405,7 @@ class Component extends DCLogic {
       levelLabel: level,
       resultMessage: resultMessage,
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
-      acceptPlan: () => { syncPlan(planChoice, [2, 4, 6, 8][usual]); this.setState({ plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }); },
+      acceptPlan: () => { syncPlan(planChoice, [2, 4, 6, 8][usual]); this.setState({ plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'home', tipStep: 1 }); },
       quickLabel: shownDef[1] + ' · ' + shownP.n,
       quickIcon: shownDef[3],
       quickBg: matchDef ? '#6EE7C1' : '#262628',
@@ -4848,7 +4903,7 @@ class Component extends DCLogic {
       ridePillC: s.picker === 'ride' ? '#6EE7C1' : '#FFFFFF',
       toggleHomePicker: () => this.setState({ picker: s.picker === 'home' ? null : 'home', pickerTarget: null }),
       toggleRidePicker: () => this.setState({ picker: s.picker === 'ride' ? null : 'ride', pickerTarget: null }),
-      startNight: () => beginNight(),
+      startNight: () => { if (s.notifyAllowed == null) this.setState({ screen: 'notify', notifyThen: 'night' }); else beginNight(); },
       timeAskOpen: !!s.timeAsk,
       timeAskBody: timeAskBody,
       timeAskOptions: timeAskOptions,
@@ -4884,7 +4939,7 @@ class Component extends DCLogic {
       // Lock screen widgets, Live Activity and Dynamic Island log straight away (no Water first sheet: widgets can't show one).
       lockAddDrink: add('drink', true),
       lockAddWater: add('water', true),
-      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
+      continueWithoutAccount: () => this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
       isLock: s.screen === 'lock' && s.active,
       showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
