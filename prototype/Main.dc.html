@@ -69,6 +69,14 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="font-weight: 700; font-size: 24px; letter-spacing: -0.3px">pacey<span style="color: #6EE7C1">.</span></div>
         </div>
       </sc-if>
+      <sc-if value="{{isHomePlan}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openProfile}}" aria-label="{{profileAria}}" style="position: relative; width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+          <sc-if value="{{profileDot}}" hint-placeholder-val="{{true}}">
+            <span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 5px; background: #6EE7C1; border: 2px solid #262628"></span>
+          </sc-if>
+        </button>
+      </sc-if>
       <sc-if value="{{isDrink}}" hint-placeholder-val="{{false}}">
         <button onClick="{{askEnd}}" style="height: 44px; padding: 0 18px; border-radius: 22px; border: none; background: #FF9588; color: #1A1A1C; font-size: 15px; font-weight: 700; cursor: pointer">End my night</button>
       </sc-if>
@@ -693,6 +701,13 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
       </sc-if>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Your <span style="color: #6EE7C1">nights</span></div>
+      <sc-if value="{{showNightsSave}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openSignupHistory}}" style="flex-shrink: 0; min-height: 52px; border-radius: 18px; border: none; background: #262628; color: #FFFFFF; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7z"></path></svg>
+          <span style="flex-grow: 1; font-size: 15px; color: #B8B8BE; line-height: 1.35">Your nights are only saved on this phone.</span>
+          <span style="font-size: 15px; font-weight: 700; color: #6EE7C1; white-space: nowrap">Save them →</span>
+        </button>
+      </sc-if>
       <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
         <sc-for list="{{nightsTabs}}" as="t" hint-placeholder-count="3">
           <button onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 40px; padding: 0; border-radius: 20px; border: none; background: {{t.bg}}; color: {{t.fg}}; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer">{{t.label}}</button>
@@ -1996,6 +2011,19 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-for>
         </div>
       </div>
+
+      <sc-if value="{{showSaveNight}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; background: #262628; border: 2px solid #6EE7C1; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 18px; font-weight: 800">{{saveNightLine}}</div>
+            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.4">Free account, takes 10 seconds. Get your nights back on a new phone.</div>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button onClick="{{openSignupSummary}}" style="flex-grow: 1; height: 50px; border-radius: 25px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Save my nights</button>
+            <button onClick="{{skipSaveNight}}" style="height: 50px; padding: 0 18px; border-radius: 25px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Not now</button>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px">
         <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
@@ -4029,7 +4057,9 @@ class Component extends DCLogic {
     const signingIn = s.accountMode === 'signin';
     // Keep the plan saved with a real account up to date, so it comes back on a new device.
     const syncPlan = (plan, avg) => { if (AUTH && s.account && s.account.real) AUTH.savePlan({ plan: plan, avg: avg }); };
-    const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'result' };
+    // Where sign-up returns to: wherever it was opened from.
+    const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' }
+      : ['summary', 'history', 'home'].indexOf(s.accountFrom) !== -1 ? { screen: s.accountFrom } : { screen: 'result' };
     const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
     const quizSel = s.quizDrinks || [];
     const finishQuiz = (extra) => this.setState(Object.assign({ screen: 'result', accountStep: 'choose' }, extra));
@@ -4189,6 +4219,16 @@ class Component extends DCLogic {
       isAccount: s.screen === 'account',
       resultOfferAccount: !s.account,
       resultSaved: !!s.account,
+      // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
+      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
+      saveNightLine: streak >= 2 ? 'Save tonight and your ' + streak + '-night streak.' : 'Save tonight so you don\'t lose it.',
+      skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
+      showNightsSave: !s.account,
+      profileDot: !s.account,
+      profileAria: s.account ? 'Your profile' : 'Create a free account',
+      openSignupSummary: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'summary', emailErr: '', accountNote: '', googleErr: '' }),
+      openSignupHistory: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'history', emailErr: '', accountNote: '', googleErr: '' }),
+      openProfile: () => this.setState(s.account ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
       accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
       openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
       consentMore: !!s.consentMore,
@@ -4210,7 +4250,7 @@ class Component extends DCLogic {
       accountChoose: (s.accountStep || 'choose') === 'choose',
       accountEmail: s.accountStep === 'email',
       // Back: to the sign-up choices, to Settings (when opened from Profile), or to the quiz.
-      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
+      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null })),
       signApple: () => { if (!s.dataConsent) { this.setState({ consentHint: true }); return; } this.setState({ account: { method: 'apple', label: 'Signed in with Apple' }, dataConsentAt: Date.now(), screen: 'result' }); },
       signGoogle: () => {
         if (!s.dataConsent) { this.setState({ consentHint: true }); return; }
@@ -4899,7 +4939,7 @@ class Component extends DCLogic {
       // Lock screen widgets, Live Activity and Dynamic Island log straight away (no Water first sheet: widgets can't show one).
       lockAddDrink: add('drink', true),
       lockAddWater: add('water', true),
-      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
+      continueWithoutAccount: () => this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
       isLock: s.screen === 'lock' && s.active,
       showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
