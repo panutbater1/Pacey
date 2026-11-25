@@ -289,7 +289,10 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isMakeIt}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 60px 24px 24px; display: flex; flex-direction: column; gap: 14px">
+    <div onPointerDown="{{mkPointerDown}}" onPointerUp="{{mkPointerUp}}" style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 52px 24px 24px; display: flex; flex-direction: column; gap: 14px; touch-action: pan-y">
+      <button onClick="{{mkBack}}" aria-label="{{mkBackAria}}" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
       <div aria-hidden="true" style="display: flex; gap: 6px; flex-shrink: 0">
         <sc-for list="{{mkSteps}}" as="st" hint-placeholder-count="3"><span style="flex: 1; height: 5px; border-radius: 3px; background: {{st.bg}}"></span></sc-for>
       </div>
@@ -343,9 +346,26 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div role="group" aria-label="Days" style="display: flex; flex-wrap: wrap; gap: 8px">
           <sc-for list="{{dayChips}}" as="x" hint-placeholder-count="7"><button onClick="{{x.pick}}" aria-pressed="{{x.pressed}}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{x.bg}}; color: {{x.fg}}; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">{{x.label}}</button></sc-for>
         </div>
-        <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <label for="pacey-pre-time" style="font-size: 16px; font-weight: 600">Time</label>
-          <input id="pacey-pre-time" type="time" value="{{preTime}}" onChange="{{setPreTime}}" style="height: 44px; padding: 0 12px; border-radius: 12px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 18px; font-weight: 700">
+        <div style="background: #262628; border-radius: 20px; padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; font-weight: 600; color: #9A9AA0">Time</span>
+          <div style="position: relative; height: 200px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <div style="position: absolute; left: 0; right: 0; top: 80px; height: 40px; border-radius: 12px; background: #353538"></div>
+            <div style="position: absolute; left: 50%; top: 80px; height: 40px; width: 8px; margin-left: -4px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800">:</div>
+            <div class="wheel" ref="{{preHourRef}}" onScroll="{{preHourScroll}}" aria-label="Reminder hour" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+              <div style="height: 80px"></div>
+              <sc-for list="{{preHourItems}}" as="it" hint-placeholder-count="5">
+                <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+              </sc-for>
+              <div style="height: 80px"></div>
+            </div>
+            <div class="wheel" ref="{{preMinRef}}" onScroll="{{preMinScroll}}" aria-label="Reminder minutes" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+              <div style="height: 80px"></div>
+              <sc-for list="{{preMinItems}}" as="it" hint-placeholder-count="5">
+                <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+              </sc-for>
+              <div style="height: 80px"></div>
+            </div>
+          </div>
         </div>
         <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
           <span style="font-size: 13px; color: #9A9AA0; font-weight: 600">Preview</span>
@@ -2765,6 +2785,39 @@ class Component extends DCLogic {
       };
     });
   }
+  // Wheels for "Remind me before I go out" (Make it yours, step 3).
+  preWheelRef(name) {
+    this.preRefs = this.preRefs || {};
+    if (!this.preRefs[name]) {
+      this.preRefs[name] = (el) => {
+        this.preEls = this.preEls || {};
+        if (el && this.preEls[name] !== el) {
+          this.preEls[name] = el;
+          const v = name === 'h' ? (this.state.preH != null ? this.state.preH : 19) : (this.state.preMi != null ? this.state.preMi : 0);
+          el.scrollTop = v * this.ROW;
+          requestAnimationFrame(() => { el.scrollTop = v * this.ROW; });
+        } else if (!el && this.preEls) this.preEls[name] = null;
+      };
+    }
+    return this.preRefs[name];
+  }
+  preWheelScroll(name) {
+    this.preScrolls = this.preScrolls || {};
+    if (!this.preScrolls[name]) {
+      this.preScrolls[name] = (e) => {
+        const key = name === 'h' ? 'preH' : 'preMi';
+        const count = name === 'h' ? 24 : 12;
+        const i = Math.max(0, Math.min(count - 1, Math.round(e.currentTarget.scrollTop / this.ROW)));
+        if (i !== this.state[key]) this.setState({ [key]: i });
+      };
+    }
+    return this.preScrolls[name];
+  }
+  preWheelTo(name, i) {
+    const el = this.preEls && this.preEls[name];
+    if (el) el.scrollTo({ top: i * this.ROW, behavior: 'smooth' });
+    else this.setState({ [name === 'h' ? 'preH' : 'preMi']: i });
+  }
   scrollWheelTo(name, i) {
     const el = this.wheelEls[name];
     if (el) el.scrollTo({ top: i * this.ROW, behavior: 'smooth' });
@@ -2823,8 +2876,7 @@ class Component extends DCLogic {
     const now = new Date();
     const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
     if ((s.preDays || ['Fri', 'Sat']).indexOf(day) === -1) return;
-    const parts = String(s.preTime || '19:00').split(':');
-    if (now.getHours() !== Number(parts[0]) || now.getMinutes() !== Number(parts[1])) return;
+    if (now.getHours() !== (s.preH != null ? s.preH : 19) || now.getMinutes() !== (s.preMi != null ? s.preMi : 0) * 5) return;
     const key = now.toDateString();
     if (s.preFiredOn === key) return;
     const why = (s.reason || '').trim();
@@ -3796,7 +3848,7 @@ class Component extends DCLogic {
       ['remLimit', 'Past your plan', 'A kind nudge when you go over your limit'],
       ['waterFirstOn', 'Water first', 'Offer a water before each drink past your plan'],
       ['earlyCheck', 'Pace check', 'Ask before a drink that comes more than 5 minutes early'],
-      ['preOn', 'Before you go out', (s.preDays || ['Fri', 'Sat']).join(', ') + ' at ' + (s.preTime || '19:00') + ' · set your plan']
+      ['preOn', 'Before you go out', (s.preDays || ['Fri', 'Sat']).join(', ') + ' at ' + String(s.preH != null ? s.preH : 19).padStart(2, '0') + ':' + String((s.preMi != null ? s.preMi : 0) * 5).padStart(2, '0') + ' · set your plan']
     ];
     const toggles = toggleDefs.map((t, i) => {
       const on = s[t[0]] !== false;
@@ -4078,8 +4130,29 @@ class Component extends DCLogic {
         const on = days.indexOf(d) !== -1;
         return { label: d, pressed: on ? 'true' : 'false', bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState({ preDays: on ? days.filter((x) => x !== d) : days.concat([d]) }) };
       }),
-      preTime: s.preTime || '19:00',
-      setPreTime: (e) => this.setState({ preTime: e.target.value || '19:00' }),
+      preTime: pad(s.preH != null ? s.preH : 19) + ':' + pad((s.preMi != null ? s.preMi : 0) * 5),
+      preHourRef: this.preWheelRef('h'),
+      preMinRef: this.preWheelRef('m'),
+      preHourScroll: this.preWheelScroll('h'),
+      preMinScroll: this.preWheelScroll('m'),
+      preHourItems: Array.from({ length: 24 }, (_, i) => pad(i)).map((label, i) => {
+        const sel = (s.preH != null ? s.preH : 19) === i;
+        return { label: label, aria: label + ' hours', color: sel ? '#FFFFFF' : '#9A9AA0', size: sel ? '22px' : '18px', pick: () => this.preWheelTo('h', i) };
+      }),
+      preMinItems: Array.from({ length: 12 }, (_, i) => pad(i * 5)).map((label, i) => {
+        const sel = (s.preMi != null ? s.preMi : 0) === i;
+        return { label: label, aria: label + ' minutes', color: sel ? '#FFFFFF' : '#9A9AA0', size: sel ? '22px' : '18px', pick: () => this.preWheelTo('m', i) };
+      }),
+      // Swipe right (or drag with the mouse) to go back a step.
+      mkPointerDown: (e) => { this.mkSwipe = { x: e.clientX, y: e.clientY }; },
+      mkPointerUp: (e) => {
+        const st = this.mkSwipe; this.mkSwipe = null;
+        if (!st) return;
+        const dx = e.clientX - st.x, dy = e.clientY - st.y;
+        if (dx > 70 && Math.abs(dy) < 60) this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' });
+      },
+      mkBack: () => this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' }),
+      mkBackAria: (s.mkStep || 0) > 0 ? 'Back to step ' + (s.mkStep || 0) : 'Back to your plan',
       preBody: 'Going out tonight? Set your plan before you go' + ((s.reason || '').trim() ? '. You said: "' + s.reason.trim() + '"' : '.'),
       isAccount: s.screen === 'account',
       resultOfferAccount: !s.account,
