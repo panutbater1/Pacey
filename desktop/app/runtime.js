@@ -13,7 +13,7 @@
   const STORAGE_KEY = 'pacey.state.v1';
 
   // Screens and keys that shouldn't come back after a restart.
-  const TRANSIENT = ['consentHint', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
+  const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
     'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft'];
 
   // ---------- styles from the prototype

@@ -152,18 +152,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       </button>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 28px; display: flex; flex-direction: column; gap: 18px">
       <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px; flex-shrink: 0">Your plan is <span style="color: #6EE7C1">ready</span></div>
-      <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">Create a free account to see your results and keep your plan safe if you change phones.</div>
+      <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">Save your plan to a free account so you get it back on a new phone. It's optional: everything in Pacey works without one.</div>
 
-      <div aria-hidden="true" style="flex-shrink: 0; position: relative; background: #262628; border-radius: 24px; padding: 18px; overflow: hidden">
-        <div style="filter: blur(7px); display: flex; flex-direction: column; gap: 10px">
-          <div style="font-size: 15px; color: #9A9AA0">Your suggested plan</div>
-          <div style="font-size: 30px; font-weight: 800">A limit of 4 drinks</div>
-        </div>
-        <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center">
-          <span style="width: 52px; height: 52px; border-radius: 26px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
-          </span>
-        </div>
+      <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="font-size: 15px; color: #9A9AA0">Your plan</div>
+        <div style="font-size: 18px; font-weight: 800">A limit of {{suggestLabel}}</div>
       </div>
 
       <sc-if value="{{showDataConsent}}" hint-placeholder-val="{{true}}">
@@ -175,7 +168,13 @@ button{font-family:Outfit,system-ui,sans-serif}
             </sc-if>
           </span>
         </button>
-        <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">I agree that Pacey can keep my plan and how much I usually drink with my account, so I can get them back on a new phone. This is health information. I can delete my account at any time in Settings › Profile.</div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 15px; color: #E0E0E4; line-height: 1.4">I agree that Pacey can keep my plan and usual drinks with my account. This is health info.</div>
+          <button onClick="{{toggleConsentMore}}" aria-expanded="{{consentMoreAttr}}" style="align-self: flex-start; min-height: 32px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; cursor: pointer">{{consentMoreLabel}}</button>
+          <sc-if value="{{consentMore}}" hint-placeholder-val="{{false}}">
+            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">Saved with your account: your sign-in, your drink limit and how many drinks you usually have, so you get them back on a new phone. Your nights and drink logs stay on this phone. You can delete your account any time in Settings › Profile.</div>
+          </sc-if>
+        </div>
       </div>
       <sc-if value="{{showConsentHint}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="flex-shrink: 0; margin-top: -8px; text-align: center; font-size: 14px; color: #FFC56B; font-weight: 600">Tick the box to create an account, or continue without one.</div>
@@ -215,7 +214,8 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px">
             <label for="pacey-password" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Password</label>
-            <input id="pacey-password" type="password" autocomplete="{{passwordAutocomplete}}" placeholder="{{passwordPlaceholder}}" value="{{passwordDraft}}" onChange="{{setPasswordDraft}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+            <input id="pacey-password" type="{{pwType}}" autocomplete="{{passwordAutocomplete}}" placeholder="{{passwordPlaceholder}}" value="{{passwordDraft}}" onChange="{{setPasswordDraft}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+            <button onClick="{{togglePw}}" aria-pressed="{{pwShownAttr}}" style="align-self: flex-start; min-height: 32px; border: none; background: none; padding: 0; color: #9A9AA0; font-size: 14px; font-weight: 600; cursor: pointer">{{pwToggleLabel}}</button>
           </div>
           <sc-if value="{{accountNoteShow}}" hint-placeholder-val="{{false}}">
             <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600; line-height: 1.4">{{accountNote}}</div>
@@ -231,33 +231,140 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </sc-if>
 
-      <button onClick="{{continueWithoutAccount}}" style="flex-shrink: 0; min-height: 44px; border: none; background: none; color: #B8B8BE; font-size: 15px; font-weight: 600; text-decoration: underline; cursor: pointer">Continue without an account</button>
-      <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45; text-align: center">Your nights stay on your phone either way. An account only holds your sign-in, your plan and your usual number of drinks.</div>
+      <button onClick="{{continueWithoutAccount}}" style="flex-shrink: 0; height: 56px; border-radius: 28px; border: 2px solid #353538; background: none; color: #FFFFFF; font-size: 17px; font-weight: 700; cursor: pointer">Not now</button>
+      <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45; text-align: center">You can save your plan later in Settings › Profile. Your nights stay on your phone either way.</div>
       </div>
     </div>
   </sc-if>
 
   <sc-if value="{{isResult}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 72px 24px 32px; display: flex; flex-direction: column; gap: 20px">
-      <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 60px 24px 24px; display: flex; flex-direction: column; gap: 14px">
+      <div style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1.5 17h-7z"></path><path d="M7.500 8h9"></path></svg>
       </div>
       <div style="font-size: 15px; font-weight: 500; color: #9A9AA0">Your suggested plan</div>
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">A limit of <span style="color: #6EE7C1">{{suggestLabel}}</span></div>
-      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">{{resultMessage}}</div>
-
-      <div style="background: #262628; border-radius: 24px; padding: 6px 18px; display: flex; flex-direction: column">
-        <div style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <div style="font-size: 16px; font-weight: 600">Plan for a night</div>
-          <div style="font-size: 16px; font-weight: 700">{{suggestLabel}}</div>
-        </div>
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 0 24px 4px; display: flex; flex-direction: column; gap: 12px">
+      <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 40px; height: 40px; border-radius: 12px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700">Built around you</span>
+          <span style="font-size: 14px; color: #B8B8BE; line-height: 1.4">{{builtAroundYou}}</span>
+        </span>
       </div>
-
+      <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 700">Your night at a glance</span><span style="font-size: 13px; color: #9A9AA0">home by {{glanceHome}}</span></div>
+        <div role="img" aria-label="{{glanceAria}}" style="position: relative; height: 34px; margin: 4px 6px 0">
+          <div style="position: absolute; left: 0; right: 0; top: 15px; height: 4px; border-radius: 2px; background: #353538"></div>
+          <sc-for list="{{glanceMarks}}" as="g" hint-placeholder-count="7">
+            <span style="position: absolute; left: {{g.left}}; top: {{g.top}}; width: {{g.size}}; height: {{g.size}}; margin-left: {{g.offset}}; border-radius: {{g.radius}}; background: {{g.color}}; transform: {{g.rot}}"></span>
+          </sc-for>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #9A9AA0; font-weight: 600"><span>{{glanceStart}}</span><span>{{glanceEnd}}</span></div>
+        <div style="font-size: 14px; color: #B8B8BE">{{glanceLine}}</div>
+      </div>
+      <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 40px; height: 40px; border-radius: 12px; background: #353538; color: #FFC56B; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
+        <span style="font-size: 14px; color: #B8B8BE; line-height: 1.4">Tomorrow morning we'll check in: <span style="color: #FFFFFF; font-weight: 700">did your plan hold?</span></span>
+      </div>
       <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">This is a limit, not a target, and you can lower it any night. It's an estimate from your answers, not medical advice.</div>
 
-      <div style="flex-grow: 1"></div>
-      <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Use this plan</button>
+      </div>
+      <sc-if value="{{resultOfferAccount}}" hint-placeholder-val="{{true}}">
+      <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700">Save your plan?</span>
+          <span style="font-size: 13px; color: #9A9AA0; line-height: 1.4">Optional. Get it back on a new phone.</span>
+        </div>
+        <button onClick="{{openAccountFromResult}}" style="height: 44px; flex-shrink: 0; padding: 0 16px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Save</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{resultSaved}}" hint-placeholder-val="{{false}}">
+      <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600">Saved to your account · {{accountShort}}</div>
+      </sc-if>
+
+      <button onClick="{{openMakeIt}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Make it yours →</button>
       <button onClick="{{retakeQuiz}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Change my answers</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isMakeIt}}" hint-placeholder-val="{{false}}">
+    <div onPointerDown="{{mkPointerDown}}" onPointerUp="{{mkPointerUp}}" style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 52px 24px 24px; display: flex; flex-direction: column; gap: 14px; touch-action: pan-y">
+      <button onClick="{{mkBack}}" aria-label="{{mkBackAria}}" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <div aria-hidden="true" style="display: flex; gap: 6px; flex-shrink: 0">
+        <sc-for list="{{mkSteps}}" as="st" hint-placeholder-count="3"><span style="flex: 1; height: 5px; border-radius: 3px; background: {{st.bg}}"></span></sc-for>
+      </div>
+      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">Make it yours · {{mkStepLabel}}</div>
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 0 24px 4px; display: flex; flex-direction: column; gap: 14px">
+      <sc-if value="{{mkReason}}" hint-placeholder-val="{{true}}">
+        <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px">Why does this <span style="color: #6EE7C1">matter</span> to you?</div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">Pacey reminds you of this on the night, in your words.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{reasonChips}}" as="x" hint-placeholder-count="5"><button onClick="{{x.pick}}" aria-pressed="{{x.pressed}}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{x.bg}}; color: {{x.fg}}; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">{{x.label}}</button></sc-for>
+        </div>
+        <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+          <label for="pacey-mk-reason" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Or write your own</label>
+          <input id="pacey-mk-reason" type="text" placeholder="e.g. Football at 9am" value="{{reason}}" onChange="{{setReason}}" style="height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 12px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+        </div>
+      </sc-if>
+      <sc-if value="{{mkIfThen}}" hint-placeholder-val="{{false}}">
+        <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px">Plan for the <span style="color: #6EE7C1">tricky moment</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">Pick one. Pacey shows it on your night screen when you reach your plan.</div>
+        <div role="radiogroup" aria-label="Your plan for a tricky moment" style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{ifThenOptions}}" as="o" hint-placeholder-count="3">
+            <button role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 18px; border: 2px solid {{o.ring}}; background: #262628; color: #FFFFFF; text-align: left; font-family: Outfit, sans-serif; font-size: 15px; line-height: 1.35; cursor: pointer">
+              <span style="width: 20px; height: 20px; border-radius: 10px; box-sizing: border-box; border: {{o.dot}}; flex-shrink: 0"></span>
+              <span><span style="font-weight: 700">{{o.when}}</span>, {{o.then}}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size: 16px; font-weight: 700; margin-top: 4px">How sure are you you'll stick to {{mkPlanLabel}}?</div>
+        <div role="radiogroup" aria-label="How sure you are, 1 to 5" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{confOptions}}" as="c" hint-placeholder-count="5">
+            <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.aria}}" onClick="{{c.pick}}" style="height: 48px; border-radius: 16px; border: none; background: {{c.bg}}; color: {{c.fg}}; font-family: Outfit, sans-serif; font-size: 18px; font-weight: 800; cursor: pointer">{{c.n}}</button>
+          </sc-for>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #9A9AA0; font-weight: 600; margin-top: -6px"><span>Not sure</span><span>Very sure</span></div>
+        <sc-if value="{{showLowerNudge}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="background: #2D2618; border: 1px solid #5A4520; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 14px; color: #FFD9A0; line-height: 1.4">Not totally sure? A lower limit can be easier to stick to.</span>
+            <span style="display: flex; gap: 8px">
+              <button onClick="{{tryLower}}" style="height: 40px; padding: 0 14px; border-radius: 20px; border: none; background: #FFC56B; color: #1A1A1C; font-size: 14px; font-weight: 700; cursor: pointer">Try {{lowerLabel}}</button>
+              <button onClick="{{keepPlan}}" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #5A4520; background: none; color: #FFD9A0; font-size: 14px; font-weight: 700; cursor: pointer">Keep {{mkPlanLabel}}</button>
+            </span>
+          </div>
+        </sc-if>
+        <sc-if value="{{showLowered}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600">Your plan is now {{mkPlanLabel}}. You can change it any night.</div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{mkRemind}}" hint-placeholder-val="{{false}}">
+        <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px">Remind me <span style="color: #6EE7C1">before</span> I go out</div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">A quick nudge to set your plan before the night starts.</div>
+        <div role="group" aria-label="Days" style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{dayChips}}" as="x" hint-placeholder-count="7"><button onClick="{{x.pick}}" aria-pressed="{{x.pressed}}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: {{x.bg}}; color: {{x.fg}}; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">{{x.label}}</button></sc-for>
+        </div>
+        <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: #353538; display: flex; align-items: center; justify-content: center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+            </div>
+            <div style="font-size: 16px; font-weight: 600">Time</div>
+          </div>
+          <button onClick="{{openPreSheet}}" aria-expanded="{{preSheetExpanded}}" aria-label="Change reminder time" style="height: 44px; padding: 0 16px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 17px; font-weight: 700; cursor: pointer">{{preTime}}</button>
+        </div>
+        <div style="background: #262628; border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; color: #9A9AA0; font-weight: 600">Preview</span>
+          <span style="font-size: 14px; font-weight: 700">Pacey · {{preTime}}</span>
+          <span style="font-size: 14px; color: #E0E0E4; line-height: 1.4">{{preBody}}</span>
+        </div>
+      </sc-if>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <button onClick="{{mkNext}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">{{mkNextLabel}}</button>
+      <button onClick="{{mkSkip}}" style="min-height: 44px; flex-shrink: 0; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">{{mkSkipLabel}}</button>
     </div>
   </sc-if>
 
@@ -1058,6 +1165,9 @@ button{font-family:Outfit,system-ui,sans-serif}
           <sc-if value="{{hasReason}}" hint-placeholder-val="{{false}}">
             <div style="margin-top: 4px; padding: 10px 12px; border-radius: 14px; background: #353538; font-size: 15px; color: #FFFFFF">You said: <span style="font-weight: 700">“{{reason}}”</span></div>
           </sc-if>
+          <sc-if value="{{hasIfThen}}" hint-placeholder-val="{{false}}">
+            <div style="padding: 10px 12px; border-radius: 14px; background: #353538; font-size: 15px; color: #FFFFFF">Your plan: <span style="font-weight: 700">{{ifThenText}}</span></div>
+          </sc-if>
         </div>
       </sc-if>
       <sc-if value="{{lastCallPassed}}" hint-placeholder-val="{{false}}">
@@ -1732,6 +1842,14 @@ button{font-family:Outfit,system-ui,sans-serif}
               <span style="font-size: 13px; color: #9A9AA0">{{countryWhere}}</span>
             </span>
             <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
+          </div>
+          <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
+            <label for="pacey-country" style="font-size: 16px; font-weight: 600">Country</label>
+            <select id="pacey-country" value="{{countryValue}}" onChange="{{setCountry}}" style="max-width: 60%; height: 40px; padding: 0 10px; border-radius: 12px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600">
+              <sc-for list="{{countryOptions}}" as="c" hint-placeholder-count="3">
+                <option value="{{c.code}}">{{c.label}}</option>
+              </sc-for>
+            </select>
           </div>
           <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
             <div style="font-size: 16px; font-weight: 600">Trusted friend</div>
@@ -2559,6 +2677,37 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{preSheetOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closePreSheet}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="Reminder time" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 16px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 20px; font-weight: 800">Reminder time</div>
+          <button onClick="{{closePreSheet}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+        </div>
+          <div style="position: relative; height: 200px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <div style="position: absolute; left: 0; right: 0; top: 80px; height: 40px; border-radius: 12px; background: #353538"></div>
+        <div style="position: absolute; left: 50%; top: 80px; height: 40px; width: 8px; margin-left: -4px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800">:</div>
+        <div class="wheel" ref="{{preHourRef}}" onScroll="{{preHourScroll}}" aria-label="Reminder hour" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+          <div style="height: 80px"></div>
+          <sc-for list="{{preHourItems}}" as="it" hint-placeholder-count="5">
+            <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+          </sc-for>
+          <div style="height: 80px"></div>
+        </div>
+        <div class="wheel" ref="{{preMinRef}}" onScroll="{{preMinScroll}}" aria-label="Reminder minutes" style="position: relative; height: 200px; overflow-y: scroll; scroll-snap-type: y mandatory">
+          <div style="height: 80px"></div>
+          <sc-for list="{{preMinItems}}" as="it" hint-placeholder-count="5">
+            <button onClick="{{it.pick}}" aria-label="{{it.aria}}" style="display: block; width: 100%; height: 40px; border: none; background: none; color: {{it.color}}; font-size: {{it.size}}; font-weight: 700; scroll-snap-align: center; cursor: pointer">{{it.label}}</button>
+          </sc-for>
+          <div style="height: 80px"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{pickerOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{closePicker}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2655,6 +2804,39 @@ class Component extends DCLogic {
       };
     });
   }
+  // Wheels for "Remind me before I go out" (Make it yours, step 3).
+  preWheelRef(name) {
+    this.preRefs = this.preRefs || {};
+    if (!this.preRefs[name]) {
+      this.preRefs[name] = (el) => {
+        this.preEls = this.preEls || {};
+        if (el && this.preEls[name] !== el) {
+          this.preEls[name] = el;
+          const v = name === 'h' ? (this.state.preH != null ? this.state.preH : 19) : (this.state.preMi != null ? this.state.preMi : 0);
+          el.scrollTop = v * this.ROW;
+          requestAnimationFrame(() => { el.scrollTop = v * this.ROW; });
+        } else if (!el && this.preEls) this.preEls[name] = null;
+      };
+    }
+    return this.preRefs[name];
+  }
+  preWheelScroll(name) {
+    this.preScrolls = this.preScrolls || {};
+    if (!this.preScrolls[name]) {
+      this.preScrolls[name] = (e) => {
+        const key = name === 'h' ? 'preH' : 'preMi';
+        const count = name === 'h' ? 24 : 12;
+        const i = Math.max(0, Math.min(count - 1, Math.round(e.currentTarget.scrollTop / this.ROW)));
+        if (i !== this.state[key]) this.setState({ [key]: i });
+      };
+    }
+    return this.preScrolls[name];
+  }
+  preWheelTo(name, i) {
+    const el = this.preEls && this.preEls[name];
+    if (el) el.scrollTo({ top: i * this.ROW, behavior: 'smooth' });
+    else this.setState({ [name === 'h' ? 'preH' : 'preMi']: i });
+  }
   scrollWheelTo(name, i) {
     const el = this.wheelEls[name];
     if (el) el.scrollTo({ top: i * this.ROW, behavior: 'smooth' });
@@ -2704,6 +2886,29 @@ class Component extends DCLogic {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
     }, 8000);
   }
+  // "Remind me before I go out": on the chosen days and time, if no night is running.
+  // The laptop app can only remind while it's open; the iPhone app will schedule it properly.
+  checkPreNight() {
+    const s = this.state;
+    if (!this.props.realtime || s.preOn === false || s.active) return;
+    if (['home', 'drink', 'settings', 'history'].indexOf(s.screen) === -1) return;
+    const now = new Date();
+    const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
+    if ((s.preDays || ['Fri', 'Sat']).indexOf(day) === -1) return;
+    if (now.getHours() !== (s.preH != null ? s.preH : 19) || now.getMinutes() !== (s.preMi != null ? s.preMi : 0) * 5) return;
+    const key = now.toDateString();
+    if (s.preFiredOn === key) return;
+    const why = (s.reason || '').trim();
+    const title = 'Going out tonight?';
+    const body = 'Set your plan before you go' + (why ? '. You said: "' + why + '"' : '.');
+    const id = Date.now();
+    this.setState({ preFiredOn: key, banner: { id: id, title: title, body: body } });
+    if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
+    clearTimeout(this.bannerTimer);
+    this.bannerTimer = setTimeout(() => {
+      if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
+    }, 8000);
+  }
   // At last call (Settings > Pace plan): one reminder to switch to water.
   checkLastCall() {
     const s = this.state;
@@ -2746,6 +2951,7 @@ class Component extends DCLogic {
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
       this.checkRideNudge();
       this.checkLastCall();
+      this.checkPreNight();
     }, 1000);
   }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.holdTimer); clearTimeout(this.bannerTimer); clearTimeout(this.animTimer); clearTimeout(this.animStart); }
@@ -2798,7 +3004,13 @@ class Component extends DCLogic {
         regionCode = m ? m[1].toUpperCase() : null;
       } catch (e) { regionCode = null; }
     }
-    const country = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    const detectedCountry = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    // Someone can set the country by hand (travelling, VPN, odd time zone). 'auto' or nothing = detected.
+    const countrySetByHand = !!(s.countryOverride && s.countryOverride !== 'auto' && COUNTRIES.some((c) => c[0] === s.countryOverride));
+    const country = countrySetByHand ? COUNTRIES.find((c) => c[0] === s.countryOverride) : detectedCountry;
+    // Other emergency numbers that also work there.
+    const ALSO_WORKS = { GB: '112', IE: '999' };
+    const alsoWorks = ALSO_WORKS[country[0]] || '';
     const emergencyNumber = country[2];
     const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
     const countryIn = country[0] === 'XX' ? '' : ' in ' + (THE.indexOf(country[0]) !== -1 ? 'the ' : '') + country[1];
@@ -3654,7 +3866,8 @@ class Component extends DCLogic {
       ['remHome', 'Heading home', '15 minutes before your home by time'],
       ['remLimit', 'Past your plan', 'A kind nudge when you go over your limit'],
       ['waterFirstOn', 'Water first', 'Offer a water before each drink past your plan'],
-      ['earlyCheck', 'Pace check', 'Ask before a drink that comes more than 5 minutes early']
+      ['earlyCheck', 'Pace check', 'Ask before a drink that comes more than 5 minutes early'],
+      ['preOn', 'Before you go out', (s.preDays || ['Fri', 'Sat']).join(', ') + ' at ' + String(s.preH != null ? s.preH : 19).padStart(2, '0') + ':' + String((s.preMi != null ? s.preMi : 0) * 5).padStart(2, '0') + ' · set your plan']
     ];
     const toggles = toggleDefs.map((t, i) => {
       const on = s[t[0]] !== false;
@@ -3810,7 +4023,7 @@ class Component extends DCLogic {
     const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'result' };
     const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
     const quizSel = s.quizDrinks || [];
-    const finishQuiz = (extra) => this.setState(Object.assign({ screen: s.account ? 'result' : 'account', accountStep: 'choose' }, extra));
+    const finishQuiz = (extra) => this.setState(Object.assign({ screen: 'result', accountStep: 'choose' }, extra));
     const qOptions = q.multi ? q.options.map((o, i) => {
       const k = dtDefs[i].k;
       const on = quizSel.indexOf(k) !== -1;
@@ -3826,13 +4039,15 @@ class Component extends DCLogic {
         const next = ans.slice();
         next[s.qIdx] = i;
         if (s.qIdx < questions.length - 1) this.setState({ answers: next, qIdx: s.qIdx + 1 });
-        else this.setState({ answers: next, screen: s.account ? 'result' : 'account', accountStep: 'choose' });
+        else this.setState({ answers: next, screen: 'result', accountStep: 'choose' });
       }
     }));
     // The suggestion never goes above 4 drinks and never above what the person usually has.
     const usual = ans[1] === null ? 1 : ans[1];
     let suggested = [2, 4, 4, 4][usual];
     if (ans[2] === 0) suggested -= 1;
+    // "Make it yours" can lower the plan (never raise it).
+    const planChoice = Math.max(1, Math.min(suggested, s.mkPlan || suggested));
     const level = ans[1] === null ? 'Not set' : usual === 0 ? 'Light' : (usual >= 2 || ans[0] >= 2) ? 'Regular' : 'Social';
     const resultMessage = usual >= 2
       ? 'That is under your usual, which is the point: a steadier night and an easier morning.'
@@ -3861,7 +4076,120 @@ class Component extends DCLogic {
       dayPickText: 'Your ' + DAY_LONG[todayDow] + ' plan',
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
+      // ---------- "Your suggested plan" hook and "Make it yours"
+      builtAroundYou: ans[2] === 0 ? 'You said staying sharp matters most, so this plan keeps your night steady.'
+        : ans[2] === 1 ? 'You said feeling fine tomorrow matters most. This plan is built for that.'
+        : ans[2] === 2 ? 'You said you want to see your pace. Pacey shows it live as you go.'
+        : usual >= 2 ? 'It\'s set a little under your usual night, for an easier morning.' : 'It fits how you usually go out.',
+      ...(() => {
+        const START_G = 20 * 60;
+        let homeG = s.homeH * 60 + s.homeMi * 5;
+        if (homeG <= START_G) homeG += 24 * 60;
+        const span = homeG - START_G;
+        const gap = Math.max(30, Math.floor(span / planChoice));
+        const marks = [];
+        for (let k = 0; k < planChoice; k += 1) {
+          const t = Math.min(span - 10, k * gap);
+          marks.push({ left: (t / span * 100) + '%', top: '9px', size: '16px', offset: '-8px', radius: '8px', color: '#6EE7C1', rot: 'none' });
+          if (k < planChoice - 1) {
+            const w = Math.min(span - 10, k * gap + gap / 2);
+            marks.push({ left: (w / span * 100) + '%', top: '11px', size: '11px', offset: '-6px', radius: '50% 0 50% 50%', color: '#5CC8F5', rot: 'rotate(-45deg)' });
+          }
+        }
+        return {
+          glanceMarks: marks,
+          glanceStart: fmt(START_G),
+          glanceEnd: fmt(homeG),
+          glanceHome: fmt(homeG),
+          glanceLine: planChoice === 1 ? 'One drink, with water around it.' : 'About one drink every ' + (Math.round(gap / 5) * 5) + ' min, with water in between.',
+          glanceAria: planChoice + (planChoice === 1 ? ' drink' : ' drinks') + ' between ' + fmt(START_G) + ' and ' + fmt(homeG) + ', with water in between'
+        };
+      })(),
+      openMakeIt: () => this.setState({ screen: 'makeit', mkStep: 0 }),
+      isMakeIt: s.screen === 'makeit',
+      mkReason: (s.mkStep || 0) === 0,
+      mkIfThen: s.mkStep === 1,
+      mkRemind: s.mkStep === 2,
+      mkSteps: [0, 1, 2].map((k) => ({ bg: k <= (s.mkStep || 0) ? '#6EE7C1' : '#353538' })),
+      mkStepLabel: ((s.mkStep || 0) + 1) + ' of 3',
+      mkNextLabel: (s.mkStep || 0) < 2 ? 'Next' : 'Start with this plan',
+      mkSkipLabel: (s.mkStep || 0) < 2 ? 'Skip' : 'No reminders',
+      mkNext: () => {
+        if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
+        syncPlan(planChoice, [2, 4, 6, 8][usual]);
+        this.setState({ preOn: true, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+      },
+      mkSkip: () => {
+        if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
+        syncPlan(planChoice, [2, 4, 6, 8][usual]);
+        this.setState({ preOn: false, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+      },
+      reasonChips: ['Feel good tomorrow', 'Save money', 'Stay in control', 'Get home safe', 'Sleep better'].map((label) => {
+        const on = (s.reason || '') === label;
+        return { label: label, pressed: on ? 'true' : 'false', bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState({ reason: on ? '' : label }) };
+      }),
+      ifThenOptions: [['round', 'If someone buys a round', 'I\'ll get a water'], ['limit', 'If I reach my limit', 'I\'ll switch to soft drinks'], ['late', 'If it\'s past midnight', 'I\'ll head home']].map((o) => {
+        const on = s.ifThen === o[0];
+        return { when: o[1], then: o[2], checked: on ? 'true' : 'false', ring: on ? '#6EE7C1' : 'transparent', dot: on ? '6px solid #6EE7C1' : '2px solid #6A6A70', pick: () => this.setState({ ifThen: on ? null : o[0] }) };
+      }),
+      hasIfThen: !!s.ifThen,
+      ifThenText: { round: 'if someone buys a round, I\'ll get a water', limit: 'if I reach my limit, I\'ll switch to soft drinks', late: 'if it\'s past midnight, I\'ll head home' }[s.ifThen] || '',
+      mkPlanLabel: planChoice + (planChoice === 1 ? ' drink' : ' drinks'),
+      lowerLabel: (planChoice - 1) + (planChoice - 1 === 1 ? ' drink' : ' drinks'),
+      confOptions: [1, 2, 3, 4, 5].map((n) => {
+        const on = s.confidence === n;
+        return { n: n, aria: n + ' out of 5', checked: on ? 'true' : 'false', bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState({ confidence: n, mkKept: false }) };
+      }),
+      showLowerNudge: !!s.confidence && s.confidence <= 3 && !s.mkKept && !s.mkLowered && planChoice > 1,
+      showLowered: !!s.mkLowered,
+      tryLower: () => this.setState({ mkPlan: planChoice - 1, mkLowered: true }),
+      keepPlan: () => this.setState({ mkKept: true }),
+      dayChips: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => {
+        const days = s.preDays || ['Fri', 'Sat'];
+        const on = days.indexOf(d) !== -1;
+        return { label: d, pressed: on ? 'true' : 'false', bg: on ? '#6EE7C1' : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF', pick: () => this.setState({ preDays: on ? days.filter((x) => x !== d) : days.concat([d]) }) };
+      }),
+      preTime: pad(s.preH != null ? s.preH : 19) + ':' + pad((s.preMi != null ? s.preMi : 0) * 5),
+      preHourRef: this.preWheelRef('h'),
+      preMinRef: this.preWheelRef('m'),
+      preHourScroll: this.preWheelScroll('h'),
+      preMinScroll: this.preWheelScroll('m'),
+      preHourItems: Array.from({ length: 24 }, (_, i) => pad(i)).map((label, i) => {
+        const sel = (s.preH != null ? s.preH : 19) === i;
+        return { label: label, aria: label + ' hours', color: sel ? '#FFFFFF' : '#9A9AA0', size: sel ? '22px' : '18px', pick: () => this.preWheelTo('h', i) };
+      }),
+      preMinItems: Array.from({ length: 12 }, (_, i) => pad(i * 5)).map((label, i) => {
+        const sel = (s.preMi != null ? s.preMi : 0) === i;
+        return { label: label, aria: label + ' minutes', color: sel ? '#FFFFFF' : '#9A9AA0', size: sel ? '22px' : '18px', pick: () => this.preWheelTo('m', i) };
+      }),
+      preSheetOpen: !!s.preSheet,
+      preSheetExpanded: s.preSheet ? 'true' : 'false',
+      openPreSheet: () => this.setState({ preSheet: true }),
+      closePreSheet: () => this.setState({ preSheet: false }),
+      // Swipe right (or drag with the mouse) to go back a step.
+      mkPointerDown: (e) => { this.mkSwipe = { x: e.clientX, y: e.clientY }; },
+      mkPointerUp: (e) => {
+        const st = this.mkSwipe; this.mkSwipe = null;
+        if (!st) return;
+        const dx = e.clientX - st.x, dy = e.clientY - st.y;
+        if (dx > 70 && Math.abs(dy) < 60 && !s.preSheet) this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' });
+      },
+      mkBack: () => this.setState((s.mkStep || 0) > 0 ? { mkStep: s.mkStep - 1 } : { screen: 'result' }),
+      mkBackAria: (s.mkStep || 0) > 0 ? 'Back to step ' + (s.mkStep || 0) : 'Back to your plan',
+      preBody: 'Going out tonight? Set your plan before you go' + ((s.reason || '').trim() ? '. You said: "' + s.reason.trim() + '"' : '.'),
       isAccount: s.screen === 'account',
+      resultOfferAccount: !s.account,
+      resultSaved: !!s.account,
+      accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
+      openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
+      consentMore: !!s.consentMore,
+      consentMoreAttr: s.consentMore ? 'true' : 'false',
+      consentMoreLabel: s.consentMore ? 'Hide details' : 'What\'s saved?',
+      toggleConsentMore: () => this.setState({ consentMore: !s.consentMore }),
+      pwType: s.pwShown ? 'text' : 'password',
+      pwShownAttr: s.pwShown ? 'true' : 'false',
+      pwToggleLabel: s.pwShown ? 'Hide password' : 'Show password',
+      togglePw: () => this.setState({ pwShown: !s.pwShown }),
       // Separate, explicit consent before an account keeps any drinking data (GDPR special category).
       showDataConsent: !(s.accountStep === 'email' && signingIn),
       consentTicked: !!s.dataConsent,
@@ -3873,7 +4201,7 @@ class Component extends DCLogic {
       accountChoose: (s.accountStep || 'choose') === 'choose',
       accountEmail: s.accountStep === 'email',
       // Back: to the sign-up choices, to Settings (when opened from Profile), or to the quiz.
-      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'quiz', qIdx: 2 }),
+      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
       signApple: () => { if (!s.dataConsent) { this.setState({ consentHint: true }); return; } this.setState({ account: { method: 'apple', label: 'Signed in with Apple' }, dataConsentAt: Date.now(), screen: 'result' }); },
       signGoogle: () => {
         if (!s.dataConsent) { this.setState({ consentHint: true }); return; }
@@ -3936,7 +4264,7 @@ class Component extends DCLogic {
       },
       hasAccount: !!s.account,
       noAccount: !s.account,
-      accountLabel: s.account ? (s.account.real ? 'Signed in as ' + s.account.label : s.account.label) : 'Not signed in',
+      accountLabel: s.account ? (s.account.method === 'google' ? 'Signed in with Google' + (s.account.real ? ' · ' + s.account.label : '') : s.account.real ? 'Signed in with email · ' + s.account.label : s.account.label) : 'Not signed in',
       openSignInFromSettings: () => this.setState({ screen: 'account', accountStep: AUTH ? 'email' : 'choose', accountMode: 'signin', accountFrom: 'settings', emailErr: '', accountNote: '', accountErr: '' }),
       accountErrShow: !!s.accountErr,
       accountErr: s.accountErr || '',
@@ -4018,11 +4346,11 @@ class Component extends DCLogic {
       qAccent: q.accent,
       qHint: q.hint,
       qOptions: qOptions,
-      suggestLabel: suggested + (suggested === 1 ? ' drink' : ' drinks'),
+      suggestLabel: planChoice + (planChoice === 1 ? ' drink' : ' drinks'),
       levelLabel: level,
       resultMessage: resultMessage,
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
-      acceptPlan: () => { syncPlan(suggested, [2, 4, 6, 8][usual]); this.setState({ plan: suggested, usualPlan: suggested, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }); },
+      acceptPlan: () => { syncPlan(planChoice, [2, 4, 6, 8][usual]); this.setState({ plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }); },
       quickLabel: shownDef[1] + ' · ' + shownP.n,
       quickIcon: shownDef[3],
       quickBg: matchDef ? '#6EE7C1' : '#262628',
@@ -4288,7 +4616,7 @@ class Component extends DCLogic {
       animWater: !!s.anim && s.anim.type === 'water',
       animTitle: s.anim ? s.anim.title : '',
       animSub: s.anim ? s.anim.sub : '',
-      showDevSkip: this.props.devSkip !== false && ['age', 'quiz', 'account', 'result', 'overview', 'tryit', 'notify'].indexOf(s.screen) !== -1,
+      showDevSkip: this.props.devSkip !== false && ['age', 'quiz', 'account', 'result', 'makeit', 'overview', 'tryit', 'notify'].indexOf(s.screen) !== -1,
       skipSetup: () => this.setState({ screen: 'home', plan: 4, usualPlan: 4, avgDrinks: 4, termsAcceptedAt: s.termsAcceptedAt || Date.now(), account: s.account || { method: 'apple', label: 'Signed in with Apple (skipped)' } }),
       alcLabel: volText(totals(s.entries).alc),
       volLabel: volText(totals(s.entries).vol),
@@ -4356,8 +4684,11 @@ class Component extends DCLogic {
       countryName: country[1],
       emergencyNumber: emergencyNumber,
       countryAria: 'Emergency number ' + emergencyNumber + (country[0] === 'XX' ? '' : ', for ' + country[1] + ', where you are now'),
-      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : 'Where you are now: ' + country[1],
-      countrySourceNote: country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones.' : 'Pacey works this out from where your phone is right now, so it changes when you travel.',
+      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : (countrySetByHand ? 'Set by you: ' : 'From your time zone: ') + country[1] + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
+      countryOptions: [{ code: 'auto', label: 'Automatic' + (detectedCountry[0] === 'XX' ? '' : ' (' + detectedCountry[1] + ')') }].concat(COUNTRIES.filter((c) => c[0] !== 'XX').map((c) => ({ code: c[0], label: c[1] + ' · ' + c[2] }))),
+      countryValue: countrySetByHand ? country[0] : 'auto',
+      setCountry: (e) => this.setState({ countryOverride: e.target.value }),
+      countrySourceNote: countrySetByHand ? 'You picked this country. Set it back to Automatic when you travel, so Pacey follows your phone\'s time zone again.' : country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones. You can pick your country above.' : 'Pacey works this out from your phone\'s time zone, which changes when you travel. If it\'s wrong, pick your country above.',
       callAria: 'Call emergency services, ' + emergencyNumber,
       // Calls straight away: in an emergency there's no confirmation step. The laptop app hands tel: links to the computer.
       callEmergency: () => {
@@ -4369,7 +4700,7 @@ class Component extends DCLogic {
       },
       underAgeShow: !!s.underAge,
       underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
-      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]),
+      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
@@ -4553,7 +4884,7 @@ class Component extends DCLogic {
       // Lock screen widgets, Live Activity and Dynamic Island log straight away (no Water first sheet: widgets can't show one).
       lockAddDrink: add('drink', true),
       lockAddWater: add('water', true),
-      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose' }),
+      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
       isLock: s.screen === 'lock' && s.active,
       showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
