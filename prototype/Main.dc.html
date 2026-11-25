@@ -283,7 +283,8 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600">Saved to your account · {{accountShort}}</div>
       </sc-if>
 
-      <button onClick="{{openMakeIt}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Make it yours →</button>
+      <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Start with this plan</button>
+      <button onClick="{{openMakeIt}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; cursor: pointer">Make it yours (reason, reminder) →</button>
       <button onClick="{{retakeQuiz}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Change my answers</button>
     </div>
   </sc-if>
@@ -409,7 +410,7 @@ button{font-family:Outfit,system-ui,sans-serif}
     <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 72px 24px 28px; display: flex; flex-direction: column; gap: 18px">
       <div style="width: 60px; height: 60px; border-radius: 18px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 21h4"></path></svg></div>
       <div style="font-size: 36px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px">Gentle <span style="color: #6EE7C1">nudges</span></div>
-      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Pacey can remind you during a night out, so you don't have to keep checking the app. For example:</div>
+      <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Allow notifications so Pacey can remind you during the night, and you don't have to keep checking the app. For example:</div>
       <div aria-hidden="true" style="display: flex; flex-direction: column; gap: 10px">
         <sc-for list="{{notifyExamples}}" as="ne" hint-placeholder-count="3">
           <div style="border-radius: 20px; background: #262628; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px">
@@ -1217,6 +1218,16 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <div style="flex-grow: 1"></div>
+
+      <sc-if value="{{showPlusTip}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="background: #6EE7C1; color: #1A1A1C; border-radius: 20px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+            <div style="font-size: 16px; font-weight: 800">Tap + when you have a drink</div>
+            <div style="font-size: 14px; line-height: 1.4">Tap + Water for water too. Pacey keeps your pace from there.</div>
+          </div>
+          <button onClick="{{hidePlusTip}}" style="min-height: 44px; flex-shrink: 0; padding: 0 14px; border-radius: 22px; border: none; background: #1A1A1C; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Got it</button>
+        </div>
+      </sc-if>
 
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
         <button onClick="{{addWater}}" style="height: 76px; border-radius: 38px; border: none; background: {{waterBg}}; color: {{waterFg}}; font-size: 22px; font-weight: 700; cursor: pointer">+ Water</button>
@@ -3738,7 +3749,7 @@ class Component extends DCLogic {
         this.countGlass.getBoundingClientRect();
         this.countGlass.classList.add('is-filling');
       }
-      this.setState({ entries: entries });
+      this.setState({ entries: entries, plusTipSeen: true });
       if (kind === 'drink' && s.remLimit !== false && count >= s.plan) this.notifyLimit(count - s.plan);
       // Water habit: a gentle nudge when a drink completes the habit (the plan nudges take over at the plan).
       else if (kind === 'drink' && !silent && s.remWater !== false && count % (s.waterEvery || 2) === 0) {
@@ -4001,9 +4012,7 @@ class Component extends DCLogic {
     else summaryMessage = vDrinks + ' drinks on a plan of ' + view.plan + '. It happens, and tomorrow is a fresh start. ' + water;
 
     const questions = [
-      { plain: 'How often do you', accent: 'go out?', hint: 'There are no wrong answers. This only sets your starting plan.', options: [
-        ['Rarely', 'A few times a year'], ['Now and then', 'Once or twice a month'], ['Most weekends', 'Around once a week'], ['More often', 'More than once a week']] },
-      { plain: 'On a usual night, how', accent: 'many drinks?', hint: 'A rough guess is fine.', options: [
+      { plain: 'On a usual night, how', accent: 'many drinks?', hint: 'A rough guess is fine. This only sets your starting plan.', options: [
         ['1 to 2', 'A couple over the evening'], ['3 to 4', 'A few through the night'], ['5 to 6', 'A fair few'], ['7 or more', 'A big night']] },
       { plain: 'What matters most', accent: 'on a night out?', hint: 'Pick the one that fits you best.', options: [
         ['Staying sharp', 'I want to feel fully in control'], ['Feeling fine tomorrow', 'A good night without the rough morning'], ['Just keeping track', 'I want to see my pace']] },
@@ -4043,12 +4052,12 @@ class Component extends DCLogic {
       }
     }));
     // The suggestion never goes above 4 drinks and never above what the person usually has.
-    const usual = ans[1] === null ? 1 : ans[1];
+    const usual = ans[0] === null ? 1 : ans[0];
     let suggested = [2, 4, 4, 4][usual];
-    if (ans[2] === 0) suggested -= 1;
+    if (ans[1] === 0) suggested -= 1;
     // "Make it yours" can lower the plan (never raise it).
     const planChoice = Math.max(1, Math.min(suggested, s.mkPlan || suggested));
-    const level = ans[1] === null ? 'Not set' : usual === 0 ? 'Light' : (usual >= 2 || ans[0] >= 2) ? 'Regular' : 'Social';
+    const level = ans[0] === null ? 'Not set' : usual === 0 ? 'Light' : usual >= 2 ? 'Regular' : 'Social';
     const resultMessage = usual >= 2
       ? 'That is under your usual, which is the point: a steadier night and an easier morning.'
       : 'That fits how you usually go out. Pacey spreads it evenly across your night.';
@@ -4077,9 +4086,9 @@ class Component extends DCLogic {
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       // ---------- "Your suggested plan" hook and "Make it yours"
-      builtAroundYou: ans[2] === 0 ? 'You said staying sharp matters most, so this plan keeps your night steady.'
-        : ans[2] === 1 ? 'You said feeling fine tomorrow matters most. This plan is built for that.'
-        : ans[2] === 2 ? 'You said you want to see your pace. Pacey shows it live as you go.'
+      builtAroundYou: ans[1] === 0 ? 'You said staying sharp matters most, so this plan keeps your night steady.'
+        : ans[1] === 1 ? 'You said feeling fine tomorrow matters most. This plan is built for that.'
+        : ans[1] === 2 ? 'You said you want to see your pace. Pacey shows it live as you go.'
         : usual >= 2 ? 'It\'s set a little under your usual night, for an easier morning.' : 'It fits how you usually go out.',
       ...(() => {
         const START_G = 20 * 60;
@@ -4117,12 +4126,12 @@ class Component extends DCLogic {
       mkNext: () => {
         if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
         syncPlan(planChoice, [2, 4, 6, 8][usual]);
-        this.setState({ preOn: true, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+        this.setState({ preOn: true, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: s.notifyAllowed == null ? 'notify' : 'home', notifyThen: 'home', tipStep: 1 });
       },
       mkSkip: () => {
         if ((s.mkStep || 0) < 2) { this.setState({ mkStep: (s.mkStep || 0) + 1 }); return; }
         syncPlan(planChoice, [2, 4, 6, 8][usual]);
-        this.setState({ preOn: false, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 });
+        this.setState({ preOn: false, plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'home', tipStep: 1 });
       },
       reasonChips: ['Feel good tomorrow', 'Save money', 'Stay in control', 'Get home safe', 'Sleep better'].map((label) => {
         const on = (s.reason || '') === label;
@@ -4319,6 +4328,8 @@ class Component extends DCLogic {
       finishTry: () => this.setState({ screen: 'notify', anim: null }),
       // Notification screen
       isNotify: s.screen === 'notify',
+      showPlusTip: s.screen === 'drink' && !s.plusTipSeen && s.entries.length === 0,
+      hidePlusTip: () => this.setState({ plusTipSeen: true }),
       notifyExamples: [
         { t: 'Water time', b: 'A glass of water now keeps the night feeling good.' },
         { t: 'Your next drink fits your plan now', b: 'No rush. Whenever you\'re ready.' },
@@ -4326,9 +4337,13 @@ class Component extends DCLogic {
       ],
       allowNotify: () => {
         if (typeof window !== 'undefined' && typeof window.paceyRequestNotify === 'function') window.paceyRequestNotify();
-        this.setState({ notifyAllowed: true, screen: 'home', tipStep: 1 });
+        if (s.notifyThen === 'night') beginNight({ notifyAllowed: true, notifyThen: null, screen: 'home' });
+        else this.setState({ notifyAllowed: true, notifyThen: null, screen: 'home' });
       },
-      skipNotify: () => this.setState({ notifyAllowed: false, screen: 'home', tipStep: 1 }),
+      skipNotify: () => {
+        if (s.notifyThen === 'night') beginNight({ notifyAllowed: false, notifyThen: null, screen: 'home' });
+        else this.setState({ notifyAllowed: false, notifyThen: null, screen: 'home' });
+      },
       // First-visit tips on Home
       showTips: s.screen === 'home' && !s.active && (s.tipStep || 0) > 0,
       tipStep: s.tipStep || 0,
@@ -4350,7 +4365,7 @@ class Component extends DCLogic {
       levelLabel: level,
       resultMessage: resultMessage,
       quizBack: () => this.setState(s.qIdx === 0 ? { screen: 'age' } : { qIdx: s.qIdx - 1 }),
-      acceptPlan: () => { syncPlan(planChoice, [2, 4, 6, 8][usual]); this.setState({ plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'tryit', tryDrinks: 0, tryWater: 0 }); },
+      acceptPlan: () => { syncPlan(planChoice, [2, 4, 6, 8][usual]); this.setState({ plan: planChoice, usualPlan: planChoice, avgDrinks: [2, 4, 6, 8][usual], screen: 'home', tipStep: 1 }); },
       quickLabel: shownDef[1] + ' · ' + shownP.n,
       quickIcon: shownDef[3],
       quickBg: matchDef ? '#6EE7C1' : '#262628',
@@ -4848,7 +4863,7 @@ class Component extends DCLogic {
       ridePillC: s.picker === 'ride' ? '#6EE7C1' : '#FFFFFF',
       toggleHomePicker: () => this.setState({ picker: s.picker === 'home' ? null : 'home', pickerTarget: null }),
       toggleRidePicker: () => this.setState({ picker: s.picker === 'ride' ? null : 'ride', pickerTarget: null }),
-      startNight: () => beginNight(),
+      startNight: () => { if (s.notifyAllowed == null) this.setState({ screen: 'notify', notifyThen: 'night' }); else beginNight(); },
       timeAskOpen: !!s.timeAsk,
       timeAskBody: timeAskBody,
       timeAskOptions: timeAskOptions,
