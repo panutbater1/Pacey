@@ -284,7 +284,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
 
       <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Start with this plan</button>
-      <button onClick="{{openMakeIt}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; cursor: pointer">Make it yours (reason, reminder) →</button>
+      <button onClick="{{openMakeIt}}" style="min-height: 44px; border: none; background: none; color: #6EE7C1; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px"><span>Make it stick →</span><span style="font-size: 13px; font-weight: 500; color: #9A9AA0">Add your reason and a reminder · 30 sec</span></button>
       <button onClick="{{retakeQuiz}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Change my answers</button>
     </div>
   </sc-if>
@@ -297,7 +297,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div aria-hidden="true" style="display: flex; gap: 6px; flex-shrink: 0">
         <sc-for list="{{mkSteps}}" as="st" hint-placeholder-count="3"><span style="flex: 1; height: 5px; border-radius: 3px; background: {{st.bg}}"></span></sc-for>
       </div>
-      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">Make it yours · {{mkStepLabel}}</div>
+      <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">Make it stick · {{mkStepLabel}}</div>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 0 24px 4px; display: flex; flex-direction: column; gap: 14px">
       <sc-if value="{{mkReason}}" hint-placeholder-val="{{true}}">
         <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px">Why does this <span style="color: #6EE7C1">matter</span> to you?</div>
