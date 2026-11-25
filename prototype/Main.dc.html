@@ -152,18 +152,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       </button>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 28px; display: flex; flex-direction: column; gap: 18px">
       <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px; flex-shrink: 0">Your plan is <span style="color: #6EE7C1">ready</span></div>
-      <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">Create a free account to see your results and keep your plan safe if you change phones.</div>
+      <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">Save your plan to a free account so you get it back on a new phone. It's optional: everything in Pacey works without one.</div>
 
-      <div aria-hidden="true" style="flex-shrink: 0; position: relative; background: #262628; border-radius: 24px; padding: 18px; overflow: hidden">
-        <div style="filter: blur(7px); display: flex; flex-direction: column; gap: 10px">
-          <div style="font-size: 15px; color: #9A9AA0">Your suggested plan</div>
-          <div style="font-size: 30px; font-weight: 800">A limit of 4 drinks</div>
-        </div>
-        <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center">
-          <span style="width: 52px; height: 52px; border-radius: 26px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
-          </span>
-        </div>
+      <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="font-size: 15px; color: #9A9AA0">Your plan</div>
+        <div style="font-size: 18px; font-weight: 800">A limit of {{suggestLabel}}</div>
       </div>
 
       <sc-if value="{{showDataConsent}}" hint-placeholder-val="{{true}}">
@@ -175,7 +168,13 @@ button{font-family:Outfit,system-ui,sans-serif}
             </sc-if>
           </span>
         </button>
-        <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">I agree that Pacey can keep my plan and how much I usually drink with my account, so I can get them back on a new phone. This is health information. I can delete my account at any time in Settings › Profile.</div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="font-size: 15px; color: #E0E0E4; line-height: 1.4">I agree that Pacey can keep my plan and usual drinks with my account. This is health info.</div>
+          <button onClick="{{toggleConsentMore}}" aria-expanded="{{consentMoreAttr}}" style="align-self: flex-start; min-height: 32px; border: none; background: none; padding: 0; color: #6EE7C1; font-size: 14px; font-weight: 700; cursor: pointer">{{consentMoreLabel}}</button>
+          <sc-if value="{{consentMore}}" hint-placeholder-val="{{false}}">
+            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">Saved with your account: your sign-in, your drink limit and how many drinks you usually have, so you get them back on a new phone. Your nights and drink logs stay on this phone. You can delete your account any time in Settings › Profile.</div>
+          </sc-if>
+        </div>
       </div>
       <sc-if value="{{showConsentHint}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="flex-shrink: 0; margin-top: -8px; text-align: center; font-size: 14px; color: #FFC56B; font-weight: 600">Tick the box to create an account, or continue without one.</div>
@@ -215,7 +214,8 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px">
             <label for="pacey-password" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Password</label>
-            <input id="pacey-password" type="password" autocomplete="{{passwordAutocomplete}}" placeholder="{{passwordPlaceholder}}" value="{{passwordDraft}}" onChange="{{setPasswordDraft}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+            <input id="pacey-password" type="{{pwType}}" autocomplete="{{passwordAutocomplete}}" placeholder="{{passwordPlaceholder}}" value="{{passwordDraft}}" onChange="{{setPasswordDraft}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
+            <button onClick="{{togglePw}}" aria-pressed="{{pwShownAttr}}" style="align-self: flex-start; min-height: 32px; border: none; background: none; padding: 0; color: #9A9AA0; font-size: 14px; font-weight: 600; cursor: pointer">{{pwToggleLabel}}</button>
           </div>
           <sc-if value="{{accountNoteShow}}" hint-placeholder-val="{{false}}">
             <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600; line-height: 1.4">{{accountNote}}</div>
@@ -231,8 +231,8 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </sc-if>
 
-      <button onClick="{{continueWithoutAccount}}" style="flex-shrink: 0; min-height: 44px; border: none; background: none; color: #B8B8BE; font-size: 15px; font-weight: 600; text-decoration: underline; cursor: pointer">Continue without an account</button>
-      <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45; text-align: center">Your nights stay on your phone either way. An account only holds your sign-in, your plan and your usual number of drinks.</div>
+      <button onClick="{{continueWithoutAccount}}" style="flex-shrink: 0; height: 56px; border-radius: 28px; border: 2px solid #353538; background: none; color: #FFFFFF; font-size: 17px; font-weight: 700; cursor: pointer">Not now</button>
+      <div style="flex-shrink: 0; font-size: 13px; color: #9A9AA0; line-height: 1.45; text-align: center">You can save your plan later in Settings › Profile. Your nights stay on your phone either way.</div>
       </div>
     </div>
   </sc-if>
@@ -254,6 +254,19 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <div style="font-size: 14px; color: #9A9AA0; line-height: 1.45">This is a limit, not a target, and you can lower it any night. It's an estimate from your answers, not medical advice.</div>
+
+      <sc-if value="{{resultOfferAccount}}" hint-placeholder-val="{{true}}">
+      <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700">Save your plan?</span>
+          <span style="font-size: 13px; color: #9A9AA0; line-height: 1.4">Optional. Get it back on a new phone.</span>
+        </div>
+        <button onClick="{{openAccountFromResult}}" style="height: 44px; flex-shrink: 0; padding: 0 16px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Save</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{resultSaved}}" hint-placeholder-val="{{false}}">
+      <div role="status" style="font-size: 14px; color: #6EE7C1; font-weight: 600">Saved to your account · {{accountShort}}</div>
+      </sc-if>
 
       <div style="flex-grow: 1"></div>
       <button onClick="{{acceptPlan}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Use this plan</button>
@@ -1734,6 +1747,14 @@ button{font-family:Outfit,system-ui,sans-serif}
             <span style="font-size: 17px; font-weight: 800; color: #FF9B8F">{{emergencyNumber}}</span>
           </div>
           <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
+            <label for="pacey-country" style="font-size: 16px; font-weight: 600">Country</label>
+            <select id="pacey-country" value="{{countryValue}}" onChange="{{setCountry}}" style="max-width: 60%; height: 40px; padding: 0 10px; border-radius: 12px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 15px; font-weight: 600">
+              <sc-for list="{{countryOptions}}" as="c" hint-placeholder-count="3">
+                <option value="{{c.code}}">{{c.label}}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #353538">
             <div style="font-size: 16px; font-weight: 600">Trusted friend</div>
             <div style="font-size: 15px; color: #9A9AA0">{{friendLabel}}</div>
           </div>
@@ -2798,7 +2819,13 @@ class Component extends DCLogic {
         regionCode = m ? m[1].toUpperCase() : null;
       } catch (e) { regionCode = null; }
     }
-    const country = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    const detectedCountry = COUNTRIES.find((c) => c[0] === regionCode) || COUNTRIES[COUNTRIES.length - 1];
+    // Someone can set the country by hand (travelling, VPN, odd time zone). 'auto' or nothing = detected.
+    const countrySetByHand = !!(s.countryOverride && s.countryOverride !== 'auto' && COUNTRIES.some((c) => c[0] === s.countryOverride));
+    const country = countrySetByHand ? COUNTRIES.find((c) => c[0] === s.countryOverride) : detectedCountry;
+    // Other emergency numbers that also work there.
+    const ALSO_WORKS = { GB: '112', IE: '999' };
+    const alsoWorks = ALSO_WORKS[country[0]] || '';
     const emergencyNumber = country[2];
     const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
     const countryIn = country[0] === 'XX' ? '' : ' in ' + (THE.indexOf(country[0]) !== -1 ? 'the ' : '') + country[1];
@@ -3810,7 +3837,7 @@ class Component extends DCLogic {
     const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'result' };
     const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
     const quizSel = s.quizDrinks || [];
-    const finishQuiz = (extra) => this.setState(Object.assign({ screen: s.account ? 'result' : 'account', accountStep: 'choose' }, extra));
+    const finishQuiz = (extra) => this.setState(Object.assign({ screen: 'result', accountStep: 'choose' }, extra));
     const qOptions = q.multi ? q.options.map((o, i) => {
       const k = dtDefs[i].k;
       const on = quizSel.indexOf(k) !== -1;
@@ -3826,7 +3853,7 @@ class Component extends DCLogic {
         const next = ans.slice();
         next[s.qIdx] = i;
         if (s.qIdx < questions.length - 1) this.setState({ answers: next, qIdx: s.qIdx + 1 });
-        else this.setState({ answers: next, screen: s.account ? 'result' : 'account', accountStep: 'choose' });
+        else this.setState({ answers: next, screen: 'result', accountStep: 'choose' });
       }
     }));
     // The suggestion never goes above 4 drinks and never above what the person usually has.
@@ -3862,6 +3889,18 @@ class Component extends DCLogic {
       isQuiz: s.screen === 'quiz',
       isResult: s.screen === 'result',
       isAccount: s.screen === 'account',
+      resultOfferAccount: !s.account,
+      resultSaved: !!s.account,
+      accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
+      openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
+      consentMore: !!s.consentMore,
+      consentMoreAttr: s.consentMore ? 'true' : 'false',
+      consentMoreLabel: s.consentMore ? 'Hide details' : 'What\'s saved?',
+      toggleConsentMore: () => this.setState({ consentMore: !s.consentMore }),
+      pwType: s.pwShown ? 'text' : 'password',
+      pwShownAttr: s.pwShown ? 'true' : 'false',
+      pwToggleLabel: s.pwShown ? 'Hide password' : 'Show password',
+      togglePw: () => this.setState({ pwShown: !s.pwShown }),
       // Separate, explicit consent before an account keeps any drinking data (GDPR special category).
       showDataConsent: !(s.accountStep === 'email' && signingIn),
       consentTicked: !!s.dataConsent,
@@ -3873,7 +3912,7 @@ class Component extends DCLogic {
       accountChoose: (s.accountStep || 'choose') === 'choose',
       accountEmail: s.accountStep === 'email',
       // Back: to the sign-up choices, to Settings (when opened from Profile), or to the quiz.
-      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'quiz', qIdx: 2 }),
+      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
       signApple: () => { if (!s.dataConsent) { this.setState({ consentHint: true }); return; } this.setState({ account: { method: 'apple', label: 'Signed in with Apple' }, dataConsentAt: Date.now(), screen: 'result' }); },
       signGoogle: () => {
         if (!s.dataConsent) { this.setState({ consentHint: true }); return; }
@@ -3936,7 +3975,7 @@ class Component extends DCLogic {
       },
       hasAccount: !!s.account,
       noAccount: !s.account,
-      accountLabel: s.account ? (s.account.real ? 'Signed in as ' + s.account.label : s.account.label) : 'Not signed in',
+      accountLabel: s.account ? (s.account.method === 'google' ? 'Signed in with Google' + (s.account.real ? ' · ' + s.account.label : '') : s.account.real ? 'Signed in with email · ' + s.account.label : s.account.label) : 'Not signed in',
       openSignInFromSettings: () => this.setState({ screen: 'account', accountStep: AUTH ? 'email' : 'choose', accountMode: 'signin', accountFrom: 'settings', emailErr: '', accountNote: '', accountErr: '' }),
       accountErrShow: !!s.accountErr,
       accountErr: s.accountErr || '',
@@ -4356,8 +4395,11 @@ class Component extends DCLogic {
       countryName: country[1],
       emergencyNumber: emergencyNumber,
       countryAria: 'Emergency number ' + emergencyNumber + (country[0] === 'XX' ? '' : ', for ' + country[1] + ', where you are now'),
-      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : 'Where you are now: ' + country[1],
-      countrySourceNote: country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones.' : 'Pacey works this out from where your phone is right now, so it changes when you travel.',
+      countryWhere: country[0] === 'XX' ? 'Works on most mobile phones' : (countrySetByHand ? 'Set by you: ' : 'From your time zone: ') + country[1] + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
+      countryOptions: [{ code: 'auto', label: 'Automatic' + (detectedCountry[0] === 'XX' ? '' : ' (' + detectedCountry[1] + ')') }].concat(COUNTRIES.filter((c) => c[0] !== 'XX').map((c) => ({ code: c[0], label: c[1] + ' · ' + c[2] }))),
+      countryValue: countrySetByHand ? country[0] : 'auto',
+      setCountry: (e) => this.setState({ countryOverride: e.target.value }),
+      countrySourceNote: countrySetByHand ? 'You picked this country. Set it back to Automatic when you travel, so Pacey follows your phone\'s time zone again.' : country[0] === 'XX' ? 'Pacey couldn\'t tell which country you\'re in, so it uses 112, which works on most mobile phones. You can pick your country above.' : 'Pacey works this out from your phone\'s time zone, which changes when you travel. If it\'s wrong, pick your country above.',
       callAria: 'Call emergency services, ' + emergencyNumber,
       // Calls straight away: in an emergency there's no confirmation step. The laptop app hands tel: links to the computer.
       callEmergency: () => {
@@ -4369,7 +4411,7 @@ class Component extends DCLogic {
       },
       underAgeShow: !!s.underAge,
       underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
-      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]),
+      callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
       bannerTitle: s.banner ? s.banner.title : '',
@@ -4553,7 +4595,7 @@ class Component extends DCLogic {
       // Lock screen widgets, Live Activity and Dynamic Island log straight away (no Water first sheet: widgets can't show one).
       lockAddDrink: add('drink', true),
       lockAddWater: add('water', true),
-      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose' }),
+      continueWithoutAccount: () => this.setState(s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : { screen: 'result', accountStep: 'choose', accountFrom: null }),
       isLock: s.screen === 'lock' && s.active,
       showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
