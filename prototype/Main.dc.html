@@ -598,27 +598,34 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </sc-if>
         <sc-if value="{{recAwake}}" hint-placeholder-val="{{true}}">
-        <div role="img" aria-label="{{recRingsAria}}" style="flex-shrink: 0; display: grid; grid-template-columns: 1fr; gap: 10px">
-            <div style="background: #262628; border-radius: 24px; padding: 18px 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
-              <div style="position: relative; width: 104px; height: 104px">
-                <svg width="104" height="104" viewBox="0 0 96 96" aria-hidden="true">
+        <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 8px">
+        <div role="img" aria-label="{{recRingsAria}}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+            <div style="background: #262628; border-radius: 24px; padding: 16px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0">
+              <div style="position: relative; width: 92px; height: 92px">
+                <svg width="92" height="92" viewBox="0 0 96 96" aria-hidden="true">
                   <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
                   <circle cx="48" cy="48" r="39" fill="none" stroke="#5CC8F5" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{hydDash}}" transform="rotate(-90 48 48)"></circle>
                 </svg>
-                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; letter-spacing: -0.5px">{{hydPct}}</span>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; letter-spacing: -0.5px">{{hydPct}}</span>
               </div>
               <span style="font-size: 16px; font-weight: 700; color: #5CC8F5">Hydration</span>
               <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">{{hydRingNote}}</span>
             </div>
+            <div style="background: #262628; border-radius: 24px; padding: 16px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0">
+              <div style="position: relative; width: 92px; height: 92px">
+                <svg width="92" height="92" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#353538" stroke-width="10"></circle>
+                  <circle cx="48" cy="48" r="39" fill="none" stroke="#6EE7C1" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{recDash}}" transform="rotate(-90 48 48)"></circle>
+                </svg>
+                <span style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; letter-spacing: -0.5px">{{recPct}}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 700; color: #6EE7C1">Recovery</span>
+              <span style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.3">Water, food and sleep today</span>
+            </div>
+        </div>
+          <div style="font-size: 12px; color: #9A9AA0; text-align: center; line-height: 1.4; padding: 0 8px">Based only on the drinks and water you've logged. It can't measure your body.</div>
         </div>
 
-
-        <sc-if value="{{recDrank}}" hint-placeholder-val="{{true}}">
-        <div style="flex-shrink: 0; display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 22px; background: #262628">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8A3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9 16H3z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
-          <span style="font-size: 15px; color: #E0E0E4; line-height: 1.45">Don't drive today until you're sure the alcohol has worn off. Pacey can't tell you when that is. If in doubt, don't.</span>
-        </div>
-        </sc-if>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
           <div style="font-size: 18px; font-weight: 700">Your day</div>
@@ -663,6 +670,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
           <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #F5B83D">{{recFoodBig}}</div>
           <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recFoodText}}</div>
+          <button onClick="{{recFoodToggle}}" aria-pressed="{{recFoodDone}}" style="min-height: 48px; border-radius: 24px; border: none; background: {{recFoodBtnBg}}; color: {{recFoodBtnFg}}; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{recFoodDoneLabel}}</button>
         </div>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
@@ -674,6 +682,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
           <div style="font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; color: #B9A4FF">{{recSleepBig}}</div>
           <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recSleepText}}</div>
+          <button onClick="{{recSleepToggle}}" aria-pressed="{{recSleepDone}}" style="min-height: 48px; border-radius: 24px; border: none; background: {{recSleepBtnBg}}; color: {{recSleepBtnFg}}; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{recSleepDoneLabel}}</button>
         </div>
 
         <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center">
@@ -694,6 +703,9 @@ button{font-family:Outfit,system-ui,sans-serif}
           </sc-if>
         </div>
 
+        <sc-if value="{{recDrank}}" hint-placeholder-val="{{true}}">
+        <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px"><strong style="font-weight: 700">Don't drive today</strong> until you're sure the alcohol has worn off. Pacey can't tell you when that is. If in doubt, don't.</div>
+        </sc-if>
         <div style="flex-shrink: 0; font-size: 13px; color: #7A7A80; line-height: 1.45; padding: 0 4px 8px">Only time clears alcohol. Water, food and sleep help you feel better, but they don't sober you up faster. This is a guide from what you logged, not medical advice.</div>
         </sc-if>
       </sc-if>
@@ -3823,19 +3835,30 @@ class Component extends DCLogic {
       // Estimates rounded to 5 minutes: the earliest rounds down and the latest rounds up.
       const f5 = (m) => fmt(Math.round(m / 5) * 5), f5lo = (m) => fmt(Math.floor(m / 5) * 5), f5hi = (m) => fmt(Math.ceil(m / 5) * 5);
       const n = R.n;
-      const NAP_END = R.nextClock(R.rEnd, 15 * 60);
+      // Sleep: 8 hours, plus a little more after more drinks because alcohol makes sleep lighter (up to 9½).
+      const sleepH = 8 + Math.min(1.5, Math.round(R.drinksN * 0.15 * 2) / 2);
+      // Wake time: a full night's sleep after the night ended, and not before 07:00. Rounded up to 5 minutes.
+      const wake = Math.ceil(Math.max(R.rEnd + sleepH * 60, R.nextClock(R.rEnd, 7 * 60)) / 5) * 5;
+      const dayOf = (m) => m - (((m % 1440) + 1440) % 1440);
       const stepDefs = [];
       if (R.lastDrinkT != null) stepDefs.push([R.lastDrinkT, 'Last drink', R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' and ' + R.watersN + ' ' + (R.watersN === 1 ? 'water' : 'waters') + ' in total']);
       stepDefs.push([R.rEnd, 'Night ended', R.lastDrinkT != null && R.rEnd - R.lastDrinkT >= 60 ? 'You stopped drinking ' + Math.round((R.rEnd - R.lastDrinkT) / 60 * 10) / 10 + ' h before this' : 'Close to your last drink']);
-      stepDefs.push([Math.max(R.nowR, R.rEnd + 1), 'Eat and drink water', 'Within an hour of waking, then water through the day']);
-      if (NAP_END > R.rEnd + 4 * 60) stepDefs.push([NAP_END, 'Last good time for a nap', 'Keep it to about 20 minutes so tonight\'s sleep isn\'t worse']);
+      stepDefs.push([wake, 'Big glass of water', '', f5(wake)]);
+      stepDefs.push([wake + 45, 'Eat breakfast', '', f5(wake + 45)]);
+      stepDefs.push([wake + 180, 'Another glass of water', '', f5(wake + 180)]);
+      stepDefs.push([wake + 270, 'Proper meal', '', f5(wake + 270)]);
+      // Nap: early afternoon (1 to 3 pm), at least 4 hours after waking, never after 3 pm.
+      const napStart = Math.max(wake + 4 * 60, dayOf(wake) + 13 * 60);
+      const napEnd = dayOf(napStart) + 15 * 60;
+      if (napEnd - napStart >= 30) stepDefs.push([napStart, 'Nap, 20 min max', '', f5(napStart) + '–' + f5(napEnd)]);
       stepDefs.sort((a, b) => a[0] - b[0]);
+      const firstNext = stepDefs.findIndex((d) => !(d[0] < R.nowR - 1));
       const recSteps = stepDefs.map((d, i) => {
-        const past = d[0] < R.nowR - 1 && d[1] !== 'Eat and drink water';
-        const isNow = d[1] === 'Eat and drink water';
+        const past = d[0] < R.nowR - 1;
+        const next = i === firstNext;
         return {
-          time: isNow ? 'Now' : fmt(Math.round(d[0])), label: d[1], sub: d[2],
-          dot: past ? '#4A4A4E' : isNow ? '#6EE7C1' : 'transparent', ring: past ? '#4A4A4E' : '#6EE7C1',
+          time: d[3] || fmt(Math.round(d[0])), label: d[1], sub: d[2],
+          dot: past ? '#4A4A4E' : next ? '#6EE7C1' : 'transparent', ring: past ? '#4A4A4E' : '#6EE7C1',
           line: i === stepDefs.length - 1 ? 'transparent' : '#353538',
           fg: past ? '#9A9AA0' : '#FFFFFF', timeFg: past ? '#9A9AA0' : '#6EE7C1'
         };
@@ -3845,20 +3868,26 @@ class Component extends DCLogic {
       const GLASS = 250;
       const waterTarget = Math.min(12, Math.max(2, 3 + Math.max(0, R.drinksN - R.watersN)));
       const mlText = (ml) => oz ? volText(ml) : Math.round(ml).toLocaleString('en-GB') + ' ml';
-      // Sleep: 8 hours, plus a little more after more drinks because alcohol makes sleep lighter (up to 9½).
-      const sleepH = 8 + Math.min(1.5, Math.round(R.drinksN * 0.15 * 2) / 2);
       const hText = (h) => Math.floor(h) + ' h' + (h % 1 ? ' 30 min' : '');
       const bedMin = (7 * 60 - sleepH * 60 + 1440) % 1440;
       const had = n.recWater || 0;
       const setRecWater = (v) => this.setState({ nights: [Object.assign({}, n, { recWater: Math.max(0, Math.min(12, v)) })].concat(s.nights.slice(1)) });
       const ate = n.ate;
+      const food = !!n.recFood;
+      const slept = !!n.recSleep;
+      const setRecFlag = (k, v) => this.setState({ nights: [Object.assign({}, n, { [k]: v })].concat(s.nights.slice(1)) });
       const gap = R.lastDrinkT != null ? R.rEnd - R.lastDrinkT : null;
       const dayName = n.day || n.title || 'last';
       // The recovery plan goes away 24 hours after the night ended (sample nights: always shown).
       const recRecent = !n.endedAtMs || this.now() - n.endedAtMs < 24 * 3600 * 1000;
       const waterLeft = Math.max(0, waterTarget - had);
-      // Ring: water against what last night needs.
-      const hydPct = Math.max(0, Math.min(100, Math.round(100 * (R.watersN + had) / (R.watersN + waterTarget))));
+      // Hydration ring (a rough guide only): starts lower the more drinks went unmatched by water
+      // (75% down to a floor of 40%), then fills to 100% as today's water target is met. Never 0.
+      const waterFrac = Math.min(1, had / waterTarget);
+      const hydBase = Math.max(40, 75 - 5 * Math.max(0, R.drinksN - R.watersN));
+      const hydPct = Math.round(hydBase + (100 - hydBase) * waterFrac);
+      // Recovery ring: 10% to start, then water, food and sleep each add 30%.
+      const recPct = Math.round(10 + 30 * waterFrac + 30 * (food ? 1 : 0) + 30 * (slept ? 1 : 0));
       const ring = (pct) => (pct / 100 * 245.04).toFixed(1) + ' 245.04';
       const sleeping = !morningReady;
       const cardBits = sleeping ? ['Ready after ' + pad(MORNING_H) + ':00', 'sleep well first'] : [R.drinksN + ' ' + (R.drinksN === 1 ? 'drink' : 'drinks') + ' logged', waterLeft ? mlText(waterLeft * GLASS) + ' of water to go' : 'Water done'];
@@ -3867,8 +3896,15 @@ class Component extends DCLogic {
         recSleeping: sleeping,
         recAwake: !sleeping,
         hydPct: hydPct + '%', hydDash: ring(hydPct),
-        hydRingNote: hydPct >= 100 ? 'Fully topped up' : 'Of the water you need',
-        recRingsAria: 'Hydration ' + hydPct + ' percent.',
+        hydRingNote: hydPct >= 100 ? 'Water target reached' : 'Rough guide, not a measurement',
+        recPct: recPct + '%', recDash: ring(recPct),
+        recRingsAria: 'Hydration ' + hydPct + ' percent, a rough guide, not a measurement. Recovery ' + recPct + ' percent, from water, food and sleep today.',
+        recFoodDone: food, recFoodDoneLabel: food ? 'Eaten' : 'I\'ve eaten',
+        recFoodBtnBg: food ? '#6EE7C1' : '#353538', recFoodBtnFg: food ? '#1A1A1C' : '#FFFFFF',
+        recFoodToggle: () => setRecFlag('recFood', !food),
+        recSleepDone: slept, recSleepDoneLabel: slept ? 'Slept' : 'I got some sleep',
+        recSleepBtnBg: slept ? '#6EE7C1' : '#353538', recSleepBtnFg: slept ? '#1A1A1C' : '#FFFFFF',
+        recSleepToggle: () => setRecFlag('recSleep', !slept),
         recCardKicker: 'After ' + (/night$/i.test(n.day || n.title || '') ? (n.day || n.title) : (n.day || n.title || 'last') + ' night'),
         recCardSub: cardBits.join(' · '),
         recCardAria: 'Your recovery plan. ' + cardBits.join('. '),
