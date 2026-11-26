@@ -124,11 +124,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         </button>
         <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">I agree to the <button onClick="{{openTermsSheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Terms and conditions</button> and the <button onClick="{{openPrivacySheet}}" style="border: none; background: none; padding: 0; color: #6EE7C1; font-size: 15px; font-weight: 700; text-decoration: underline; cursor: pointer">Privacy policy</button>.</div>
       </div>
+      <sc-if value="{{ageButtonsShow}}" hint-placeholder-val="{{true}}">
       <button onClick="{{confirmAge}}" aria-disabled="{{termsButtonDisabled}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: {{termsButtonBg}}; color: {{termsButtonFg}}; font-size: 18px; font-weight: 700; cursor: pointer">I'm {{ageMin}} or older</button>
       <sc-if value="{{showTickHint}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="margin-top: -12px; text-align: center; font-size: 14px; color: #FFC56B; font-weight: 600">Tick the box to agree before you continue.</div>
       </sc-if>
       <button onClick="{{sayUnderAge}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">I'm under {{ageMin}}</button>
+      </sc-if>
       <sc-if value="{{underAgeShow}}" hint-placeholder-val="{{false}}">
         <div role="alert" style="flex-shrink: 0; background: #262628; border-radius: 20px; padding: 14px 16px; font-size: 15px; color: #B8B8BE; line-height: 1.45">{{underAgeText}}</div>
       </sc-if>
@@ -4612,6 +4614,7 @@ class Component extends DCLogic {
       },
       confirmDeleteAccount: !!s.confirmDelAcct && !!s.account,
       confirmAge: () => {
+        if (s.underAge) return;
         if (!s.termsTick) { this.setState({ tickHint: true }); return; }
         this.setState({ termsAcceptedAt: s.termsAcceptedAt || Date.now(), tickHint: false, screen: 'quiz', qIdx: 0 });
       },
@@ -5056,6 +5059,8 @@ class Component extends DCLogic {
         this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 5000);
       },
       underAgeShow: !!s.underAge,
+      // Once someone says they're under age, the age buttons stay hidden, also after a restart.
+      ageButtonsShow: !s.underAge,
       underAgeText: 'Pacey is only for people of legal drinking age' + (countryIn ? ', which is ' + ageMin + countryIn : '') + '. Thanks for being honest.',
       callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
