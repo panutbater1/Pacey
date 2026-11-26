@@ -3,5 +3,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('paceyNative', {
-  googleSignIn: (settings) => ipcRenderer.invoke('pacey:google-sign-in', settings)
+  googleSignIn: (settings) => ipcRenderer.invoke('pacey:google-sign-in', settings),
+  googleSignInCancel: () => ipcRenderer.invoke('pacey:google-sign-in-cancel')
 });

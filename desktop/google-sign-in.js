@@ -18,12 +18,14 @@ function page(title, text) {
 }
 
 let running = null;
+let cancelRunning = null;
 
 async function googleSignIn(settings) {
   const url = String((settings && settings.supabaseUrl) || '').replace(/\/+$/, '');
   const key = String((settings && settings.anonKey) || '');
   if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url) || !key) return { error: 'Google sign-in isn\'t set up.' };
-  if (running) return { error: 'Google sign-in is already open in your browser.' };
+  // A new try replaces one that never finished (for example, the browser was closed while offline).
+  if (running) { cancelGoogleSignIn(); await running.catch(() => {}); }
 
   const verifier = b64url(crypto.randomBytes(32));
   const challenge = b64url(crypto.createHash('sha256').update(verifier).digest());
@@ -34,9 +36,12 @@ async function googleSignIn(settings) {
       if (done) return;
       done = true;
       clearTimeout(timer);
+      cancelRunning = null;
       server.close();
+      if (server.closeAllConnections) server.closeAllConnections();
       resolve(result);
     };
+    cancelRunning = () => finish({ cancelled: true, error: 'Google sign-in was cancelled.' });
     const server = http.createServer(async (req, res) => {
       const u = new URL(req.url, REDIRECT);
       if (u.pathname !== '/auth/callback') { res.writeHead(404); res.end(); return; }
@@ -82,4 +87,10 @@ async function googleSignIn(settings) {
   }
 }
 
-module.exports = { googleSignIn };
+// Cancel from the app: stops waiting for the browser and frees the port so a retry works.
+function cancelGoogleSignIn() {
+  if (cancelRunning) cancelRunning();
+  return { ok: true };
+}
+
+module.exports = { googleSignIn, cancelGoogleSignIn };

@@ -15,7 +15,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk', 'locating', 'deleteNightsAsk', 'nightsDeleted'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -234,18 +234,29 @@
   }
   const userOut = (u) => ({ id: u.id, email: u.email, plan: u.user_metadata && u.user_metadata.plan, avg: u.user_metadata && u.user_metadata.avg });
 
+  // Each Google sign-in try gets a number; Cancel moves it on, so a try that finishes after Cancel is dropped.
+  let googleAttempt = 0;
   window.paceyAuth = {
     enabled: authOn,
     // Google sign-in: only in the laptop app, and only once it's switched on in pacey.config.json.
     google: authOn && !!cfg.googleSignIn && !!(window.paceyNative && window.paceyNative.googleSignIn),
+    cancelGoogle() {
+      googleAttempt += 1;
+      if (window.paceyNative && window.paceyNative.googleSignInCancel) window.paceyNative.googleSignInCancel().catch(() => {});
+    },
     async signInWithGoogle(data) {
+      const attempt = ++googleAttempt;
       const r = await window.paceyNative.googleSignIn({ supabaseUrl: cfg.supabaseUrl, anonKey: cfg.supabaseAnonKey });
+      // Cancelled, even at the last moment: never save the session.
+      if ((r && r.cancelled) || attempt !== googleAttempt) return { cancelled: true };
       if (!r || r.error) return { error: (r && r.error) || 'Google sign-in didn\'t finish. Try again.' };
       const sess = keep(r.session);
       let user = userOut(sess.user);
       // A new account gets the plan; an existing one keeps the plan it already has.
       if (!user.plan && data) {
         const u = await call('/auth/v1/user', { data: data }, sess.access, 'PUT');
+        // Cancelled while the plan was saving: drop the session so the app stays signed out.
+        if (attempt !== googleAttempt) { writeSession(null); return { cancelled: true }; }
         if (u.ok && u.json) { sess.user = u.json; writeSession(sess); user = userOut(u.json); }
         return { user: user, isNew: true };
       }
