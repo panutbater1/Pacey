@@ -1636,6 +1636,9 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-for>
 
       <div style="flex-shrink: 0; text-align: center; font-size: 13px; color: #9A9AA0">Pacey 1.0</div>
+      <sc-if value="{{showTesterLink}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openTesterNote}}" style="flex-shrink: 0; align-self: center; min-height: 44px; border: none; background: none; padding: 0 12px; color: #6EE7C1; font-size: 14px; font-weight: 700; cursor: pointer">How to add to Home Screen</button>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -2821,6 +2824,26 @@ button{font-family:Outfit,system-ui,sans-serif}
             </button>
           </sc-for>
         </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{testerNoteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 31; display: flex; flex-direction: column; justify-content: flex-end">
+      <div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6)"></div>
+      <div role="dialog" aria-modal="true" aria-labelledby="pacey-tester-title" style="position: relative; max-height: 92%; overflow-y: auto; box-sizing: border-box; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E; flex-shrink: 0"></div>
+        <div id="pacey-tester-title" style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Pacey <span style="color: #6EE7C1">test version</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">Your nights and plan are saved only on this phone. Nothing is sent anywhere.</div>
+        <div style="flex-shrink: 0; background: #353538; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 15px; font-weight: 700">On iPhone</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Tap Share, then Add to Home Screen, and open Pacey from there. Log your nights in that app — Safari and the Home Screen app keep separate data.</div>
+        </div>
+        <div style="flex-shrink: 0; background: #353538; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 15px; font-weight: 700">On Android</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Open the browser menu (⋮), then tap Add to Home screen or Install app.</div>
+        </div>
+        <button ref="{{focusOnOpen}}" onClick="{{closeTesterNote}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Got it</button>
       </div>
     </div>
   </sc-if>
@@ -5153,6 +5176,11 @@ class Component extends DCLogic {
       callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
+      // Web test version: a note shown once on the first visit, and again from Settings.
+      testerNoteOpen: !!this.props.web && (!s.testerSeen || !!s.testerOpen),
+      closeTesterNote: () => this.setState({ testerSeen: true, testerOpen: false }),
+      showTesterLink: !!this.props.web,
+      openTesterNote: () => this.setState({ testerOpen: true }),
       // Web version on a real phone: keep the banner below the status bar.
       bannerTop: this.props.web ? 'calc(10px + env(safe-area-inset-top))' : '10px',
       bannerTitle: s.banner ? s.banner.title : '',
