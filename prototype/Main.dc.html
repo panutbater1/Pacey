@@ -5064,7 +5064,7 @@ class Component extends DCLogic {
       gapOptions: [[0, 'Auto'], [30, '30m'], [45, '45m'], [60, '1h'], [90, '1½h']].map((o) => radio(o, minGap, 'minGap')),
       gapNote: minGap ? 'At least ' + (minGap >= 60 ? (minGap === 60 ? 'an hour' : '1½ hours') : minGap + ' minutes') + ' between drinks, even if your plan would allow one sooner.' : 'Pacey spreads your limit evenly until your home by time.',
       slowOptions: [[0, 'Off'], [15, '15 min'], [30, '30 min'], [45, '45 min']].map((o) => radio(o, slowStart, 'slowStart')),
-      slowNote: slowStart ? 'No drink for the first ' + slowStart + ' minutes of the night. Start with water or a soft drink.' : 'Have your first drink whenever you like.',
+      slowNote: slowStart ? 'No drink for the first ' + slowStart + ' minutes of the night. Start with water or a soft drink.' : 'No wait before your first drink. Starting with water still helps.',
       lastCallOptions: [[0, 'Off'], [30, '30 min'], [60, '1 hour'], [90, '90 min']].map((o) => radio(o, lastCallMins, 'lastCall')),
       lastCallNote: lastCallMins ? 'No drinks in the last ' + (lastCallMins === 60 ? 'hour' : lastCallMins + ' minutes') + ' before home by. Pacey reminds you at last call.' : 'Drinks can fit right up to your home by time.',
       weekLimitBig: weekLimit ? String(weekLimit) : 'Off',
