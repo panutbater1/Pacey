@@ -2871,7 +2871,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{showBanner}}" hint-placeholder-val="{{false}}">
-    <button onClick="{{dismissBanner}}" aria-live="polite" style="position: absolute; left: 10px; right: 10px; top: 10px; z-index: 27; border: none; border-radius: 22px; background: rgba(53, 53, 56, 0.97); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+    <button onClick="{{dismissBanner}}" aria-live="polite" style="position: absolute; left: 10px; right: 10px; top: {{bannerTop}}; z-index: 27; border: none; border-radius: 22px; background: rgba(53, 53, 56, 0.97); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
       <span style="width: 38px; height: 38px; border-radius: 10px; background: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="30" height="30" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path></g></svg>
       </span>
       <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
@@ -5153,6 +5153,8 @@ class Component extends DCLogic {
       callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
+      // Web version on a real phone: keep the banner below the status bar.
+      bannerTop: this.props.web ? 'calc(10px + env(safe-area-inset-top))' : '10px',
       bannerTitle: s.banner ? s.banner.title : '',
       bannerBody: s.banner ? s.banner.body : '',
       dismissBanner: () => {

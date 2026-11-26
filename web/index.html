@@ -2,12 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; manifest-src 'self'">
 <title>Pacey</title>
+<meta name="description" content="Pace your drinking during one night out.">
+<meta name="theme-color" content="#1A1A1C">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pacey">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
-  html, body { margin: 0; height: 100%; background: #1A1A1C; }
-  #screen { height: 100%; }
+  @font-face { font-family: 'Outfit'; font-weight: 400; src: url('fonts/Outfit-Regular.ttf') format('truetype'); }
+  @font-face { font-family: 'Outfit'; font-weight: 500; src: url('fonts/Outfit-Medium.ttf') format('truetype'); }
+  @font-face { font-family: 'Outfit'; font-weight: 600; src: url('fonts/Outfit-SemiBold.ttf') format('truetype'); }
+  @font-face { font-family: 'Outfit'; font-weight: 700; src: url('fonts/Outfit-Bold.ttf') format('truetype'); }
+  @font-face { font-family: 'Outfit'; font-weight: 800; src: url('fonts/Outfit-ExtraBold.ttf') format('truetype'); }
+
+  /* Full screen on the phone: no frame, no page scroll, no bounce. Pages scroll inside the app. */
+  html, body {
+    margin: 0; height: 100%; background: #1A1A1C; color: #FFFFFF; overflow: hidden;
+    overscroll-behavior: none; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+    font-family: Outfit, system-ui, sans-serif;
+  }
+  body { position: fixed; inset: 0; }
+  #screen { position: absolute; inset: 0; max-width: 480px; margin: 0 auto; background: #1A1A1C; touch-action: manipulation; }
+
+  /* The app was drawn for a 390 x 844 phone. Here it fills the screen and keeps clear of the
+     notch / Dynamic Island and the home bar. The app already leaves about 20px at the top. */
+  #screen [data-pacey-root] {
+    width: 100% !important; height: 100% !important;
+    padding-top: max(0px, calc(env(safe-area-inset-top) - 20px)) !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+    padding-left: env(safe-area-inset-left) !important;
+    padding-right: env(safe-area-inset-right) !important;
+  }
+  #screen [data-pacey-root] [style*="overflow-y: auto"] { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  /* At least 16px in text fields, so iPhone Safari doesn't zoom in when you tap one. */
+  input, textarea, select { font-size: max(16px, 1em); }
 </style>
 </head>
 <body>
