@@ -3131,15 +3131,15 @@ class Component extends DCLogic {
     const COUNTRIES = [
       ['AR', 'Argentina', '107', 18], ['AU', 'Australia', '000', 18], ['AT', 'Austria', '112', 18], ['BE', 'Belgium', '112', 18],
       ['BR', 'Brazil', '192', 18], ['BG', 'Bulgaria', '112', 18], ['CA', 'Canada', '911', 19], ['HR', 'Croatia', '112', 18],
-      ['CY', 'Cyprus', '112', 17], ['CZ', 'Czechia', '112', 18], ['DK', 'Denmark', '112', 18], ['EE', 'Estonia', '112', 18],
+      ['CY', 'Cyprus', '112', 18], ['CZ', 'Czechia', '112', 18], ['DK', 'Denmark', '112', 18], ['EE', 'Estonia', '112', 18],
       ['FI', 'Finland', '112', 18], ['FR', 'France', '112', 18], ['DE', 'Germany', '112', 18], ['GR', 'Greece', '112', 18],
       ['HK', 'Hong Kong', '999', 18], ['HU', 'Hungary', '112', 18], ['IS', 'Iceland', '112', 20], ['IN', 'India', '112', 21],
       ['IE', 'Ireland', '112', 18], ['IT', 'Italy', '112', 18], ['JP', 'Japan', '119', 20], ['LV', 'Latvia', '112', 18],
-      ['LT', 'Lithuania', '112', 20], ['LU', 'Luxembourg', '112', 18], ['MT', 'Malta', '112', 17], ['MX', 'Mexico', '911', 18],
+      ['LT', 'Lithuania', '112', 20], ['LU', 'Luxembourg', '112', 18], ['MT', 'Malta', '112', 18], ['MX', 'Mexico', '911', 18],
       ['NL', 'Netherlands', '112', 18], ['NZ', 'New Zealand', '111', 18], ['NO', 'Norway', '113', 18], ['PH', 'Philippines', '911', 18],
       ['PL', 'Poland', '112', 18], ['PT', 'Portugal', '112', 18], ['RO', 'Romania', '112', 18], ['SG', 'Singapore', '995', 18],
       ['SK', 'Slovakia', '112', 18], ['SI', 'Slovenia', '112', 18], ['ZA', 'South Africa', '112', 18], ['KR', 'South Korea', '119', 19],
-      ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18], ['CH', 'Switzerland', '112', 18], ['TH', 'Thailand', '1669', 20],
+      ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18], ['CH', 'Switzerland', '144', 18], ['TH', 'Thailand', '1669', 20],
       ['AE', 'United Arab Emirates', '998', 21], ['GB', 'United Kingdom', '999', 18], ['US', 'United States', '911', 21], ['XX', 'Somewhere else', '112', 18]
     ];
     // Where the phone is right now, from its time zone: phones set it automatically from their location,
@@ -3174,7 +3174,7 @@ class Component extends DCLogic {
     const countrySetByHand = !!(s.countryOverride && s.countryOverride !== 'auto' && COUNTRIES.some((c) => c[0] === s.countryOverride));
     const country = countrySetByHand ? COUNTRIES.find((c) => c[0] === s.countryOverride) : detectedCountry;
     // Other emergency numbers that also work there.
-    const ALSO_WORKS = { GB: '112', IE: '999', NO: '112', CH: '144', CZ: '155', SK: '155' };
+    const ALSO_WORKS = { GB: '112', IE: '999', NO: '112', CH: '112', CZ: '155', SK: '155' };
     const alsoWorks = ALSO_WORKS[country[0]] || '';
     const emergencyNumber = country[2];
     const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
