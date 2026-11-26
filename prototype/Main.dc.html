@@ -4090,7 +4090,7 @@ class Component extends DCLogic {
     const waitTotal = last === null ? Math.max(1, slowStart) : interval;
     const waiting = !reached && !afterLastCall && !pastHomeBy && remaining > 0;
     // Read by checkPaceTimer() so the "Pace timer done" reminder uses the same numbers as the screen.
-    this.paceNow = { last: last, done: last !== null && !reached && !afterLastCall && remaining <= 0 };
+    this.paceNow = { last: last, done: last !== null && !reached && !afterLastCall && !pastHomeBy && remaining <= 0 };
     // Weekly limit: drinks in saved nights since Monday, plus tonight's.
     const weekLimit = s.weekLimit || 0;
     const weekStartISO = (() => { const d = new Date(this.now()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); })();
