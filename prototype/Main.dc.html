@@ -4499,13 +4499,14 @@ class Component extends DCLogic {
       mkBackAria: (s.mkStep || 0) > 0 ? 'Back to step ' + (s.mkStep || 0) : 'Back to your plan',
       preBody: 'Going out tonight? Set your plan before you go' + ((s.reason || '').trim() ? '. You said: "' + s.reason.trim() + '"' : '.'),
       isAccount: s.screen === 'account',
-      resultOfferAccount: !s.account,
+      resultOfferAccount: !s.account && !s.active,
       resultSaved: !!s.account,
       // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
-      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
+      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
       saveNightLine: streak >= 2 ? 'Save tonight and your ' + streak + '-night streak.' : 'Save tonight so you don\'t lose it.',
       skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
-      showNightsSave: !s.account,
+      // Never offer sign-up during a night out.
+      showNightsSave: !s.account && !s.active,
       profileDot: !s.account,
       profileAria: s.account ? 'Your profile' : 'Create a free account',
       openSignupSummary: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'summary', emailErr: '', accountNote: '', googleErr: '' }),
@@ -4594,7 +4595,7 @@ class Component extends DCLogic {
         }).catch(() => this.setState({ accountBusy: false, emailErr: 'Something went wrong. Try again.' }));
       },
       hasAccount: !!s.account,
-      noAccount: !s.account,
+      noAccount: !s.account && !s.active,
       accountLabel: s.account ? (s.account.method === 'google' ? 'Signed in with Google' + (s.account.real ? ' · ' + s.account.label : '') : s.account.real ? 'Signed in with email · ' + s.account.label : s.account.label) : 'Not signed in',
       openSignInFromSettings: () => this.setState({ screen: 'account', accountStep: AUTH ? 'email' : 'choose', accountMode: 'signin', accountFrom: 'settings', emailErr: '', accountNote: '', accountErr: '' }),
       accountErrShow: !!s.accountErr,
