@@ -105,7 +105,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="font-size: 17px; color: #B8B8BE; line-height: 1.45">Pacey helps you pace one night out, so you have a good time and get home feeling fine.</div>
       <div style="background: #262628; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
         <div style="font-size: 15px; font-weight: 600">Before you start</div>
-        <div style="font-size: 15px; color: #9A9AA0; line-height: 1.45">Pacey is not medical advice and can't measure your blood alcohol. Never use it to decide whether you're safe to drive.</div>
+        <div style="font-size: 15px; color: #9A9AA0; line-height: 1.45">Pacey is not medical advice and can't measure your blood alcohol. Never use it to make decisions about driving.</div>
       </div>
       <div style="flex-grow: 1"></div>
       <div style="display: flex; align-items: flex-start; gap: 12px">
@@ -1136,9 +1136,9 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 12px">
-            <button aria-label="One less drink" onClick="{{less}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
+            <button aria-label="Take a drink off your plan" onClick="{{less}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">−</button>
             <div style="font-size: 30px; font-weight: 800; min-width: 34px; text-align: center; color: {{planColor}}">{{plan}}</div>
-            <button aria-label="One more drink" onClick="{{more}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
+            <button aria-label="Add a drink to your plan" onClick="{{more}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 22px; cursor: pointer">+</button>
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center">
@@ -1224,8 +1224,8 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
       <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
         <div style="background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 8px">
-          <div style="font-size: 20px; font-weight: 700">Your next drink fits your plan now</div>
-          <div style="font-size: 16px; color: #B8B8BE">No rush. Whenever you're ready.</div>
+          <div style="font-size: 20px; font-weight: 700">You're on pace</div>
+          <div style="font-size: 16px; color: #B8B8BE">No rush. A water is always a good choice.</div>
         </div>
       </sc-if>
 
@@ -2011,7 +2011,7 @@ button{font-family:Outfit,system-ui,sans-serif}
       <sc-if value="{{subAbout}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 8px">
           <div style="font-size: 16px; font-weight: 700">Not medical advice</div>
-          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Pacey gives estimates to help you pace a night out. It can't measure your blood alcohol. Never use it to decide whether you're safe to drive.</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Pacey gives estimates to help you pace a night out. It can't measure your blood alcohol. Never use it to make decisions about driving.</div>
         </div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <button onClick="{{goTerms}}" style="min-height: 52px; border: none; background: none; padding: 0; display: flex; align-items: center; justify-content: space-between; color: #FFFFFF; font-size: 16px; font-weight: 600; cursor: pointer">Terms and conditions<span style="color: #9A9AA0">›</span></button>
@@ -4143,7 +4143,7 @@ class Component extends DCLogic {
     const goTo = (page) => () => this.setState({ settingsPage: page });
     const toggleDefs = [
       ['remWater', 'Water reminders', 'Follows your water habit in Pace plan'],
-      ['remNext', 'Next drink fits your plan', 'When your pace timer ends'],
+      ['remNext', 'Pace timer done', 'When your pace timer ends'],
       ['remHome', 'Heading home', '15 minutes before your home by time'],
       ['remLimit', 'Past your plan', 'A kind nudge when you go over your limit'],
       ['waterFirstOn', 'Water first', 'Offer a water before each drink past your plan'],
@@ -4614,7 +4614,7 @@ class Component extends DCLogic {
       hidePlusTip: () => this.setState({ plusTipSeen: true }),
       notifyExamples: [
         { t: 'Water time', b: 'A glass of water now keeps the night feeling good.' },
-        { t: 'Your next drink fits your plan now', b: 'No rush. Whenever you\'re ready.' },
+        { t: 'Pace timer done', b: 'You\'re on pace. No rush.' },
         { t: 'Heading home soon?', b: 'You planned to be home by ' + pad(s.homeH) + ':' + pad(s.homeMi * 5) + '.' }
       ],
       allowNotify: () => {
@@ -5248,15 +5248,15 @@ class Component extends DCLogic {
         this.islandHeld = true;
         this.setState({ islandOpen: true });
       },
-      // Neutral wording only: the timer, or "Fits your plan". Never a push to drink.
-      islandShort: reached || afterLastCall ? 'Water' : waiting ? remaining + 'm' : 'Fits',
+      // Neutral wording only: the timer, or "On pace". Never a push to drink.
+      islandShort: reached || afterLastCall ? 'Water' : waiting ? remaining + 'm' : 'On pace',
       islandShortColor: reached ? '#FF8A3D' : '#D0D0D5',
       laNoun: s.plan === 1 ? cur.one : nounMany,
-      laStatus: reached ? 'Plan reached · water next' : afterLastCall ? 'Past last call · water next' : waiting ? 'Next in ' + remaining + ' min' : 'Fits your plan',
+      laStatus: reached ? 'Plan reached · water next' : afterLastCall ? 'Past last call · water next' : waiting ? 'Next in ' + remaining + ' min' : 'On pace',
       laStatusColor: reached ? '#FF8A3D' : '#D0D0D5',
-      widgetNext: reached ? 'Plan reached · water' : afterLastCall ? 'Water from here' : waiting ? 'Next at ' + fmt(now + remaining) : 'Fits your plan',
-      widgetAria: 'Pacey: ' + drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : afterLastCall ? 'Past last call.' : waiting ? 'Next at ' + fmt(now + remaining) + '.' : 'Fits your plan.') + ' Opens Pacey',
-      islandAria: drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : afterLastCall ? 'Past last call.' : waiting ? 'Next in ' + remaining + ' minutes.' : 'Fits your plan.') + ' Tap to open Pacey, press and hold to expand',
+      widgetNext: reached ? 'Plan reached · water' : afterLastCall ? 'Water from here' : waiting ? 'Next at ' + fmt(now + remaining) : 'On pace',
+      widgetAria: 'Pacey: ' + drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : afterLastCall ? 'Past last call.' : waiting ? 'Next at ' + fmt(now + remaining) + '.' : 'On pace.') + ' Opens Pacey',
+      islandAria: drinks.length + ' of ' + s.plan + ' drinks. ' + (reached ? 'Plan reached.' : afterLastCall ? 'Past last call.' : waiting ? 'Next in ' + remaining + ' minutes.' : 'On pace.') + ' Tap to open Pacey, press and hold to expand',
       // Live Activity logging. Locked: a short Face ID step first, then it logs without opening the app.
       laButtons: !s.lockAuth && !s.lockToast,
       laAuth: !!s.lockAuth && !s.lockToast,
