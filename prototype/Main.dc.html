@@ -2158,6 +2158,21 @@ button{font-family:Outfit,system-ui,sans-serif}
         </div>
       </div>
 
+      <sc-if value="{{showGettingHome}}" hint-placeholder-val="{{true}}">
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 14px">
+            <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; color: #6EE7C1; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 18px; font-weight: 800">Getting home?</span>
+              <span style="font-size: 14px; color: #B8B8BE">Don't drive tonight.</span>
+            </span>
+          </div>
+          <button onClick="{{openTaxiNow}}" style="height: 50px; border-radius: 25px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Book a taxi</button>
+        </div>
+      </sc-if>
+
       <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.3px; flex-shrink: 0">What you logged</div>
 
       <sc-if value="{{noRecords}}" hint-placeholder-val="{{false}}">
@@ -2184,6 +2199,8 @@ button{font-family:Outfit,system-ui,sans-serif}
           <span style="font-size: 14px; font-weight: 600; color: #B8B8BE; text-align: right">{{r.note}}</span>
         </div>
       </sc-for>
+
+      <button onClick="{{done}}" style="flex-shrink: 0; height: 62px; margin-top: 6px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Done</button>
 
       <sc-if value="{{canDeleteNight}}" hint-placeholder-val="{{true}}">
         <button onClick="{{askDeleteNight}}" style="flex-shrink: 0; min-height: 52px; margin: 6px 0 18px; border-radius: 26px; border: none; background: #262628; color: #FF9B8F; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; cursor: pointer">
@@ -5309,6 +5326,8 @@ class Component extends DCLogic {
         rideBooked: false
       }),
       done: () => this.setState({ screen: s.summaryFrom }),
+      // Getting home card: only for the night that just ended (or Last night), not when looking back through Nights.
+      showGettingHome: s.summaryFrom !== 'history',
       // Delete one night from Nights (and its streak and stats). Sample nights in the prototype can be deleted too.
       canDeleteNight: s.nights.length > 0 && !!s.nights[s.viewIdx],
       askDeleteNight: () => this.setState({ deleteNightAsk: true }),
