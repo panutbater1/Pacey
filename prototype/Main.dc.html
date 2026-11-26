@@ -3087,20 +3087,25 @@ class Component extends DCLogic {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
     }, 5000);
   }
-  // 20 minutes before home by, on a taxi or rideshare night: a nudge that opens the taxi app.
+  // "Heading home": 15 minutes before home by, worded for the way home. Taxi and rideshare open the taxi app.
   checkRideNudge() {
     const s = this.state;
-    if (!s.active || s.rideNudged || s.remHome === false || [0, 1].indexOf(s.rideIdx || 0) === -1) return;
+    if (!s.active || s.rideNudged || s.remHome === false) return;
     const start = this.props.realtime ? (s.startMin != null ? s.startMin : 0) : 21 * 60 + 5;
     let home = s.homeH * 60 + s.homeMi * 5;
     if (home <= start) home += 24 * 60;
-    if (start + s.tick < home - 20) return;
+    if (start + s.tick < home - 15) return;
+    const ride = s.rideIdx || 0;
     const app = { uber: 'Uber', bolt: 'Bolt', lyft: 'Lyft', local: 'a local taxi' }[s.rideApp || 'uber'];
     const time = String(s.homeH).padStart(2, '0') + ':' + String(s.homeMi * 5).padStart(2, '0');
-    const title = s.rideBooked ? 'Your ride home' : 'Time to book your ride home';
-    const body = s.rideBooked ? 'If you pre-booked, check ' + app + ' for your driver. If not, book now to be home by ' + time + '.' : 'To be home by ' + time + ', order ' + app + ' now. Tap to order.';
+    const isRide = ride === 0 || ride === 1;
+    const title = !isRide ? 'Time to head home soon' : s.rideBooked ? 'Your ride home' : 'Time to book your ride home';
+    const body = ride === 2 ? 'To be home by ' + time + ', check your bus or train times now.'
+      : ride === 3 ? 'To be home by ' + time + ', check in with your lift now.'
+      : ride === 4 ? 'To be home by ' + time + ', start heading out in the next few minutes.'
+      : s.rideBooked ? 'If you pre-booked, check ' + app + ' for your driver. If not, book now to be home by ' + time + '.' : 'To be home by ' + time + ', order ' + app + ' now. Tap to order.';
     const id = Date.now();
-    this.setState({ rideNudged: true, banner: { id: id, title: title, body: body, action: 'ride' } });
+    this.setState({ rideNudged: true, banner: isRide ? { id: id, title: title, body: body, action: 'ride' } : { id: id, title: title, body: body } });
     if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
     clearTimeout(this.bannerTimer);
     this.bannerTimer = setTimeout(() => {
@@ -3129,6 +3134,21 @@ class Component extends DCLogic {
     this.bannerTimer = setTimeout(() => {
       if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
     }, 8000);
+  }
+  // "Pace timer done" (Settings > Reminders): one calm reminder when the timer after a drink runs out.
+  checkPaceTimer() {
+    const s = this.state;
+    const p = this.paceNow;
+    if (!s.active || s.remNext === false || !p || !p.done || s.paceNudgedFor === p.last) return;
+    const title = 'Pace timer done';
+    const body = 'No rush. A water is always a good choice.';
+    const id = Date.now();
+    this.setState({ paceNudgedFor: p.last, banner: { id: id, title: title, body: body } });
+    if (typeof window !== 'undefined' && typeof window.paceyNotify === 'function') window.paceyNotify(title, body);
+    clearTimeout(this.bannerTimer);
+    this.bannerTimer = setTimeout(() => {
+      if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null });
+    }, 6000);
   }
   // At last call (Settings > Pace plan): one reminder to switch to water.
   checkLastCall() {
@@ -3174,6 +3194,7 @@ class Component extends DCLogic {
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
       this.checkRideNudge();
       this.checkLastCall();
+      this.checkPaceTimer();
       this.checkPreNight();
     }, 1000);
   }
@@ -4028,6 +4049,8 @@ class Component extends DCLogic {
     const remaining = last === null ? (inSlowStart ? START + slowStart - now : 0) : last + interval - now;
     const waitTotal = last === null ? Math.max(1, slowStart) : interval;
     const waiting = !reached && !afterLastCall && remaining > 0;
+    // Read by checkPaceTimer() so the "Pace timer done" reminder uses the same numbers as the screen.
+    this.paceNow = { last: last, done: last !== null && !reached && !afterLastCall && remaining <= 0 };
     // Weekly limit: drinks in saved nights since Monday, plus tonight's.
     const weekLimit = s.weekLimit || 0;
     const weekStartISO = (() => { const d = new Date(this.now()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); })();
@@ -4091,7 +4114,7 @@ class Component extends DCLogic {
     };
 
     // Starting a night: check the home by time makes sense from now.
-    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, lastCallNudged: false, startedAtMs: this.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
+    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, lastCallNudged: false, paceNudgedFor: null, startedAtMs: this.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
     const gapTo = (h, mi) => { let g = h * 60 + mi * 5 - START; if (g <= 0) g += 24 * 60; return g; };
     const beginNight = (patch) => {
       const pl = Object.assign({ homeH: s.homeH, homeMi: s.homeMi, plan: s.plan }, patch || {});
