@@ -71,9 +71,18 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-if>
       <sc-if value="{{isHomePlan}}" hint-placeholder-val="{{false}}">
         <button onClick="{{openProfile}}" aria-label="{{profileAria}}" style="position: relative; width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: none; background: #262628; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+          <sc-if value="{{homeAvatarPerson}}" hint-placeholder-val="{{true}}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+          </sc-if>
+          <sc-if value="{{homeAvatarCustom}}" hint-placeholder-val="{{false}}">
+          <span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 22px; background: {{avatar.bg}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; font-size: 18px; font-weight: 800">
+          <sc-if value="{{avatar.isPhoto}}" hint-placeholder-val="{{false}}"><img src="{{avatar.photo}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block"></sc-if>
+          <sc-if value="{{avatar.isIcon}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{avatar.iconPath}}"></path></svg></sc-if>
+          <sc-if value="{{avatar.isInitial}}" hint-placeholder-val="{{true}}">{{avatar.letter}}</sc-if>
+        </span>
+          </sc-if>
           <sc-if value="{{profileDot}}" hint-placeholder-val="{{true}}">
-            <span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 5px; background: #6EE7C1; border: 2px solid #262628"></span>
+            <span aria-hidden="true" style="position: absolute; {{profileDotPos}}; width: 10px; height: 10px; border-radius: 5px; background: #6EE7C1"></span>
           </sc-if>
         </button>
       </sc-if>
@@ -1543,7 +1552,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       <div style="font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.8px; flex-shrink: 0">Your <span style="color: #6EE7C1">settings</span></div>
 
       <button onClick="{{goProfile}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 26px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
-        <span style="width: 56px; height: 56px; border-radius: 28px; background: #6EE7C1; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; font-weight: 800">{{initial}}</span>
+        <span aria-hidden="true" style="width: 56px; height: 56px; border-radius: 28px; background: {{avatar.bg}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; font-size: 22px; font-weight: 800">
+          <sc-if value="{{avatar.isPhoto}}" hint-placeholder-val="{{false}}"><img src="{{avatar.photo}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block"></sc-if>
+          <sc-if value="{{avatar.isIcon}}" hint-placeholder-val="{{false}}"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{avatar.iconPath}}"></path></svg></sc-if>
+          <sc-if value="{{avatar.isInitial}}" hint-placeholder-val="{{true}}">{{avatar.letter}}</sc-if>
+        </span>
         <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 18px; font-weight: 700">{{displayName}}</span>
           <span style="font-size: 14px; color: #9A9AA0">Profile and trusted friend</span>
@@ -1585,6 +1598,24 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="flex-shrink: 0; font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{subTitle}}</div>
 
       <sc-if value="{{subProfile}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 4px 0 6px">
+          <button onClick="{{openAvatarPick}}" aria-label="Change profile picture" style="position: relative; width: 96px; height: 96px; padding: 0; border: none; border-radius: 48px; background: none; cursor: pointer">
+            <span aria-hidden="true" style="width: 96px; height: 96px; border-radius: 48px; background: {{avatar.bg}}; color: #1A1A1C; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 40px; font-weight: 800">
+              <sc-if value="{{avatar.isPhoto}}" hint-placeholder-val="{{false}}"><img src="{{avatar.photo}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block"></sc-if>
+              <sc-if value="{{avatar.isIcon}}" hint-placeholder-val="{{false}}"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{avatar.iconPath}}"></path></svg></sc-if>
+              <sc-if value="{{avatar.isInitial}}" hint-placeholder-val="{{true}}">{{avatar.letter}}</sc-if>
+            </span>
+            <span aria-hidden="true" style="position: absolute; right: -2px; bottom: -2px; width: 34px; height: 34px; border-radius: 17px; background: #6EE7C1; color: #1A1A1C; border: 3px solid #1A1A1C; display: flex; align-items: center; justify-content: center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>
+            </span>
+          </button>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center">
+            <div style="font-size: 22px; font-weight: 800">{{displayName}}</div>
+            <div style="font-size: 14px; color: #9A9AA0">{{accountLabel}}</div>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Account</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <div style="display: flex; flex-direction: column; gap: 2px">
@@ -1601,31 +1632,26 @@ button{font-family:Outfit,system-ui,sans-serif}
           <sc-if value="{{accountErrShow}}" hint-placeholder-val="{{false}}">
             <div role="alert" style="padding: 0 0 12px; font-size: 14px; color: #FFC56B; font-weight: 600">{{accountErr}}</div>
           </sc-if>
-          <sc-if value="{{hasAccount}}" hint-placeholder-val="{{true}}">
-            <button onClick="{{askDeleteAccount}}" style="min-height: 52px; border: none; border-top: 1px solid #353538; background: none; padding: 0; color: #FF9B8F; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer">Delete my account</button>
-          </sc-if>
-          <sc-if value="{{confirmDeleteAccount}}" hint-placeholder-val="{{false}}">
-            <div role="alert" style="padding: 4px 0 14px; display: flex; flex-direction: column; gap: 10px">
-              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">This deletes your account and the plan saved with it. Your nights on this phone stay unless you delete them too.</div>
-              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
-                <button onClick="{{cancelDeleteAccount}}" style="height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Keep it</button>
-                <button onClick="{{deleteAccount}}" style="height: 44px; border-radius: 22px; border: none; background: #E5484D; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Delete account</button>
-              </div>
-            </div>
-          </sc-if>
         </div>
-        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+
+        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">You</div>
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
           <div style="display: flex; flex-direction: column; gap: 6px">
             <label for="pacey-name" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Your name</label>
             <input id="pacey-name" type="text" placeholder="Add your name" value="{{name}}" onChange="{{setName}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
           </div>
+          <div style="min-height: 44px; border-top: 1px solid #353538; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <div style="font-size: 16px; font-weight: 600">Age</div>
+            <div style="font-size: 15px; color: #9A9AA0">Confirmed · {{ageMin}} or older</div>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Getting home</div>
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
           <div style="display: flex; flex-direction: column; gap: 6px">
             <label for="pacey-friend" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Trusted friend, for sending your location</label>
             <input id="pacey-friend" type="text" placeholder="Name or phone number" value="{{friend}}" onChange="{{setFriend}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
           </div>
-        </div>
-        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Your ride home</div>
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
           <div style="display: flex; flex-direction: column; gap: 6px">
             <label for="pacey-address" style="font-size: 13px; font-weight: 600; color: #9A9AA0">Home address</label>
             <input id="pacey-address" type="text" autocomplete="street-address" placeholder="e.g. 12 High Street, Leeds" value="{{homeAddress}}" onChange="{{setHomeAddress}}" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: none; background: #353538; color: #FFFFFF; font-family: Outfit, sans-serif; font-size: 16px">
@@ -1640,10 +1666,21 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
         <div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45; padding: 0 4px">Only used to fill in your taxi app. It stays on this phone. Pacey can't see or confirm the booking.</div>
-        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 0 18px; min-height: 56px; display: flex; align-items: center; justify-content: space-between">
-          <div style="font-size: 16px; font-weight: 600">Age</div>
-          <div style="font-size: 15px; color: #9A9AA0">Confirmed · {{ageMin}} or older</div>
+
+        <sc-if value="{{hasAccount}}" hint-placeholder-val="{{true}}">
+        <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 4px 18px; display: flex; flex-direction: column">
+          <button onClick="{{askDeleteAccount}}" style="min-height: 52px; border: none; background: none; padding: 0; color: #FF9B8F; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer">Delete my account</button>
+          <sc-if value="{{confirmDeleteAccount}}" hint-placeholder-val="{{false}}">
+            <div role="alert" style="padding: 4px 0 14px; display: flex; flex-direction: column; gap: 10px">
+              <div style="font-size: 14px; color: #B8B8BE; line-height: 1.45">This deletes your account and the plan saved with it. Your nights on this phone stay unless you delete them too.</div>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+                <button onClick="{{cancelDeleteAccount}}" style="height: 44px; border-radius: 22px; border: none; background: #353538; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Keep it</button>
+                <button onClick="{{deleteAccount}}" style="height: 44px; border-radius: 22px; border: none; background: #E5484D; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Delete account</button>
+              </div>
+            </div>
+          </sc-if>
         </div>
+        </sc-if>
       </sc-if>
 
       <sc-if value="{{subPlan}}" hint-placeholder-val="{{false}}">
@@ -2562,6 +2599,43 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{avatarPickOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Close" onClick="{{closeAvatarPick}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="dialog" aria-label="Profile picture" style="position: relative; max-height: 92%; overflow-y: auto; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 30px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E; flex-shrink: 0"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0">
+          <div style="font-size: 20px; font-weight: 800">Profile picture</div>
+          <button onClick="{{closeAvatarPick}}" style="height: 44px; padding: 0 20px; border-radius: 22px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Done</button>
+        </div>
+        <input id="pacey-avatar-file" type="file" accept="image/*" tabindex="-1" aria-hidden="true" onChange="{{avatarFileChange}}" style="display: none">
+        <button onClick="{{chooseAvatarPhoto}}" style="height: 52px; flex-shrink: 0; border-radius: 26px; border: none; background: #353538; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; font-weight: 700; cursor: pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          Upload a photo
+        </button>
+        <sc-if value="{{avatarErrShow}}" hint-placeholder-val="{{false}}">
+          <div role="alert" style="font-size: 14px; color: #FFC56B; font-weight: 600">{{avatarErr}}</div>
+        </sc-if>
+        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0; flex-shrink: 0">Or pick a symbol</div>
+        <div role="radiogroup" aria-label="Symbols" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; flex-shrink: 0">
+          <sc-for list="{{avatarIconChoices}}" as="c" hint-placeholder-count="8">
+            <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.label}}" onClick="{{c.pick}}" style="height: 64px; border-radius: 18px; border: none; background: {{c.bg}}; color: {{c.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.path}}"></path></svg>
+              <span style="font-size: 11px; font-weight: 600">{{c.label}}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0; flex-shrink: 0">Colour</div>
+        <div role="radiogroup" aria-label="Colour" style="display: flex; gap: 12px; flex-shrink: 0">
+          <sc-for list="{{avatarColorChoices}}" as="c" hint-placeholder-count="5">
+            <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.label}}" onClick="{{c.pick}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: {{c.color}}; box-shadow: {{c.ring}}; cursor: pointer"></button>
+          </sc-for>
+        </div>
+        <button onClick="{{useInitialAvatar}}" style="min-height: 44px; flex-shrink: 0; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Use my initial</button>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{taxiOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Close" onClick="{{closeTaxi}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2798,7 +2872,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { screen: 'age', helpFrom: 'home', plan: 4, homeH: 1, homeMi: 6, rideIdx: 0, picker: null, entries: [], tick: 0, endTick: 0, active: false, name: '', friend: '', reminders: true, qIdx: 0, answers: [null, null, null], viewIdx: 0, summaryFrom: 'home',
+    this.state = { screen: 'age', helpFrom: 'home', plan: 4, homeH: 1, homeMi: 6, rideIdx: 0, picker: null, entries: [], tick: 0, endTick: 0, active: false, name: '', friend: '', avatarType: 'initial', avatarPhoto: '', avatarIcon: 'smile', avatarBg: '#6EE7C1', reminders: true, qIdx: 0, answers: [null, null, null], viewIdx: 0, summaryFrom: 'home',
       nights: props.realtime ? [] : [
         { title: 'Saturday 14 November', date: '2026-11-14', day: 'Saturday', plan: 4, endTick: 215, entries: [
           { kind: 'drink', t: 1275 }, { kind: 'water', t: 1300 }, { kind: 'drink', t: 1345 }, { kind: 'water', t: 1400 }, { kind: 'drink', t: 1420 }] },
@@ -2997,7 +3071,54 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const TERMS = [{"h": "What Pacey is", "b": "Pacey helps you plan and pace drinking during one night out. You set a plan, log drinks and water, and Pacey shows your pace and gentle reminders. It is not a programme to stop drinking."}, {"h": "Who can use it", "b": "You must be of legal drinking age where you live to use Pacey. If you are not, please don't use the app."}, {"h": "Not medical advice", "b": "Pacey is not medical advice. Drink sizes and alcohol amounts are rough estimates from the numbers you enter. Pacey can't measure your blood alcohol."}, {"h": "Never drive after drinking", "b": "Never use Pacey to decide whether you can drive, cycle, swim, operate machinery or do anything else that needs you to be sober. If you have been drinking, get a ride home."}, {"h": "Your choices", "b": "You decide what and how much you drink, and you are responsible for following the law where you are. Pacey's suggestions are a guide, not a target."}, {"h": "Emergencies", "b": "If you or someone else needs urgent help, call your local emergency number straight away. Pacey's Need help screen uses your phone's own calling, messaging and maps, so it only works when those do."}, {"h": "Safety features are free", "b": "Need help, emergency calling, sending your location and getting a ride home will always be free in Pacey."}, {"h": "Your data", "b": "Your nights and settings are stored on your phone. See the Privacy policy for what Pacey keeps and how to delete it."}, {"h": "Changes to these terms", "b": "We may update these terms. When we do, Pacey will ask you to read and agree to the new version."}, {"h": "No guarantees", "b": "Pacey is provided as it is. As far as the law allows, we are not responsible for decisions you make while using it, or for any harm from drinking."}, {"h": "Contact", "b": "Questions about these terms: velfringv@gmail.com"}];
-    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
+    // Profile picture: simple symbols (nothing about drinking) and colours. No red: red is for emergency and help only.
+    const AVATAR_ICONS = [
+      ['smile', 'Smile', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M8 14s1.5 2 4 2 4-2 4-2 M9 9h.01 M15 9h.01'],
+      ['star', 'Star', 'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z'],
+      ['moon', 'Moon', 'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'],
+      ['sun', 'Sun', 'M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z M12 1v2 M12 21v2 M4.2 4.2l1.4 1.4 M18.4 18.4l1.4 1.4 M1 12h2 M21 12h2 M4.2 19.8l1.4-1.4 M18.4 5.6l1.4-1.4'],
+      ['music', 'Music', 'M9 18V5l12-2v13 M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z'],
+      ['leaf', 'Leaf', 'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z M2 21c0-3 1.9-5.4 5.1-6'],
+      ['bolt', 'Bolt', 'M13 2L3 14h9l-1 8 10-12h-9l1-8z'],
+      ['heart', 'Heart', 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z']
+    ];
+    const AVATAR_COLORS = [['#6EE7C1', 'Mint'], ['#5CC8F5', 'Blue'], ['#B9A4FF', 'Purple'], ['#FFC56B', 'Amber'], ['#9A9AA0', 'Grey']];
+    // Centre-crop a picked photo to a small square JPEG so it stays light to save.
+    const shrinkPhoto = (file, done) => {
+      const fail = () => done(null);
+      if (!file || !/^image\//.test(file.type || '')) { fail(); return; }
+      const reader = new FileReader();
+      reader.onerror = fail;
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = fail;
+        img.onload = () => {
+          const side = Math.min(img.naturalWidth, img.naturalHeight);
+          if (!side) { fail(); return; }
+          const c = document.createElement('canvas');
+          c.width = 160; c.height = 160;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#262628';
+          ctx.fillRect(0, 0, 160, 160);
+          ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, 160, 160);
+          let q = 0.8;
+          let url = c.toDataURL('image/jpeg', q);
+          while (url.length > 40000 && q > 0.35) { q -= 0.15; url = c.toDataURL('image/jpeg', q); }
+          done(url);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    };
+    // One avatar, used on Home, the Settings card and Profile.
+    const avatar = (() => {
+      const bg = AVATAR_COLORS.some((c) => c[0] === s.avatarBg) ? s.avatarBg : '#6EE7C1';
+      const icon = AVATAR_ICONS.find((x) => x[0] === s.avatarIcon) || AVATAR_ICONS[0];
+      const type = s.avatarType === 'photo' && s.avatarPhoto ? 'photo' : s.avatarType === 'icon' ? 'icon' : 'initial';
+      return { isPhoto: type === 'photo', isIcon: type === 'icon', isInitial: type === 'initial', photo: type === 'photo' ? s.avatarPhoto : '',
+        iconKey: icon[0], iconPath: icon[2], bg: type === 'photo' ? '#353538' : bg, letter: (s.name.trim()[0] || 'P').toUpperCase() };
+    })();
+    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, profile picture, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
     // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
     const RT = !!this.props.realtime;
     const nowDate = new Date();
@@ -4767,6 +4888,34 @@ class Component extends DCLogic {
       },
       toggles: toggles,
       initial: (s.name.trim()[0] || 'P').toUpperCase(),
+      avatar: avatar,
+      homeAvatarPerson: avatar.isInitial && !s.name.trim(),
+      homeAvatarCustom: !(avatar.isInitial && !s.name.trim()),
+      profileDotPos: avatar.isInitial && !s.name.trim() ? 'top: 8px; right: 8px; border: 2px solid #262628' : 'top: 0; right: 0; border: 2px solid #1A1A1C',
+      avatarPickOpen: !!s.avatarPick,
+      openAvatarPick: () => this.setState({ avatarPick: true, avatarErr: '' }),
+      closeAvatarPick: () => this.setState({ avatarPick: false, avatarErr: '' }),
+      avatarErrShow: !!s.avatarErr,
+      avatarErr: s.avatarErr || '',
+      chooseAvatarPhoto: () => { const el = document.getElementById('pacey-avatar-file'); if (el) { el.value = ''; el.click(); } },
+      avatarFileChange: (e) => {
+        const file = e.target.files && e.target.files[0];
+        shrinkPhoto(file, (url) => {
+          if (!url) { this.setState({ avatarErr: "That picture didn't work. Try another photo." }); return; }
+          this.setState({ avatarType: 'photo', avatarPhoto: url, avatarErr: '' });
+        });
+      },
+      avatarIconChoices: AVATAR_ICONS.map((x) => {
+        const on = avatar.isIcon && avatar.iconKey === x[0];
+        return { label: x[1], path: x[2], checked: on ? 'true' : 'false', bg: on ? avatar.bg : '#353538', fg: on ? '#1A1A1C' : '#FFFFFF',
+          pick: () => this.setState({ avatarType: 'icon', avatarIcon: x[0], avatarPhoto: '' }) };
+      }),
+      avatarColorChoices: AVATAR_COLORS.map((x) => {
+        const on = avatar.bg === x[0];
+        return { label: x[1], color: x[0], checked: on ? 'true' : 'false', ring: on ? '0 0 0 3px #262628, 0 0 0 5px #FFFFFF' : 'none',
+          pick: () => this.setState({ avatarBg: x[0] }) };
+      }),
+      useInitialAvatar: () => this.setState({ avatarType: 'initial', avatarPhoto: '', avatarBg: '#6EE7C1', avatarErr: '' }),
       usualLabel: (s.usualPlan || 4) + ((s.usualPlan || 4) === 1 ? ' drink' : ' drinks'),
       limitN: limitN,
       limitNoun: limitN === 1 ? 'drink' : 'drinks',
