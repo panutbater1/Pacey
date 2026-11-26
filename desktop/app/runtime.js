@@ -146,16 +146,35 @@
 
   // ---------- saving between launches
   let saveTimer = null;
-  function save(state) {
+  let pending = null;
+  function writeNow() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      try {
-        const copy = Object.assign({}, state);
-        TRANSIENT.forEach((k) => { delete copy[k]; });
-        if (copy.screen === 'lock' || copy.screen === 'help') copy.screen = copy.lockReturn || copy.helpFrom || 'home';
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
-      } catch (e) { /* storage full or blocked: keep running */ }
-    }, 250);
+    if (!pending) return;
+    const state = pending;
+    pending = null;
+    try {
+      const copy = Object.assign({}, state);
+      TRANSIENT.forEach((k) => { delete copy[k]; });
+      if (copy.screen === 'lock' || copy.screen === 'help') copy.screen = copy.lockReturn || copy.helpFrom || 'home';
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
+    } catch (e) { /* storage full or blocked: keep running */ }
+  }
+  function save(state) {
+    pending = state;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(writeNow, 250);
+  }
+
+  if (WEB) {
+    // A phone can close the page at any moment (switching apps, locking): save straight away when it's hidden.
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') writeNow(); });
+    window.addEventListener('pagehide', writeNow);
+    // Ask the browser once to keep Pacey's data, so it isn't cleared when the phone is low on space.
+    try {
+      if (navigator.storage && navigator.storage.persist && navigator.storage.persisted) {
+        navigator.storage.persisted().then((kept) => (kept ? true : navigator.storage.persist())).catch(() => {});
+      }
+    } catch (e) { /* not supported: data is still saved */ }
   }
 
   function load() {
