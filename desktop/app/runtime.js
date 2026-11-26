@@ -15,7 +15,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -105,7 +105,7 @@
 
   const ATTR = {
     class: 'className', for: 'htmlFor', onclick: 'onClick', onchange: 'onChange', onscroll: 'onScroll',
-    oninput: 'onInput', onpointerdown: 'onPointerDown', onpointerup: 'onPointerUp',
+    oninput: 'onInput', onkeydown: 'onKeyDown', onpointerdown: 'onPointerDown', onpointerup: 'onPointerUp',
     onpointerleave: 'onPointerLeave', onpointercancel: 'onPointerCancel', oncontextmenu: 'onContextMenu', autocomplete: 'autoComplete', tabindex: 'tabIndex', readonly: 'readOnly', maxlength: 'maxLength'
   };
 
