@@ -25,7 +25,7 @@ Paste this whole file into Claude Code (or drop it into the project folder), tog
 **In v1:**
 1. Age gate + short disclaimer on first launch.
 2. **Home** — "Going out tonight?": set a drink plan (number of drinks), a "home by" time and how you're getting home, then **Start my night**.
-3. **Drink mode** — a glass that fills as you log drinks, a countdown to when your next drink fits your plan, + Drink and + Water buttons, water count, time since last drink, End night button, ride-home and Need help buttons. When you reach your plan the glass turns orange and the message says "You've reached your plan — switch to water from here".
+3. **Drink mode** — a glass that fills as you log drinks, a pace timer counting down between drinks, + Drink and + Water buttons, water count, time since last drink, End night button, ride-home and Need help buttons. When you reach your plan the glass turns orange and the message says "You've reached your plan — switch to water from here".
 4. **Night summary** — "You stuck to your plan" (or a kind message if not), drinks, water, pace, an hour-by-hour chart, a "Getting home? Don't drive tonight" card with Book a taxi, and Done.
 5. **Need help?** — big Call emergency services button (uses local number), Send my location to a friend, Get a ride home, signs someone needs urgent help, and what to do while waiting.
 6. Gentle local notifications (e.g. "Water time", "Pace timer done").
