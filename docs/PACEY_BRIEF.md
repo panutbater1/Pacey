@@ -30,13 +30,14 @@ Paste this whole file into Claude Code (or drop it into the project folder), tog
 5. **Need help?** — big Call emergency services button (uses local number), Send my location to a friend, Get a ride home, signs someone needs urgent help, and what to do while waiting.
 6. Gentle local notifications (e.g. "Water time", "Your next drink fits your plan now").
 7. Store nights locally on the phone (no account needed for v1).
+8. **Lock screen logging** (Arthur's decision, 26 November 2026) — a Live Activity (and Dynamic Island) during a night with + Drink and + Water, a short "logged" message with Undo, and read-only lock screen widgets showing the count and next-drink time. This is the main way people log drinks on a night out.
 
-**Later (v2+), not in v1:** friends / group nights, invites and check-in messages ("Water round?", "You good?"), monthly stats calendar, widgets, Dynamic Island / Live Activity, Back Tap quick logging, paid features.
+**Later (v2+), not in v1:** friends / group nights, invites and check-in messages ("Water round?", "You good?"), monthly stats calendar, Back Tap quick logging, paid features.
 
 ## 4. Tech direction
 
 - **Build order (Aaron's decision, 24 November 2026):** build a **web prototype first** (`prototype/Main.dc.html`, which runs on a laptop with `npm start`), then rebuild it as the native SwiftUI app below.
-- **Native iPhone app in SwiftUI** (native is needed later for widgets, Live Activities / Dynamic Island and Back Tap).
+- **Native iPhone app in SwiftUI** (native is needed for the v1 lock screen widgets and Live Activity / Dynamic Island, and later for Back Tap).
 - Local storage (SwiftData or similar) for v1.
 - Local notifications for pacing reminders.
 - Ride and emergency buttons can open the phone dialer / maps / a taxi app link.
