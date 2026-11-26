@@ -176,7 +176,7 @@ button{font-family:Outfit,system-ui,sans-serif}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
       </button>
       <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 28px; display: flex; flex-direction: column; gap: 18px">
-      <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px; flex-shrink: 0">Your plan is <span style="color: #6EE7C1">ready</span></div>
+      <div style="font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px; flex-shrink: 0">{{accountTitleA}} <span style="color: #6EE7C1">{{accountTitleB}}</span></div>
       <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45; flex-shrink: 0">Save your plan to a free account so you get it back on a new phone. It's optional: everything in Pacey works without one.</div>
 
       <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
@@ -733,8 +733,8 @@ button{font-family:Outfit,system-ui,sans-serif}
       <sc-if value="{{showNightsSave}}" hint-placeholder-val="{{false}}">
         <button onClick="{{openSignupHistory}}" style="flex-shrink: 0; min-height: 52px; border-radius: 18px; border: none; background: #262628; color: #FFFFFF; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6EE7C1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7z"></path></svg>
-          <span style="flex-grow: 1; font-size: 15px; color: #B8B8BE; line-height: 1.35">Your nights are only saved on this phone.</span>
-          <span style="font-size: 15px; font-weight: 700; color: #6EE7C1; white-space: nowrap">Save them →</span>
+          <span style="flex-grow: 1; font-size: 15px; color: #B8B8BE; line-height: 1.35">Keep your plan if you change phone.</span>
+          <span style="font-size: 15px; font-weight: 700; color: #6EE7C1; white-space: nowrap">Save plan →</span>
         </button>
       </sc-if>
       <div role="group" aria-label="Show nights by" style="flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 24px; background: #262628">
@@ -2069,11 +2069,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       <sc-if value="{{showSaveNight}}" hint-placeholder-val="{{false}}">
         <div style="flex-shrink: 0; background: #262628; border: 2px solid #6EE7C1; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
           <div style="display: flex; flex-direction: column; gap: 4px">
-            <div style="font-size: 18px; font-weight: 800">{{saveNightLine}}</div>
-            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.4">Free account, takes 10 seconds. Get your nights back on a new phone.</div>
+            <div style="font-size: 18px; font-weight: 800">Save your plan?</div>
+            <div style="font-size: 14px; color: #B8B8BE; line-height: 1.4">Free account, takes 10 seconds. Keep your plan if you change phone. Your nights stay on this phone.</div>
           </div>
           <div style="display: flex; gap: 10px">
-            <button onClick="{{openSignupSummary}}" style="flex-grow: 1; height: 50px; border-radius: 25px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Save my nights</button>
+            <button onClick="{{openSignupSummary}}" style="flex-grow: 1; height: 50px; border-radius: 25px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 16px; font-weight: 700; cursor: pointer">Save my plan</button>
             <button onClick="{{skipSaveNight}}" style="height: 50px; padding: 0 18px; border-radius: 25px; border: none; background: #353538; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Not now</button>
           </div>
         </div>
@@ -3225,7 +3225,7 @@ class Component extends DCLogic {
       return { isPhoto: type === 'photo', notPhoto: type !== 'photo', isIcon: type === 'icon', isInitial: type === 'initial', photo: type === 'photo' ? s.avatarPhoto : '',
         iconKey: icon[0], iconPath: icon[2], bg: type === 'photo' ? '#353538' : bg, letter: (s.name.trim()[0] || 'P').toUpperCase() };
     })();
-    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, profile picture, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
+    const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You can create an account whenever you choose, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, profile picture, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
     // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
     const RT = !!this.props.realtime;
     const nowDate = new Date(this.now());
@@ -4499,11 +4499,12 @@ class Component extends DCLogic {
       mkBackAria: (s.mkStep || 0) > 0 ? 'Back to step ' + (s.mkStep || 0) : 'Back to your plan',
       preBody: 'Going out tonight? Set your plan before you go' + ((s.reason || '').trim() ? '. You said: "' + s.reason.trim() + '"' : '.'),
       isAccount: s.screen === 'account',
+      accountTitleA: s.accountFrom === 'result' ? 'Your plan is' : s.accountFrom === 'settings' ? 'Your' : 'Save your',
+      accountTitleB: s.accountFrom === 'result' ? 'ready' : s.accountFrom === 'settings' ? 'account' : 'plan',
       resultOfferAccount: !s.account && !s.active,
       resultSaved: !!s.account,
       // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
       showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
-      saveNightLine: streak >= 2 ? 'Save tonight and your ' + streak + '-night streak.' : 'Save tonight so you don\'t lose it.',
       skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
       // Never offer sign-up during a night out.
       showNightsSave: !s.account && !s.active,
