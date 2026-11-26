@@ -408,7 +408,7 @@ button{font-family:Outfit,system-ui,sans-serif}
 
       <sc-if value="{{tryHasDrink}}" hint-placeholder-val="{{false}}">
         <div style="background: #262628; border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
-          <div style="font-size: 14px; font-weight: 600; color: #9A9AA0">Your next drink fits your plan in</div>
+          <div style="font-size: 14px; font-weight: 600; color: #9A9AA0">Pace timer</div>
           <div style="font-size: 30px; font-weight: 800; line-height: 1">{{tryInterval}} min</div>
           <div style="height: 8px; border-radius: 4px; background: #353538; overflow: hidden"><div style="height: 8px; width: 6%; border-radius: 4px; background: linear-gradient(90deg, #6EE7C1, #5CC8F5)"></div></div>
         </div>
@@ -475,7 +475,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
           <div style="display: flex; flex-direction: column; gap: 2px">
             <div style="font-size: 16px; font-weight: 700">Stay on pace</div>
-            <div style="font-size: 14px; color: #9A9AA0; line-height: 1.35">A timer shows when your next drink fits, with water reminders in between.</div>
+            <div style="font-size: 14px; color: #9A9AA0; line-height: 1.35">A pace timer keeps your night steady, with water reminders in between.</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px">
@@ -5129,7 +5129,7 @@ class Component extends DCLogic {
       ready: !reached && !waiting && !afterLastCall,
       countdown: remaining + ' min',
       progressW: Math.max(4, Math.min(100, Math.round((1 - remaining / waitTotal) * 100))) + '%',
-      waitTitle: inSlowStart ? 'Slow start: your first drink fits in' : 'Your next drink fits your plan in',
+      waitTitle: inSlowStart ? 'Slow start timer' : 'Pace timer',
       lastCallPassed: afterLastCall && !reached,
       lastCallText: 'It was at ' + (lastCallAt != null ? fmt(lastCallAt) : '') + ', ' + (lastCallMins >= 60 ? (lastCallMins === 60 ? 'an hour' : (lastCallMins / 60) + ' hours') : lastCallMins + ' min') + ' before home by. Water from here helps you sleep and feel better tomorrow.',
       lastCallLine: lastCallAt != null ? ' · last call ' + fmt(lastCallAt) : '',
@@ -5204,7 +5204,7 @@ class Component extends DCLogic {
       earlyT2: s.earlyAsk === 'lastcall' ? 'call' : 'early?',
       earlyBody: s.earlyAsk === 'lastcall' ? 'Last call was ' + (lastCallAt != null ? fmt(lastCallAt) : '') + ', so you\'ll sleep better with water from here. You can still log it.'
         : inSlowStart ? 'Your slow start has ' + Math.max(1, remaining) + ' min to go. A water first sets a good pace.'
-        : 'Your next ' + cur.one + ' fits your plan in ' + Math.max(1, remaining) + ' min. A water now keeps you on pace.',
+        : 'Your pace timer has ' + Math.max(1, remaining) + ' min to go. A water now keeps you on pace.',
       earlyWater: () => { this.setState({ earlyAsk: false }); add('water')(); },
       earlyDrink: () => { this.setState({ earlyAsk: false }); add('drink')(); },
       earlyCancel: () => this.setState({ earlyAsk: false }),
