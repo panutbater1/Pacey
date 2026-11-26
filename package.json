@@ -11,6 +11,7 @@
     "dev": "node bin/pacey.js --dev",
     "demo": "node bin/pacey.js --demo",
     "web": "node web/build.js",
-    "web:serve": "node web/build.js && node web/serve.js"
+    "web:serve": "node web/build.js && node web/serve.js",
+    "web:publish": "node web/publish.js"
   }
 }
