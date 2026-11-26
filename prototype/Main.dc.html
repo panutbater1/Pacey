@@ -2214,13 +2214,13 @@ button{font-family:Outfit,system-ui,sans-serif}
         </span>
       </button>
 
-      <button style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
+      <button onClick="{{sendLocation}}" aria-busy="{{locatingBusy}}" style="flex-shrink: 0; background: #262628; border: none; border-radius: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-align: left; cursor: pointer">
         <span style="width: 44px; height: 44px; border-radius: 14px; background: #353538; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
         </span>
         <span style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 16px; font-weight: 600">Send my location to a friend</span>
-          <span style="font-size: 14px; color: #9A9AA0">Opens a message you can send</span>
+          <span style="font-size: 14px; color: #9A9AA0">{{locationSub}}</span>
         </span>
       </button>
 
@@ -3581,6 +3581,8 @@ class Component extends DCLogic {
     const rideAppName = (RIDE_APPS.find((a) => a[0] === rideApp) || RIDE_APPS[0])[1];
     const homeAddress = (s.homeAddress || '').trim();
     const taxiNumber = (s.taxiNumber || '').replace(/[^0-9+]/g, '');
+    // The trusted friend field takes a name or a phone number; only a number can go in the message link.
+    const friendPhone = /^\+?[0-9][0-9 ()-]{5,}$/.test(s.friend.trim()) ? s.friend.replace(/[^0-9+]/g, '') : '';
     // Uber is the only one whose link takes the home address; for the others Pacey copies it to paste in.
     const rideUrl = rideApp === 'uber'
       ? 'https://m.uber.com/ul/?action=setPickup&pickup=my_location' + (homeAddress ? '&dropoff[formatted_address]=' + encodeURIComponent(homeAddress) : '')
@@ -5311,6 +5313,37 @@ class Component extends DCLogic {
         });
         clearTimeout(this.bannerTimer);
         this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 3500);
+      },
+      // Send my location: looks it up once, puts it in a message for the person to send, and never stores it.
+      locatingBusy: s.locating ? 'true' : 'false',
+      locationSub: s.locating ? 'Finding where you are...' : (friendPhone ? 'Opens a message to ' + s.friend.trim() : 'Opens a message you can send'),
+      sendLocation: () => {
+        if (s.locating) return;
+        const flash = (title, body) => {
+          const id = Date.now();
+          this.setState({ locating: false, banner: { id: id, title: title, body: body } });
+          clearTimeout(this.bannerTimer);
+          this.bannerTimer = setTimeout(() => { if (this.state.banner && this.state.banner.id === id) this.setState({ banner: null }); }, 6000);
+        };
+        const openMessage = (lat, lng) => {
+          const text = 'I could use a hand.' + (lat != null ? ' I\'m here: https://maps.google.com/?q=' + lat.toFixed(5) + ',' + lng.toFixed(5) : ' Can you call me?');
+          const sms = 'sms:' + friendPhone + '?body=' + encodeURIComponent(text);
+          const fallback = () => { if (RT && typeof window !== 'undefined' && window.open) window.open(sms, '_blank'); };
+          // No saved number: the phone's share sheet lets the person pick who to send it to.
+          if (RT && !friendPhone && typeof navigator !== 'undefined' && navigator.share) navigator.share({ text: text }).catch((e) => { if (!e || e.name !== 'AbortError') fallback(); });
+          else fallback();
+          if (lat != null) flash('Opening your messages', RT ? 'Your location is in the message. Check it and press send. Pacey doesn\'t keep it.' : 'In the real app this opens a message with your location.');
+          else flash('Couldn\'t get your location', 'The message opens without it. Tell your friend where you are, or check location is switched on for Pacey.');
+        };
+        if (!RT || typeof navigator === 'undefined' || !navigator.geolocation) { openMessage(null, null); return; }
+        this.setState({ locating: true });
+        let settled = false;
+        const finish = (lat, lng) => { if (settled) return; settled = true; clearTimeout(guard); openMessage(lat, lng); };
+        // Extra guard in case the location service never answers.
+        const guard = setTimeout(() => finish(null, null), 11000);
+        try {
+          navigator.geolocation.getCurrentPosition((pos) => finish(pos.coords.latitude, pos.coords.longitude), () => finish(null, null), { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+        } catch (e) { finish(null, null); }
       },
       openHelp: () => this.setState({ screen: 'help', helpFrom: s.screen }),
       closeHelp: () => this.setState({ screen: s.helpFrom })

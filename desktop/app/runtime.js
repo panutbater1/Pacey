@@ -15,7 +15,7 @@
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk', 'locating'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
