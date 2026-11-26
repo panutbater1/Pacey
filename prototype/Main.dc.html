@@ -1611,11 +1611,9 @@ button{font-family:Outfit,system-ui,sans-serif}
           </button>
           <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center">
             <div style="font-size: 22px; font-weight: 800">{{displayName}}</div>
-            <div style="font-size: 14px; color: #9A9AA0">{{accountLabel}}</div>
           </div>
         </div>
 
-        <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">Account</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <div style="display: flex; flex-direction: column; gap: 2px">
@@ -2625,12 +2623,14 @@ button{font-family:Outfit,system-ui,sans-serif}
             </button>
           </sc-for>
         </div>
-        <div style="font-size: 13px; font-weight: 600; color: #9A9AA0; flex-shrink: 0">Colour</div>
-        <div role="radiogroup" aria-label="Colour" style="display: flex; gap: 12px; flex-shrink: 0">
-          <sc-for list="{{avatarColorChoices}}" as="c" hint-placeholder-count="5">
-            <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.label}}" onClick="{{c.pick}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: {{c.color}}; box-shadow: {{c.ring}}; cursor: pointer"></button>
-          </sc-for>
-        </div>
+        <sc-if value="{{avatar.notPhoto}}" hint-placeholder-val="{{true}}">
+          <div style="font-size: 13px; font-weight: 600; color: #9A9AA0; flex-shrink: 0">Colour</div>
+          <div role="radiogroup" aria-label="Colour" style="display: flex; gap: 12px; flex-shrink: 0">
+            <sc-for list="{{avatarColorChoices}}" as="c" hint-placeholder-count="5">
+              <button role="radio" aria-checked="{{c.checked}}" aria-label="{{c.label}}" onClick="{{c.pick}}" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: {{c.color}}; box-shadow: {{c.ring}}; cursor: pointer"></button>
+            </sc-for>
+          </div>
+        </sc-if>
         <button onClick="{{useInitialAvatar}}" style="min-height: 44px; flex-shrink: 0; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Use my initial</button>
       </div>
     </div>
@@ -3115,7 +3115,7 @@ class Component extends DCLogic {
       const bg = AVATAR_COLORS.some((c) => c[0] === s.avatarBg) ? s.avatarBg : '#6EE7C1';
       const icon = AVATAR_ICONS.find((x) => x[0] === s.avatarIcon) || AVATAR_ICONS[0];
       const type = s.avatarType === 'photo' && s.avatarPhoto ? 'photo' : s.avatarType === 'icon' ? 'icon' : 'initial';
-      return { isPhoto: type === 'photo', isIcon: type === 'icon', isInitial: type === 'initial', photo: type === 'photo' ? s.avatarPhoto : '',
+      return { isPhoto: type === 'photo', notPhoto: type !== 'photo', isIcon: type === 'icon', isInitial: type === 'initial', photo: type === 'photo' ? s.avatarPhoto : '',
         iconKey: icon[0], iconPath: icon[2], bg: type === 'photo' ? '#353538' : bg, letter: (s.name.trim()[0] || 'P').toUpperCase() };
     })();
     const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, profile picture, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
