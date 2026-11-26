@@ -285,9 +285,22 @@
     }
   };
 
+  // ---------- dev clock: in the dev version time runs 60x faster (one real second is one minute).
+  // It keeps going from where the last dev launch stopped, so saved nights never jump backwards.
+  const FAST = DEV && !DEMO;
+  if (FAST) {
+    const CLOCK_KEY = 'pacey.devclock.v1';
+    const realStart = Date.now();
+    let saved = 0;
+    try { saved = Number(localStorage.getItem(CLOCK_KEY)) || 0; } catch (e) {}
+    const base = Math.max(realStart, saved);
+    window.paceyNow = () => base + (Date.now() - realStart) * 60;
+    setInterval(() => { try { localStorage.setItem(CLOCK_KEY, String(window.paceyNow())); } catch (e) {} }, 2000);
+  }
+
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
-  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, realtime: !DEMO, savedState: DEMO ? null : load() });
+  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, savedState: DEMO ? null : load() });
   ReactDOM.createRoot(document.getElementById('screen')).render(h(Component, props));
 
   window.paceyReset = function () {

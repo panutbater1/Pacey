@@ -2458,6 +2458,10 @@ button{font-family:Outfit,system-ui,sans-serif}
     </button>
   </sc-if>
 
+  <sc-if value="{{showDevClock}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 30; height: 28px; padding: 0 10px; border-radius: 14px; border: 1.5px dashed #FFC56B; background: rgba(26, 26, 28, 0.9); color: #FFC56B; display: flex; align-items: center; font-size: 12px; font-weight: 700; pointer-events: none">Dev clock 60×</div>
+  </sc-if>
+
   <sc-if value="{{showDevSkip}}" hint-placeholder-val="{{false}}">
     <button onClick="{{skipSetup}}" style="position: absolute; top: 12px; right: 12px; z-index: 30; height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px dashed #FFC56B; background: rgba(26, 26, 28, 0.9); color: #FFC56B; font-size: 13px; font-weight: 700; cursor: pointer">Skip setup · prototype only</button>
   </sc-if>
@@ -3017,7 +3021,7 @@ class Component extends DCLogic {
     const s = this.state;
     if (!this.props.realtime || s.preOn === false || s.active) return;
     if (['home', 'drink', 'settings', 'history'].indexOf(s.screen) === -1) return;
-    const now = new Date();
+    const now = new Date(this.now());
     const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
     if ((s.preDays || ['Fri', 'Sat']).indexOf(day) === -1) return;
     if (now.getHours() !== (s.preH != null ? s.preH : 19) || now.getMinutes() !== (s.preMi != null ? s.preMi : 0) * 5) return;
@@ -3065,13 +3069,15 @@ class Component extends DCLogic {
       }, 1900);
     }, 20);
   }
+  // One clock for pacing: real time, except the dev version where it runs 60x faster.
+  now() { return this.props.fastClock && typeof window !== 'undefined' && typeof window.paceyNow === 'function' ? window.paceyNow() : Date.now(); }
   componentDidMount() {
     // Prototype clock: one real second is one minute of the night.
     this.timer = setInterval(() => {
       if (this.props.realtime) {
         // Real app: minutes since the night started, and a refresh each minute for the clock.
-        const tick = this.state.active && this.state.startedAtMs ? Math.floor((Date.now() - this.state.startedAtMs) / 60000) : this.state.tick;
-        const minute = Math.floor(Date.now() / 60000);
+        const tick = this.state.active && this.state.startedAtMs ? Math.max(0, Math.floor((this.now() - this.state.startedAtMs) / 60000)) : this.state.tick;
+        const minute = Math.floor(this.now() / 60000);
         if (tick !== this.state.tick || minute !== this.lastMinute) { this.lastMinute = minute; this.setState({ tick: tick }); }
       } else if (this.state.active) this.setState({ tick: this.state.tick + 1 });
       this.checkRideNudge();
@@ -3133,7 +3139,7 @@ class Component extends DCLogic {
     const PRIVACY = [{"h": "The short version", "b": "Your nights stay on your phone. Your Pacey account, if you choose to make one, only holds your sign-in, your plan and how many drinks you usually have. There are no ads and no tracking, and we don't sell or share your data."}, {"h": "Your account", "b": "You create an account after the first-launch quiz, with Apple, Google or email. It keeps your sign-in details, your plan and how many drinks you usually have, so you can restore them on a new phone. Because this is health information, Pacey only creates an account after you tick a separate box to agree. You can sign out or delete your account at any time in Settings › Profile, and you can use Pacey without an account."}, {"h": "What Pacey stores on your phone", "b": "Your plans, the drinks and water you log with their times, your morning check-ins, your drink types and sizes, your quick starts, reminder choices, and the name, profile picture, trusted friend, home address and taxi app you add in Profile."}, {"h": "Location", "b": "Pacey only looks up your location when you tap Send my location to a friend. It puts it in a message for you to send and doesn't store it."}, {"h": "Notifications", "b": "Reminders are scheduled on your phone. No one else sees them."}, {"h": "Contacts and messages", "b": "Pacey never reads your contacts or messages. When you send your location or call for help, your phone's own apps do it."}, {"h": "Your choices", "b": "You can change any detail in Settings, delete your saved nights below, or delete the app to remove everything."}, {"h": "Children", "b": "Pacey is not for anyone under the legal drinking age, and we don't knowingly collect anything about them."}, {"h": "Changes", "b": "If this policy changes, Pacey will show you the new version in the app."}, {"h": "Contact", "b": "Questions about privacy: velfringv@gmail.com"}];
     // Real app mode (desktop app): real clock, no sample nights. Prototype mode: 21:05 start, 1 second = 1 minute.
     const RT = !!this.props.realtime;
-    const nowDate = new Date();
+    const nowDate = new Date(this.now());
     const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
     const START = RT ? (s.active ? (s.startMin != null ? s.startMin : nowMin) : nowMin) : 21 * 60 + 5;
     const EMPTY_NIGHT = { title: 'No nights yet', day: '', date: nowDate.toISOString().slice(0, 10), plan: 4, endTick: 0, entries: [], start: START };
@@ -3764,9 +3770,9 @@ class Component extends DCLogic {
     // Last night stays on the Tonight tab until Plan my night, but goes away by itself
     // if nothing was updated in the 24 hours after the night ended.
     const lastTouched = !!lastNight.feel || lastNight.entries.some((e) => e.late) || !!lastNight.keepOpen;
-    const lastExpired = !!lastNight.endedAtMs && Date.now() - lastNight.endedAtMs > 24 * 3600 * 1000 && !lastTouched;
+    const lastExpired = !!lastNight.endedAtMs && this.now() - lastNight.endedAtMs > 24 * 3600 * 1000 && !lastTouched;
     const showLastNight = !!s.morningAfter && s.nights.length > 0 && !lastExpired;
-    const morningReady = !lastNight.endedAtMs || !!lastNight.morningSkip || Date.now() >= morningAtMs;
+    const morningReady = !lastNight.endedAtMs || !!lastNight.morningSkip || this.now() >= morningAtMs;
     // Morning check-in: compare last night's plan with what was logged, then tie how you feel to it.
     const lnDrinkN = lastNight.entries.filter((e) => e.kind === 'drink').length;
     const lnHeld = lnDrinkN <= lastNight.plan;
@@ -3802,7 +3808,7 @@ class Component extends DCLogic {
       // Where "now" is on the night's clock. The prototype pretends it's 09:30 the next morning.
       // The next given clock time (minutes after midnight) after a point on the night's clock.
       const nextClock = (after, clock) => { let m = after - (((after % 1440) + 1440) % 1440) + clock; while (m <= after) m += 1440; return m; };
-      const nowR = RT && n.endedAtMs ? rEnd + (Date.now() - n.endedAtMs) / 60000 : nextClock(rEnd + 60, 9 * 60 + 30);
+      const nowR = RT && n.endedAtMs ? rEnd + (this.now() - n.endedAtMs) / 60000 : nextClock(rEnd + 60, 9 * 60 + 30);
       const lastDrinkT = drinksR.length ? Math.min(drinksR[drinksR.length - 1].t, rEnd) : null;
       return { nextClock: nextClock, n: n, RS: RS, rEnd: rEnd, drinksN: drinksR.length, watersN: watersR, grams: grams, nowR: nowR, lastDrinkT: lastDrinkT, drank: drinksR.length > 0 };
     })();
@@ -3844,7 +3850,7 @@ class Component extends DCLogic {
       const gap = R.lastDrinkT != null ? R.rEnd - R.lastDrinkT : null;
       const dayName = n.day || n.title || 'last';
       // The recovery plan goes away 24 hours after the night ended (sample nights: always shown).
-      const recRecent = !n.endedAtMs || Date.now() - n.endedAtMs < 24 * 3600 * 1000;
+      const recRecent = !n.endedAtMs || this.now() - n.endedAtMs < 24 * 3600 * 1000;
       const waterLeft = Math.max(0, waterTarget - had);
       // Ring: water against what last night needs.
       const hydPct = Math.max(0, Math.min(100, Math.round(100 * (R.watersN + had) / (R.watersN + waterTarget))));
@@ -3902,7 +3908,7 @@ class Component extends DCLogic {
     const waiting = !reached && !afterLastCall && remaining > 0;
     // Weekly limit: drinks in saved nights since Monday, plus tonight's.
     const weekLimit = s.weekLimit || 0;
-    const weekStartISO = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); })();
+    const weekStartISO = (() => { const d = new Date(this.now()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); })();
     const weekSaved = s.nights.filter((n) => (n.date || '') >= weekStartISO).reduce((a, n) => a + n.entries.filter((e) => e.kind === 'drink').length, 0);
     const weekDrinks = weekSaved + (s.active ? drinks.length : 0);
     const add = (kind, silent) => () => {
@@ -3963,7 +3969,7 @@ class Component extends DCLogic {
     };
 
     // Starting a night: check the home by time makes sense from now.
-    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, lastCallNudged: false, startedAtMs: Date.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
+    const startFresh = { ateBefore: checkDefs.some((c) => c[0] === 'eat') ? !!checks.eat : null, screen: 'drink', entries: [], tick: 0, active: true, checklist: {}, morningAfter: false, rideNudged: false, lastCallNudged: false, startedAtMs: this.now(), startMin: nowMin, timeAsk: null, quickOpen: false };
     const gapTo = (h, mi) => { let g = h * 60 + mi * 5 - START; if (g <= 0) g += 24 * 60; return g; };
     const beginNight = (patch) => {
       const pl = Object.assign({ homeH: s.homeH, homeMi: s.homeMi, plan: s.plan }, patch || {});
@@ -5169,6 +5175,7 @@ class Component extends DCLogic {
         this.setState({ entries: this.state.entries.filter((e) => e !== t.entry), lockToast: null });
       },
       gaugeDash: (Math.min(1, drinks.length / s.plan) * 188.5).toFixed(1) + ' 188.5',
+      showDevClock: !!this.props.fastClock && (s.screen === 'home' || s.screen === 'drink' || s.screen === 'history' || s.screen === 'settings'),
       showLockChip: this.props.devSkip !== false && s.active && !s.islandOpen && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
       lockPhone: () => this.setState({ lockReturn: s.screen, screen: 'lock', islandOpen: false, typeMenu: false }),
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
@@ -5176,10 +5183,10 @@ class Component extends DCLogic {
       endNight: () => shortNight ? this.setState({ endAsk: false, active: false, screen: 'home', entries: [], tick: 0, rideBooked: false, banner: { id: Date.now(), title: 'Night not saved', body: 'It was under 10 minutes, so it won\'t show in your nights.' } }) : this.setState({
         endAsk: false, screen: 'summary', active: false, viewIdx: 0, summaryFrom: 'drink',
         nights: [{
-          title: new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
-          date: [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-'),
-          day: new Date().toLocaleDateString('en-GB', { weekday: 'long' }),
-          plan: s.plan, entries: s.entries, endTick: s.tick, start: START, endedAtMs: Date.now(), ate: s.ateBefore == null ? null : s.ateBefore }].concat(s.nights),
+          title: nowDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
+          date: [nowDate.getFullYear(), String(nowDate.getMonth() + 1).padStart(2, '0'), String(nowDate.getDate()).padStart(2, '0')].join('-'),
+          day: nowDate.toLocaleDateString('en-GB', { weekday: 'long' }),
+          plan: s.plan, entries: s.entries, endTick: s.tick, start: START, endedAtMs: this.now(), ate: s.ateBefore == null ? null : s.ateBefore }].concat(s.nights),
         morningAfter: true,
         rideBooked: false
       }),
