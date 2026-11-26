@@ -4088,7 +4088,7 @@ class Component extends DCLogic {
     const inSlowStart = last === null && slowStart > 0 && now < START + slowStart;
     const remaining = last === null ? (inSlowStart ? START + slowStart - now : 0) : last + interval - now;
     const waitTotal = last === null ? Math.max(1, slowStart) : interval;
-    const waiting = !reached && !afterLastCall && remaining > 0;
+    const waiting = !reached && !afterLastCall && !pastHomeBy && remaining > 0;
     // Read by checkPaceTimer() so the "Pace timer done" reminder uses the same numbers as the screen.
     this.paceNow = { last: last, done: last !== null && !reached && !afterLastCall && remaining <= 0 };
     // Weekly limit: drinks in saved nights since Monday, plus tonight's.
