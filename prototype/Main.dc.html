@@ -1945,9 +1945,9 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </sc-for>
         </div>
-        <button onClick="{{deleteNights}}" style="flex-shrink: 0; min-height: 56px; background: #262628; border: none; border-radius: 22px; padding: 0 18px; color: #FF9B8F; font-size: 16px; font-weight: 700; text-align: left; cursor: pointer">Delete my saved nights</button>
+        <button onClick="{{askDeleteNights}}" style="flex-shrink: 0; min-height: 56px; background: #262628; border: none; border-radius: 22px; padding: 0 18px; color: #FF9B8F; font-size: 16px; font-weight: 700; text-align: left; cursor: pointer">Delete my saved nights</button>
         <sc-if value="{{nightsDeleted}}" hint-placeholder-val="{{false}}">
-          <div style="flex-shrink: 0; font-size: 14px; color: #6EE7C1; font-weight: 600">Your saved nights have been deleted.</div>
+          <div role="status" style="flex-shrink: 0; font-size: 14px; color: #6EE7C1; font-weight: 600">Your saved nights have been deleted.</div>
         </sc-if>
       </sc-if>
 
@@ -2598,6 +2598,19 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{deleteNightBody}}</div>
         <button onClick="{{deleteNight}}" style="height: 62px; border-radius: 31px; border: none; background: #FF9B8F; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Delete night</button>
         <button onClick="{{keepNight}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Keep it</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{deleteNightsOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 15; display: flex; flex-direction: column; justify-content: flex-end">
+      <button aria-label="Cancel" onClick="{{cancelDeleteNights}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
+      <div role="alertdialog" aria-label="Delete all saved nights?" style="position: relative; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E"></div>
+        <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Delete all saved nights?</div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">This can't be undone.</div>
+        <button onClick="{{deleteNights}}" style="height: 62px; border-radius: 31px; border: none; background: #353538; color: #FFFFFF; font-size: 18px; font-weight: 700; cursor: pointer">Delete</button>
+        <button onClick="{{cancelDeleteNights}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Cancel</button>
       </div>
     </div>
   </sc-if>
@@ -4894,7 +4907,11 @@ class Component extends DCLogic {
       goPrivacy: () => this.setState({ settingsPage: 'privacy' }),
       goPrivacyFromTerms: () => this.setState({ settingsPage: 'privacy' }),
       nightsDeleted: !!s.nightsDeleted,
-      deleteNights: () => this.setState({ nightsDeleted: true }),
+      askDeleteNights: () => this.setState({ deleteNightsAsk: true, nightsDeleted: false }),
+      cancelDeleteNights: () => this.setState({ deleteNightsAsk: false }),
+      deleteNightsOpen: !!s.deleteNightsAsk,
+      // Clears every saved night and what's worked out from them (Last night, the morning check-in, the limit suggestion).
+      deleteNights: () => this.setState({ deleteNightsAsk: false, nightsDeleted: true, nights: [], viewIdx: 0, hourSel: null, morningAfter: false, suggestDismissed: null, signupSkipAt: s.signupSkipAt == null ? null : 0, recoveryFrom: null }),
       subAbout: sp === 'about',
       subDrinkType: sp === 'drinktype',
       subQuick: sp === 'quick',
