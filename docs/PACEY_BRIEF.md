@@ -28,7 +28,7 @@ Paste this whole file into Claude Code (or drop it into the project folder), tog
 3. **Drink mode** — a glass that fills as you log drinks, a countdown to when your next drink fits your plan, + Drink and + Water buttons, water count, time since last drink, End night button, ride-home and Need help buttons. When you reach your plan the glass turns orange and the message says "You've reached your plan — switch to water from here".
 4. **Night summary** — "You stuck to your plan" (or a kind message if not), drinks, water, pace, an hour-by-hour chart, a "Getting home? Don't drive tonight" card with Book a taxi, and Done.
 5. **Need help?** — big Call emergency services button (uses local number), Send my location to a friend, Get a ride home, signs someone needs urgent help, and what to do while waiting.
-6. Gentle local notifications (e.g. "Water time", "Your next drink fits your plan now").
+6. Gentle local notifications (e.g. "Water time", "Pace timer done").
 7. Store nights locally on the phone (no account needed for v1).
 8. **Lock screen logging** (Arthur's decision, 26 November 2026) — a Live Activity (and Dynamic Island) during a night with + Drink and + Water, a short "logged" message with Undo, and read-only lock screen widgets showing the count and next-drink time. This is the main way people log drinks on a night out.
 
