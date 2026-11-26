@@ -3139,7 +3139,7 @@ class Component extends DCLogic {
       ['NL', 'Netherlands', '112', 18], ['NZ', 'New Zealand', '111', 18], ['NO', 'Norway', '113', 18], ['PH', 'Philippines', '911', 18],
       ['PL', 'Poland', '112', 18], ['PT', 'Portugal', '112', 18], ['RO', 'Romania', '112', 18], ['SG', 'Singapore', '995', 18],
       ['SK', 'Slovakia', '112', 18], ['SI', 'Slovenia', '112', 18], ['ZA', 'South Africa', '112', 18], ['KR', 'South Korea', '119', 19],
-      ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18], ['CH', 'Switzerland', '112', 18], ['TH', 'Thailand', '1669', 20],
+      ['ES', 'Spain', '112', 18], ['SE', 'Sweden', '112', 18], ['CH', 'Switzerland', '144', 18], ['TH', 'Thailand', '1669', 20],
       ['AE', 'United Arab Emirates', '998', 21], ['GB', 'United Kingdom', '999', 18], ['US', 'United States', '911', 21], ['XX', 'Somewhere else', '112', 18]
     ];
     // Where the phone is right now, from its time zone: phones set it automatically from their location,
@@ -3174,7 +3174,7 @@ class Component extends DCLogic {
     const countrySetByHand = !!(s.countryOverride && s.countryOverride !== 'auto' && COUNTRIES.some((c) => c[0] === s.countryOverride));
     const country = countrySetByHand ? COUNTRIES.find((c) => c[0] === s.countryOverride) : detectedCountry;
     // Other emergency numbers that also work there.
-    const ALSO_WORKS = { GB: '112', IE: '999', NO: '112', CH: '144', CZ: '155', SK: '155' };
+    const ALSO_WORKS = { GB: '112', IE: '999', NO: '112', CH: '112', CZ: '155', SK: '155' };
     const alsoWorks = ALSO_WORKS[country[0]] || '';
     const emergencyNumber = country[2];
     const THE = ['US', 'GB', 'NL', 'PH', 'AE'];
