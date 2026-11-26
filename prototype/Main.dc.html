@@ -389,6 +389,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <span style="font-size: 14px; font-weight: 700">Pacey · {{preTime}}</span>
           <span style="font-size: 14px; color: #E0E0E4; line-height: 1.4">{{preBody}}</span>
         </div>
+        <sc-if value="{{showWebReminderNote}}" hint-placeholder-val="{{false}}"><div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">In this test version, reminders show while Pacey is open.</div></sc-if>
       </sc-if>
       </div>
       <div style="flex-grow: 1"></div>
@@ -1951,6 +1952,7 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </sc-for>
         </div>
+        <sc-if value="{{showWebReminderNote}}" hint-placeholder-val="{{false}}"><div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">In this test version, reminders show while Pacey is open.</div></sc-if>
       </sc-if>
 
       <sc-if value="{{subSafety}}" hint-placeholder-val="{{false}}">
@@ -5180,6 +5182,8 @@ class Component extends DCLogic {
       testerNoteOpen: !!this.props.web && (!s.testerSeen || !!s.testerOpen),
       closeTesterNote: () => this.setState({ testerSeen: true, testerOpen: false }),
       showTesterLink: !!this.props.web,
+      // Web test version: reminders only show while the page is open.
+      showWebReminderNote: !!this.props.web,
       openTesterNote: () => this.setState({ testerOpen: true }),
       // Web version on a real phone: keep the banner below the status bar.
       bannerTop: this.props.web ? 'calc(10px + env(safe-area-inset-top))' : '10px',

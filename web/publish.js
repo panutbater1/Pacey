@@ -14,9 +14,14 @@ const git = (args, cwd = root) => execFileSync('git', args, { cwd, stdio: 'pipe'
 require('./build');
 
 // 2. Never publish keys: the web version has sign-up off, so no Supabase settings belong here.
-for (const f of ['generated.js', 'runtime.js', 'index.html']) {
-  if (/service_role|eyJhbGci/.test(fs.readFileSync(path.join(dist, f), 'utf8'))) {
-    throw new Error('Stopped: ' + f + ' looks like it contains a key. Nothing was published.');
+//    Checks every file in web-dist for secret keys, JWTs (service_role keys start eyJhbGci) and bot tokens.
+const KEY_PATTERNS = [/sb_secret_/, /service_role/, /eyJhbGci/, /\d{8,10}:[A-Za-z0-9_-]{35}/];
+const allFiles = (dir) => fs.readdirSync(dir, { withFileTypes: true })
+  .flatMap((e) => e.isDirectory() ? allFiles(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+for (const f of allFiles(dist)) {
+  const text = fs.readFileSync(f, 'latin1');
+  if (KEY_PATTERNS.some((re) => re.test(text))) {
+    throw new Error('Stopped: ' + path.relative(dist, f) + ' looks like it contains a key. Nothing was published.');
   }
 }
 
@@ -25,8 +30,15 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pacey-gh-pages-'));
 let hasRemote = false;
 try { git(['fetch', 'origin', 'gh-pages']); hasRemote = true; } catch (e) { hasRemote = false; }
 try {
+  let hasLocal = true;
+  try { git(['rev-parse', '--verify', '--quiet', 'refs/heads/gh-pages']); } catch (e) { hasLocal = false; }
   if (hasRemote) git(['worktree', 'add', '-B', 'gh-pages', tmp, 'origin/gh-pages']);
-  else {
+  else if (hasLocal) {
+    // First publish after a run that made the branch here but never pushed it: reuse it.
+    console.log('No gh-pages on GitHub yet; using the local gh-pages branch.');
+    try { git(['worktree', 'add', tmp, 'gh-pages']); }
+    catch (e) { throw new Error('Could not use the local gh-pages branch (is it open in another folder? try "git worktree prune"). Nothing was published.'); }
+  } else {
     git(['worktree', 'add', '--detach', tmp]);
     git(['checkout', '--orphan', 'gh-pages'], tmp);
   }
