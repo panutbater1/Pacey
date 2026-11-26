@@ -10,7 +10,8 @@
   const DEV = params.get('dev') === '1';
   // Demo mode: the prototype's sample nights and sped-up clock, nothing saved.
   const DEMO = params.get('demo') === '1';
-  const STORAGE_KEY = 'pacey.state.v1';
+  // The dev version (fast clock) saves under its own key so its future-dated nights never reach the real app.
+  const STORAGE_KEY = 'pacey.state.v1' + (DEV && !DEMO ? '.dev' : '');
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
@@ -295,7 +296,7 @@
     try { saved = Number(localStorage.getItem(CLOCK_KEY)) || 0; } catch (e) {}
     const base = Math.max(realStart, saved);
     window.paceyNow = () => base + (Date.now() - realStart) * 60;
-    setInterval(() => { try { localStorage.setItem(CLOCK_KEY, String(window.paceyNow())); } catch (e) {} }, 2000);
+    window.paceyClockTimer = setInterval(() => { try { localStorage.setItem(CLOCK_KEY, String(window.paceyNow())); } catch (e) {} }, 2000);
   }
 
   // ---------- start
@@ -305,6 +306,7 @@
 
   window.paceyReset = function () {
     localStorage.removeItem(STORAGE_KEY);
+    if (FAST) { clearInterval(window.paceyClockTimer); localStorage.removeItem('pacey.devclock.v1'); }
     window.location.reload();
   };
 })();
