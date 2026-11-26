@@ -676,13 +676,13 @@ button{font-family:Outfit,system-ui,sans-serif}
           <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">{{recSleepText}}</div>
         </div>
 
-        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+        <div style="flex-shrink: 0; background: #262628; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center">
           <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
           <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
             <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
-            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-              <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="3">
-                <button onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 48px; border-radius: 24px; border: 2px solid {{f.ring}}; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{f.label}}</button>
+            <div style="display: flex; justify-content: center; gap: 4px">
+              <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="5">
+                <button onClick="{{f.pick}}" aria-label="{{f.label}}" aria-pressed="{{f.pressed}}" style="width: 48px; height: 48px; border: none; background: none; padding: 0; display: flex; align-items: center; justify-content: center; color: {{f.color}}; cursor: pointer"><svg width="34" height="34" viewBox="0 0 24 24" fill="{{f.fill}}" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"></path></svg></button>
               </sc-for>
             </div>
             <sc-if value="{{hasFeel}}" hint-placeholder-val="{{false}}">
@@ -1518,12 +1518,12 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <sc-if value="{{morningReady}}" hint-placeholder-val="{{true}}">
-      <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+      <div style="flex-shrink: 0; background: #262628; border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center">
         <div style="font-size: 13px; font-weight: 600; color: #9A9AA0">Morning check-in</div>
         <div style="font-size: 18px; font-weight: 700">How are you feeling today?</div>
-        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-          <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="3">
-            <button onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 48px; border-radius: 24px; border: 2px solid {{f.ring}}; background: #353538; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{f.label}}</button>
+        <div style="display: flex; justify-content: center; gap: 4px">
+          <sc-for list="{{feelOptions}}" as="f" hint-placeholder-count="5">
+            <button onClick="{{f.pick}}" aria-label="{{f.label}}" aria-pressed="{{f.pressed}}" style="width: 48px; height: 48px; border: none; background: none; padding: 0; display: flex; align-items: center; justify-content: center; color: {{f.color}}; cursor: pointer"><svg width="34" height="34" viewBox="0 0 24 24" fill="{{f.fill}}" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"></path></svg></button>
           </sc-for>
         </div>
         <sc-if value="{{hasFeel}}" hint-placeholder-val="{{false}}">
@@ -3769,7 +3769,10 @@ class Component extends DCLogic {
     }
     // Last night stays on the Tonight tab until Plan my night, but goes away by itself
     // if nothing was updated in the 24 hours after the night ended.
-    const lastTouched = !!lastNight.feel || lastNight.entries.some((e) => e.late) || !!lastNight.keepOpen;
+    // How you felt the next morning: a 1-5 star rating. Old saves used Great / OK / Rough.
+    const feelNum = (f) => typeof f === 'number' ? f : ({ Great: 5, OK: 3, Rough: 1 })[f] || 0;
+    const feelKey = (f) => { const n = feelNum(f); return n >= 4 ? 'Great' : n === 3 ? 'OK' : n >= 1 ? 'Rough' : ''; };
+    const lastTouched = !!feelNum(lastNight.feel) || lastNight.entries.some((e) => e.late) || !!lastNight.keepOpen;
     const lastExpired = !!lastNight.endedAtMs && this.now() - lastNight.endedAtMs > 24 * 3600 * 1000 && !lastTouched;
     const showLastNight = !!s.morningAfter && s.nights.length > 0 && !lastExpired;
     const morningReady = !lastNight.endedAtMs || !!lastNight.morningSkip || this.now() >= morningAtMs;
@@ -3789,11 +3792,13 @@ class Component extends DCLogic {
       OK: 'Water, food and rest will help. Staying on plan next time might make the morning easier.',
       Rough: 'Sorry it is a rough one. Water, food, rest and time are what help. Staying on plan next time might make the morning easier.'
     };
-    const feelOptions = ['Great', 'OK', 'Rough'].map((label) => ({
-      label: label,
-      ring: lastNight.feel === label ? '#6EE7C1' : '#353538',
-      pressed: lastNight.feel === label ? 'true' : 'false',
-      pick: () => setLast({ feel: label })
+    const lnFeel = feelNum(lastNight.feel);
+    const feelOptions = [1, 2, 3, 4, 5].map((n) => ({
+      label: n === 1 ? '1 star' : n + ' stars',
+      color: n <= lnFeel ? '#6EE7C1' : '#5A5A60',
+      fill: n <= lnFeel ? '#6EE7C1' : 'none',
+      pressed: n === lnFeel ? 'true' : 'false',
+      pick: () => setLast({ feel: n })
     }));
     // ----- Recovery: the morning after the latest night, from what was logged.
     const recovery = (() => {
@@ -4183,8 +4188,8 @@ class Component extends DCLogic {
           { k: 'Calories', v: Math.round(lst.kcal).toLocaleString('en-GB') },
           { k: 'Pace', v: lst.pace === null ? '–' : lst.pace + ' min' }
         ],
-        hasFeel: !!ln.feel,
-        feel: ln.feel === 'OK' ? 'OK' : (ln.feel || '').toLowerCase(),
+        hasFeel: !!feelNum(ln.feel),
+        feel: feelNum(ln.feel) + ' of 5 \u2605',
         open: openNight(0)
       };
     }
@@ -4744,8 +4749,8 @@ class Component extends DCLogic {
       lnVerdictColor: lnHeld ? '#6EE7C1' : '#FF8A3D',
       lnWater: lastNight.entries.filter((e) => e.kind === 'water').length,
       feelOptions: feelOptions,
-      hasFeel: !!lastNight.feel,
-      feelMessage: feelMessages[lastNight.feel] || '',
+      hasFeel: !!lnFeel,
+      feelMessage: feelMessages[feelKey(lastNight.feel)] || '',
       lateDrinkMore: lateAdd('drink'),
       lateDrinkLess: lateRemove('drink'),
       lateWaterMore: lateAdd('water'),
