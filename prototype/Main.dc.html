@@ -2567,12 +2567,12 @@ button{font-family:Outfit,system-ui,sans-serif}
         <div style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">{{endAskTitle}}</div>
         <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">{{endAskBody}}</div>
         <sc-if value="{{endAskShort}}" hint-placeholder-val="{{false}}">
-        <button onClick="{{keepGoing}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Keep going</button>
+        <button onClick="{{keepGoing}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Not yet</button>
         <button onClick="{{endNight}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">End without saving</button>
         </sc-if>
         <sc-if value="{{endAskLong}}" hint-placeholder-val="{{true}}">
         <button onClick="{{endNight}}" style="height: 62px; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">End night</button>
-        <button onClick="{{keepGoing}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Keep going</button>
+        <button onClick="{{keepGoing}}" style="min-height: 48px; border: none; background: none; color: #9A9AA0; font-size: 16px; font-weight: 600; cursor: pointer">Not yet</button>
         </sc-if>
       </div>
     </div>
@@ -3874,8 +3874,7 @@ class Component extends DCLogic {
     const lnDrinkN = lastNight.entries.filter((e) => e.kind === 'drink').length;
     const lnHeld = lnDrinkN <= lastNight.plan;
     const lnDiff = Math.abs(lnDrinkN - lastNight.plan);
-    const lnVerdict = lnDrinkN === lastNight.plan ? 'Your plan held. Right on it.'
-      : lnHeld ? 'Your plan held, with ' + lnDiff + ' to spare.'
+    const lnVerdict = lnHeld ? 'Your plan held. Nice pacing.'
       : lnDiff + ' over your plan. That happens. Your plan is there for next time.';
     const feelMessages = lnHeld ? {
       Great: 'Good to hear. Sticking to your plan paid off.',
