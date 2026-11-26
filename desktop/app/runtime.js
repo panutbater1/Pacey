@@ -10,11 +10,12 @@
   const DEV = params.get('dev') === '1';
   // Demo mode: the prototype's sample nights and sped-up clock, nothing saved.
   const DEMO = params.get('demo') === '1';
-  const STORAGE_KEY = 'pacey.state.v1';
+  // The dev version (fast clock) saves under its own key so its future-dated nights never reach the real app.
+  const STORAGE_KEY = 'pacey.state.v1' + (DEV && !DEMO ? '.dev' : '');
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'underAge', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -285,13 +286,27 @@
     }
   };
 
+  // ---------- dev clock: in the dev version time runs 60x faster (one real second is one minute).
+  // It keeps going from where the last dev launch stopped, so saved nights never jump backwards.
+  const FAST = DEV && !DEMO;
+  if (FAST) {
+    const CLOCK_KEY = 'pacey.devclock.v1';
+    const realStart = Date.now();
+    let saved = 0;
+    try { saved = Number(localStorage.getItem(CLOCK_KEY)) || 0; } catch (e) {}
+    const base = Math.max(realStart, saved);
+    window.paceyNow = () => base + (Date.now() - realStart) * 60;
+    window.paceyClockTimer = setInterval(() => { try { localStorage.setItem(CLOCK_KEY, String(window.paceyNow())); } catch (e) {} }, 2000);
+  }
+
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
-  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, realtime: !DEMO, savedState: DEMO ? null : load() });
+  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, savedState: DEMO ? null : load() });
   ReactDOM.createRoot(document.getElementById('screen')).render(h(Component, props));
 
   window.paceyReset = function () {
     localStorage.removeItem(STORAGE_KEY);
+    if (FAST) { clearInterval(window.paceyClockTimer); localStorage.removeItem('pacey.devclock.v1'); }
     window.location.reload();
   };
 })();
