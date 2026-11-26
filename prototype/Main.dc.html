@@ -1174,7 +1174,8 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{isDrink}}" hint-placeholder-val="{{false}}">
-    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 12px 24px 8px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 12px 24px 8px; display: flex; flex-direction: column; gap: 10px">
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; margin: 0 -24px; padding: 0 24px 4px; display: flex; flex-direction: column; gap: 14px">
       <div style="font-size: 15px; font-weight: 500; color: #9A9AA0; flex-shrink: 0">{{clockLabel}} · home by {{homeByLabel}}{{lastCallLine}}</div>
 
       <sc-if value="{{notReached}}" hint-placeholder-val="{{true}}">
@@ -1258,10 +1259,11 @@ button{font-family:Outfit,system-ui,sans-serif}
       </div>
 
       <sc-if value="{{canUndo}}" hint-placeholder-val="{{false}}">
-        <button onClick="{{undo}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Undo last entry</button>
+        <button onClick="{{undo}}" style="min-height: 44px; flex-shrink: 0; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Undo last entry</button>
       </sc-if>
+      </div>
 
-      <div style="flex-grow: 1"></div>
+      <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px">
 
       <sc-if value="{{showPlusTip}}" hint-placeholder-val="{{false}}">
         <div role="status" style="background: #6EE7C1; color: #1A1A1C; border-radius: 20px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
@@ -1303,6 +1305,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14"></path><path d="M6 16l1.6-5.5h8.8L18 16"></path><circle cx="8" cy="17.5" r="1.8"></circle><circle cx="16" cy="17.5" r="1.8"></circle></svg>
           Order a taxi
         </button>
+      </div>
       </div>
     </div>
   </sc-if>
