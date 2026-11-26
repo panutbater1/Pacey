@@ -7,9 +7,11 @@
   const Fragment = React.Fragment;
   const build = window.PACEY_BUILD;
   const params = new URLSearchParams(window.location.search);
-  const DEV = params.get('dev') === '1';
+  // Phone web version (web/build.js): no Electron, no sign-up, real clock, reminders inside the app only.
+  const WEB = !!build.web;
+  const DEV = !WEB && params.get('dev') === '1';
   // Demo mode: the prototype's sample nights and sped-up clock, nothing saved.
-  const DEMO = params.get('demo') === '1';
+  const DEMO = !WEB && params.get('demo') === '1';
   // The dev version (fast clock) saves under its own key so its future-dated nights never reach the real app.
   const STORAGE_KEY = 'pacey.state.v1' + (DEV && !DEMO ? '.dev' : '');
 
@@ -173,22 +175,33 @@
     }
   }
 
-  // ---------- notifications from the operating system
-  window.paceyNotify = function (title, body) {
-    if (!('Notification' in window)) return;
-    const show = () => { try { new Notification(title, { body: body }); } catch (e) { /* ignore */ } };
-    if (Notification.permission === 'granted') show();
-    else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
-  };
+  // ---------- notifications from the operating system (laptop app only; the web version shows banners inside the app)
+  if (!WEB) {
+    window.paceyNotify = function (title, body) {
+      if (!('Notification' in window)) return;
+      const show = () => { try { new Notification(title, { body: body }); } catch (e) { /* ignore */ } };
+      if (Notification.permission === 'granted') show();
+      else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
+    };
 
-  window.paceyRequestNotify = function () {
-    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-  };
+    window.paceyRequestNotify = function () {
+      if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+    };
+  }
+
+  // ---------- phone links in the web version: tel: and sms: open the phone's own app in the same tab
+  if (WEB) {
+    const openLink = window.open.bind(window);
+    window.open = function (url, target, features) {
+      if (typeof url === 'string' && /^(tel|sms):/i.test(url)) { window.location.href = url; return null; }
+      return openLink(url, target, features);
+    };
+  }
 
   // ---------- real sign-in (Supabase), when pacey.config.json has a project URL and key
   const AUTH_KEY = 'pacey.auth.v1';
   const cfg = build.config || {};
-  const authOn = !!(cfg.supabaseUrl && cfg.supabaseAnonKey) && !DEMO;
+  const authOn = !!(cfg.supabaseUrl && cfg.supabaseAnonKey) && !DEMO && !WEB;
 
   function readSession() {
     try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch (e) { return null; }
@@ -246,6 +259,7 @@
     },
     async signInWithGoogle(data) {
       const attempt = ++googleAttempt;
+      if (!(window.paceyNative && window.paceyNative.googleSignIn)) return { error: 'Google sign-in only works in the laptop app.' };
       const r = await window.paceyNative.googleSignIn({ supabaseUrl: cfg.supabaseUrl, anonKey: cfg.supabaseAnonKey });
       // Cancelled, even at the last moment: never save the session.
       if ((r && r.cancelled) || attempt !== googleAttempt) return { cancelled: true };
@@ -312,7 +326,7 @@
 
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
-  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, savedState: DEMO ? null : load() });
+  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, web: WEB, savedState: DEMO ? null : load() });
   ReactDOM.createRoot(document.getElementById('screen')).render(h(Component, props));
 
   window.paceyReset = function () {

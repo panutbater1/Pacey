@@ -1667,6 +1667,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
 
+        <sc-if value="{{showAccountCard}}" hint-placeholder-val="{{true}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <div style="display: flex; flex-direction: column; gap: 2px">
@@ -1684,6 +1685,7 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div role="alert" style="padding: 0 0 12px; font-size: 14px; color: #FFC56B; font-weight: 600">{{accountErr}}</div>
           </sc-if>
         </div>
+        </sc-if>
 
         <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">You</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
@@ -3031,6 +3033,8 @@ class Component extends DCLogic {
           { kind: 'drink', t: 1270 }, { kind: 'drink', t: 1310 }, { kind: 'drink', t: 1350 }, { kind: 'water', t: 1370 }, { kind: 'drink', t: 1400 }, { kind: 'drink', t: 1440 }] }
       ] };
     if (props.savedState) Object.assign(this.state, props.savedState);
+    // Phone web version: reminders only show inside the app, so there's no "Allow notifications" step.
+    if (props.web && this.state.notifyAllowed == null) this.state.notifyAllowed = false;
 
     // Scroll wheels (like the iOS time picker). Refs stay stable so re-renders never reset the scroll.
     // Wheel rows are 44px tall so each one is a full-size tap target.
@@ -4399,6 +4403,8 @@ class Component extends DCLogic {
     const q = questions[s.qIdx];
     // Real sign-in (laptop app with Supabase settings) or the pretend one (prototype).
     const AUTH = typeof window !== 'undefined' && window.paceyAuth && window.paceyAuth.enabled ? window.paceyAuth : null;
+    // Phone web version for testers: no sign-up or account anywhere, nights stay on the phone.
+    const WEB = !!this.props.web;
     // Apple sign-in isn't connected yet, so it only shows in the pretend version. Google shows there,
     // and in the laptop app once it's switched on (googleSignIn in pacey.config.json).
     const showGoogle = !AUTH || !!AUTH.google;
@@ -4575,18 +4581,18 @@ class Component extends DCLogic {
       isAccount: s.screen === 'account',
       accountTitleA: s.accountFrom === 'result' ? 'Your plan is' : s.accountFrom === 'settings' ? 'Your' : 'Save your',
       accountTitleB: s.accountFrom === 'result' ? 'ready' : s.accountFrom === 'settings' ? 'account' : 'plan',
-      resultOfferAccount: !s.account && !s.active,
+      resultOfferAccount: !WEB && !s.account && !s.active,
       resultSaved: !!s.account,
       // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
-      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
+      showSaveNight: !WEB && s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
       skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
       // Never offer sign-up during a night out.
-      showNightsSave: !s.account && !s.active,
-      profileDot: !s.account,
-      profileAria: s.account ? 'Your profile' : 'Create a free account',
+      showNightsSave: !WEB && !s.account && !s.active,
+      profileDot: !WEB && !s.account,
+      profileAria: s.account || WEB ? 'Your profile' : 'Create a free account',
       openSignupSummary: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'summary', emailErr: '', accountNote: '', googleErr: '' }),
       openSignupHistory: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'history', emailErr: '', accountNote: '', googleErr: '' }),
-      openProfile: () => this.setState(s.account ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
+      openProfile: () => this.setState(s.account || WEB ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
       accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
       openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
       consentMore: !!s.consentMore,
@@ -4674,7 +4680,8 @@ class Component extends DCLogic {
           done({ method: 'email', label: r.user.email || email, id: r.user.id, real: true }, restore);
         }).catch(() => this.setState({ accountBusy: false, emailErr: 'Something went wrong. Try again.' }));
       },
-      hasAccount: !!s.account,
+      hasAccount: !WEB && !!s.account,
+      showAccountCard: !WEB,
       noAccount: !s.account && !s.active,
       accountLabel: s.account ? (s.account.method === 'google' ? 'Signed in with Google' + (s.account.real ? ' · ' + s.account.label : '') : s.account.real ? 'Signed in with email · ' + s.account.label : s.account.label) : 'Not signed in',
       openSignInFromSettings: () => this.setState({ screen: 'account', accountStep: AUTH ? 'email' : 'choose', accountMode: 'signin', accountFrom: 'settings', emailErr: '', accountNote: '', accountErr: '' }),
@@ -4729,7 +4736,7 @@ class Component extends DCLogic {
       tryNextLabel: (s.tryDrinks && s.tryWater) ? 'Continue' : 'Skip practice',
       tryNextBg: (s.tryDrinks && s.tryWater) ? '#6EE7C1' : 'transparent',
       tryNextFg: (s.tryDrinks && s.tryWater) ? '#1A1A1C' : '#9A9AA0',
-      finishTry: () => this.setState({ screen: 'notify', anim: null }),
+      finishTry: () => this.setState(WEB ? { screen: 'home', anim: null, notifyThen: null } : { screen: 'notify', anim: null }),
       // Notification screen
       isNotify: s.screen === 'notify',
       showPlusTip: s.screen === 'drink' && !s.plusTipSeen && s.entries.length === 0,
@@ -5365,7 +5372,8 @@ class Component extends DCLogic {
       addWater: add('water'),
       continueWithoutAccount: () => cancelGoogle() || this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
       isLock: s.screen === 'lock' && s.active,
-      showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
+      // The pretend Dynamic Island is for the laptop app; on a real phone it would sit under the real one.
+      showIsland: !WEB && s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
       islandExpanded: !!s.islandOpen,
       closeIsland: () => this.setState({ islandOpen: false }),
@@ -5413,7 +5421,7 @@ class Component extends DCLogic {
       },
       gaugeDash: (Math.min(1, drinks.length / s.plan) * 188.5).toFixed(1) + ' 188.5',
       showDevClock: !!this.props.fastClock && (s.screen === 'home' || s.screen === 'drink' || s.screen === 'history' || s.screen === 'settings'),
-      showLockChip: this.props.devSkip !== false && s.active && !s.islandOpen && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
+      showLockChip: !WEB && this.props.devSkip !== false && s.active && !s.islandOpen && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
       lockPhone: () => this.setState({ lockReturn: s.screen, screen: 'lock', islandOpen: false, typeMenu: false }),
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
