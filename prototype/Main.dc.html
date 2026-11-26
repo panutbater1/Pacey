@@ -220,6 +220,9 @@ button{font-family:Outfit,system-ui,sans-serif}
             {{googleLabel}}
           </button>
           </sc-if>
+          <sc-if value="{{googleWaiting}}" hint-placeholder-val="{{false}}">
+            <button onClick="{{cancelGoogle}}" style="min-height: 44px; border: none; background: none; color: #9A9AA0; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+          </sc-if>
           <sc-if value="{{googleErrShow}}" hint-placeholder-val="{{false}}">
             <div role="alert" style="font-size: 14px; color: #FFC56B; font-weight: 600; text-align: center; line-height: 1.4">{{googleErr}}</div>
           </sc-if>
@@ -4383,6 +4386,13 @@ class Component extends DCLogic {
     // Keep the plan saved with a real account up to date, so it comes back on a new device.
     const syncPlan = (plan, avg) => { if (AUTH && s.account && s.account.real) AUTH.savePlan({ plan: plan, avg: avg }); };
     // Where sign-up returns to: wherever it was opened from.
+    // Stop a Google sign-in that's waiting on the browser (Cancel, or leaving the screen), so a retry works.
+    const cancelGoogle = () => {
+      if (this.state.accountBusy !== 'google') return;
+      this.googleRun = (this.googleRun || 0) + 1;
+      if (AUTH && AUTH.cancelGoogle) AUTH.cancelGoogle();
+      this.setState({ accountBusy: false });
+    };
     const afterAccount = s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile' }
       : ['summary', 'history', 'home'].indexOf(s.accountFrom) !== -1 ? { screen: s.accountFrom } : { screen: 'result' };
     const ans = s.answers.length < questions.length ? s.answers.concat([null]) : s.answers;
@@ -4577,7 +4587,7 @@ class Component extends DCLogic {
       accountChoose: (s.accountStep || 'choose') === 'choose',
       accountEmail: s.accountStep === 'email',
       // Back: to the sign-up choices, to Settings (when opened from Profile), or to the quiz.
-      accountBack: () => this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null })),
+      accountBack: () => cancelGoogle() || this.setState(s.accountStep === 'email' && showSocial ? { accountStep: 'choose', emailErr: '', accountNote: '' } : s.accountFrom === 'settings' ? { screen: 'settings', settingsPage: 'profile', accountFrom: null, accountStep: 'choose' } : s.accountStep === 'email' ? { accountStep: 'choose', emailErr: '', accountNote: '' } : Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null })),
       signApple: () => { if (!s.dataConsent) { this.setState({ consentHint: true }); return; } this.setState({ account: { method: 'apple', label: 'Signed in with Apple' }, dataConsentAt: Date.now(), screen: 'result' }); },
       signGoogle: () => {
         if (!s.dataConsent) { this.setState({ consentHint: true }); return; }
@@ -4585,13 +4595,18 @@ class Component extends DCLogic {
         if (s.accountBusy) return;
         this.setState({ accountBusy: 'google', googleErr: '' });
         const data = Object.assign(s.accountFrom === 'settings' ? { plan: s.usualPlan || 4, avg: s.avgDrinks || 4 } : { plan: suggested, avg: [2, 4, 6, 8][usual] }, { consent_at: new Date().toISOString() });
+        // Each try gets an id, so a cancelled or replaced try can't sign in or show an error later.
+        const run = this.googleRun = (this.googleRun || 0) + 1;
         AUTH.signInWithGoogle(data).then((r) => {
+          if (run !== this.googleRun || r.cancelled) return;
           if (r.error) { this.setState({ accountBusy: false, googleErr: r.error }); return; }
           // Signing in to an existing account brings back the plan saved with it.
           const restore = !r.isNew && r.user.plan ? { usualPlan: r.user.plan, avgDrinks: r.user.avg || this.state.avgDrinks, plan: r.user.plan } : {};
           this.setState(Object.assign({ account: { method: 'google', label: r.user.email || 'Signed in with Google', id: r.user.id, real: true }, dataConsentAt: Date.now(), accountBusy: false, googleErr: '', accountNote: '', emailErr: '', accountFrom: null, accountStep: 'choose' }, afterAccount, restore));
-        }).catch(() => this.setState({ accountBusy: false, googleErr: 'Something went wrong. Try again.' }));
+        }).catch(() => { if (run === this.googleRun) this.setState({ accountBusy: false, googleErr: 'Something went wrong. Try again.' }); });
       },
+      googleWaiting: s.accountBusy === 'google',
+      cancelGoogle: () => { cancelGoogle(); this.setState({ accountBusy: false, googleErr: '' }); },
       showSocialSignIn: showSocial,
       showAppleSignIn: !AUTH,
       showGoogleSignIn: showGoogle,
@@ -5321,7 +5336,7 @@ class Component extends DCLogic {
         else { this.setState({ typeMenu: false }); add('drink')(); }
       },
       addWater: add('water'),
-      continueWithoutAccount: () => this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
+      continueWithoutAccount: () => cancelGoogle() || this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
       isLock: s.screen === 'lock' && s.active,
       showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,

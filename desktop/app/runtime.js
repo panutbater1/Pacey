@@ -238,8 +238,12 @@
     enabled: authOn,
     // Google sign-in: only in the laptop app, and only once it's switched on in pacey.config.json.
     google: authOn && !!cfg.googleSignIn && !!(window.paceyNative && window.paceyNative.googleSignIn),
+    cancelGoogle() {
+      if (window.paceyNative && window.paceyNative.googleSignInCancel) window.paceyNative.googleSignInCancel().catch(() => {});
+    },
     async signInWithGoogle(data) {
       const r = await window.paceyNative.googleSignIn({ supabaseUrl: cfg.supabaseUrl, anonKey: cfg.supabaseAnonKey });
+      if (r && r.cancelled) return { cancelled: true };
       if (!r || r.error) return { error: (r && r.error) || 'Google sign-in didn\'t finish. Try again.' };
       const sess = keep(r.session);
       let user = userOut(sess.user);

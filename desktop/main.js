@@ -1,7 +1,7 @@
 // Pacey desktop: opens the app in a phone-sized window.
 const { app, BrowserWindow, screen, shell, ipcMain } = require('electron');
 const path = require('path');
-const { googleSignIn } = require('./google-sign-in');
+const { googleSignIn, cancelGoogleSignIn } = require('./google-sign-in');
 
 const DEV = process.argv.includes('--dev');
 const DEMO = process.argv.includes('--demo');
@@ -54,6 +54,7 @@ function createWindow() {
 
 // Google sign-in runs here, in the main process, because it opens the person's browser.
 ipcMain.handle('pacey:google-sign-in', (event, settings) => googleSignIn(settings));
+ipcMain.handle('pacey:google-sign-in-cancel', () => cancelGoogleSignIn());
 
 app.whenReady().then(() => {
   createWindow();
