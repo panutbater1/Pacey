@@ -7,15 +7,17 @@
   const Fragment = React.Fragment;
   const build = window.PACEY_BUILD;
   const params = new URLSearchParams(window.location.search);
-  const DEV = params.get('dev') === '1';
+  // Phone web version (web/build.js): no Electron, no sign-up, real clock, reminders inside the app only.
+  const WEB = !!build.web;
+  const DEV = !WEB && params.get('dev') === '1';
   // Demo mode: the prototype's sample nights and sped-up clock, nothing saved.
-  const DEMO = params.get('demo') === '1';
+  const DEMO = !WEB && params.get('demo') === '1';
   // The dev version (fast clock) saves under its own key so its future-dated nights never reach the real app.
   const STORAGE_KEY = 'pacey.state.v1' + (DEV && !DEMO ? '.dev' : '');
 
   // Screens and keys that shouldn't come back after a restart.
   const TRANSIENT = ['preSheet', 'consentHint', 'consentMore', 'pwShown', 'mkKept', 'banner', 'anim', 'picker', 'pickerTarget', 'typeMenu', 'legalSheet', 'islandOpen',
-    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk', 'locating', 'deleteNightsAsk', 'nightsDeleted'];
+    'waterFirst', 'tickHint', 'emailErr', 'passwordDraft', 'confirmDelAcct', 'planDrinkOpen', 'bigPlanAsk', 'quickOpen', 'timeAsk', 'earlyAsk', 'endAsk', 'hourSel', 'quickAt', 'deleteNightAsk', 'iconPickFor', 'accountBusy', 'accountNote', 'accountErr', 'taxiSheet', 'checkEdit', 'checkDraft', 'avatarPick', 'avatarErr', 'lockAuth', 'lockToast', 'countryPick', 'callAsk', 'locating', 'deleteNightsAsk', 'nightsDeleted', 'testerOpen'];
 
   // ---------- styles from the prototype
   const style = document.createElement('style');
@@ -144,16 +146,35 @@
 
   // ---------- saving between launches
   let saveTimer = null;
-  function save(state) {
+  let pending = null;
+  function writeNow() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      try {
-        const copy = Object.assign({}, state);
-        TRANSIENT.forEach((k) => { delete copy[k]; });
-        if (copy.screen === 'lock' || copy.screen === 'help') copy.screen = copy.lockReturn || copy.helpFrom || 'home';
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
-      } catch (e) { /* storage full or blocked: keep running */ }
-    }, 250);
+    if (!pending) return;
+    const state = pending;
+    pending = null;
+    try {
+      const copy = Object.assign({}, state);
+      TRANSIENT.forEach((k) => { delete copy[k]; });
+      if (copy.screen === 'lock' || copy.screen === 'help') copy.screen = copy.lockReturn || copy.helpFrom || 'home';
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
+    } catch (e) { /* storage full or blocked: keep running */ }
+  }
+  function save(state) {
+    pending = state;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(writeNow, 250);
+  }
+
+  if (WEB) {
+    // A phone can close the page at any moment (switching apps, locking): save straight away when it's hidden.
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') writeNow(); });
+    window.addEventListener('pagehide', writeNow);
+    // Ask the browser once to keep Pacey's data, so it isn't cleared when the phone is low on space.
+    try {
+      if (navigator.storage && navigator.storage.persist && navigator.storage.persisted) {
+        navigator.storage.persisted().then((kept) => (kept ? true : navigator.storage.persist())).catch(() => {});
+      }
+    } catch (e) { /* not supported: data is still saved */ }
   }
 
   function load() {
@@ -173,22 +194,33 @@
     }
   }
 
-  // ---------- notifications from the operating system
-  window.paceyNotify = function (title, body) {
-    if (!('Notification' in window)) return;
-    const show = () => { try { new Notification(title, { body: body }); } catch (e) { /* ignore */ } };
-    if (Notification.permission === 'granted') show();
-    else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
-  };
+  // ---------- notifications from the operating system (laptop app only; the web version shows banners inside the app)
+  if (!WEB) {
+    window.paceyNotify = function (title, body) {
+      if (!('Notification' in window)) return;
+      const show = () => { try { new Notification(title, { body: body }); } catch (e) { /* ignore */ } };
+      if (Notification.permission === 'granted') show();
+      else if (Notification.permission !== 'denied') Notification.requestPermission().then((p) => { if (p === 'granted') show(); });
+    };
 
-  window.paceyRequestNotify = function () {
-    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-  };
+    window.paceyRequestNotify = function () {
+      if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+    };
+  }
+
+  // ---------- phone links in the web version: tel: and sms: open the phone's own app in the same tab
+  if (WEB) {
+    const openLink = window.open.bind(window);
+    window.open = function (url, target, features) {
+      if (typeof url === 'string' && /^(tel|sms):/i.test(url)) { window.location.href = url; return null; }
+      return openLink(url, target, features);
+    };
+  }
 
   // ---------- real sign-in (Supabase), when pacey.config.json has a project URL and key
   const AUTH_KEY = 'pacey.auth.v1';
   const cfg = build.config || {};
-  const authOn = !!(cfg.supabaseUrl && cfg.supabaseAnonKey) && !DEMO;
+  const authOn = !!(cfg.supabaseUrl && cfg.supabaseAnonKey) && !DEMO && !WEB;
 
   function readSession() {
     try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch (e) { return null; }
@@ -246,6 +278,7 @@
     },
     async signInWithGoogle(data) {
       const attempt = ++googleAttempt;
+      if (!(window.paceyNative && window.paceyNative.googleSignIn)) return { error: 'Google sign-in only works in the laptop app.' };
       const r = await window.paceyNative.googleSignIn({ supabaseUrl: cfg.supabaseUrl, anonKey: cfg.supabaseAnonKey });
       // Cancelled, even at the last moment: never save the session.
       if ((r && r.cancelled) || attempt !== googleAttempt) return { cancelled: true };
@@ -312,7 +345,7 @@
 
   // ---------- start
   const Component = new Function('DCLogic', 'React', build.code + '\nreturn Component;')(DCLogic, React);
-  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, savedState: DEMO ? null : load() });
+  const props = Object.assign({}, build.defaults, { devSkip: DEV || DEMO, fastClock: FAST, realtime: !DEMO, web: WEB, savedState: DEMO ? null : load() });
   ReactDOM.createRoot(document.getElementById('screen')).render(h(Component, props));
 
   window.paceyReset = function () {

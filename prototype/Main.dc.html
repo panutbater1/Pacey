@@ -389,6 +389,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           <span style="font-size: 14px; font-weight: 700">Pacey · {{preTime}}</span>
           <span style="font-size: 14px; color: #E0E0E4; line-height: 1.4">{{preBody}}</span>
         </div>
+        <sc-if value="{{showWebReminderNote}}" hint-placeholder-val="{{false}}"><div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">In this test version, reminders show while Pacey is open.</div></sc-if>
       </sc-if>
       </div>
       <div style="flex-grow: 1"></div>
@@ -1636,6 +1637,9 @@ button{font-family:Outfit,system-ui,sans-serif}
       </sc-for>
 
       <div style="flex-shrink: 0; text-align: center; font-size: 13px; color: #9A9AA0">Pacey 1.0</div>
+      <sc-if value="{{showTesterLink}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{openTesterNote}}" style="flex-shrink: 0; align-self: center; min-height: 44px; border: none; background: none; padding: 0 12px; color: #6EE7C1; font-size: 14px; font-weight: 700; cursor: pointer">How to add to Home Screen</button>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1667,6 +1671,7 @@ button{font-family:Outfit,system-ui,sans-serif}
           </div>
         </div>
 
+        <sc-if value="{{showAccountCard}}" hint-placeholder-val="{{true}}">
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 6px 18px; display: flex; flex-direction: column">
           <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
             <div style="display: flex; flex-direction: column; gap: 2px">
@@ -1684,6 +1689,7 @@ button{font-family:Outfit,system-ui,sans-serif}
             <div role="alert" style="padding: 0 0 12px; font-size: 14px; color: #FFC56B; font-weight: 600">{{accountErr}}</div>
           </sc-if>
         </div>
+        </sc-if>
 
         <div style="flex-shrink: 0; font-size: 13px; font-weight: 600; color: #9A9AA0; padding-left: 4px">You</div>
         <div style="flex-shrink: 0; background: #262628; border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
@@ -1946,6 +1952,7 @@ button{font-family:Outfit,system-ui,sans-serif}
             </div>
           </sc-for>
         </div>
+        <sc-if value="{{showWebReminderNote}}" hint-placeholder-val="{{false}}"><div style="flex-shrink: 0; font-size: 14px; color: #9A9AA0; line-height: 1.45">In this test version, reminders show while Pacey is open.</div></sc-if>
       </sc-if>
 
       <sc-if value="{{subSafety}}" hint-placeholder-val="{{false}}">
@@ -2823,6 +2830,26 @@ button{font-family:Outfit,system-ui,sans-serif}
     </div>
   </sc-if>
 
+  <sc-if value="{{testerNoteOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 31; display: flex; flex-direction: column; justify-content: flex-end">
+      <div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6)"></div>
+      <div role="dialog" aria-modal="true" aria-labelledby="pacey-tester-title" style="position: relative; max-height: 92%; overflow-y: auto; box-sizing: border-box; background: #262628; border-radius: 28px 28px 0 0; padding: 12px 24px 34px; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #4A4A4E; flex-shrink: 0"></div>
+        <div id="pacey-tester-title" style="font-size: 30px; font-weight: 800; line-height: 1.05; letter-spacing: -0.6px">Pacey <span style="color: #6EE7C1">test version</span></div>
+        <div style="font-size: 16px; color: #B8B8BE; line-height: 1.45">Your nights and plan are saved only on this phone. Nothing is sent anywhere.</div>
+        <div style="flex-shrink: 0; background: #353538; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 15px; font-weight: 700">On iPhone</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Tap Share, then Add to Home Screen, and open Pacey from there. Log your nights in that app — Safari and the Home Screen app keep separate data.</div>
+        </div>
+        <div style="flex-shrink: 0; background: #353538; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 15px; font-weight: 700">On Android</div>
+          <div style="font-size: 15px; color: #B8B8BE; line-height: 1.45">Open the browser menu (⋮), then tap Add to Home screen or Install app.</div>
+        </div>
+        <button ref="{{focusOnOpen}}" onClick="{{closeTesterNote}}" style="height: 62px; flex-shrink: 0; border-radius: 31px; border: none; background: #6EE7C1; color: #1A1A1C; font-size: 18px; font-weight: 700; cursor: pointer">Got it</button>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{callAskOpen}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end">
       <button aria-label="Cancel" onClick="{{cancelCall}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: none; background: rgba(0, 0, 0, 0.6); cursor: pointer"></button>
@@ -2869,7 +2896,7 @@ button{font-family:Outfit,system-ui,sans-serif}
   </sc-if>
 
   <sc-if value="{{showBanner}}" hint-placeholder-val="{{false}}">
-    <button onClick="{{dismissBanner}}" aria-live="polite" style="position: absolute; left: 10px; right: 10px; top: 10px; z-index: 27; border: none; border-radius: 22px; background: rgba(53, 53, 56, 0.97); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
+    <button onClick="{{dismissBanner}}" aria-live="polite" style="position: absolute; left: 10px; right: 10px; top: {{bannerTop}}; z-index: 27; border: none; border-radius: 22px; background: rgba(53, 53, 56, 0.97); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; color: #FFFFFF; text-align: left; cursor: pointer">
       <span style="width: 38px; height: 38px; border-radius: 10px; background: #1A1A1C; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="30" height="30" viewBox="8 24 170 170" aria-hidden="true"><circle cx="34" cy="62" r="8" fill="#6EE7C1"></circle><circle cx="52" cy="76" r="5" fill="#6EE7C1"></circle><g transform="rotate(-22 110 105)"><path d="M58 62 L162 62 L110 118 Z" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round"></path><path d="M76 80 L144 80 L110 113 Z" fill="#6EE7C1"></path><path d="M110 118 L110 164" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path><path d="M86 168 Q110 158 134 168" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"></path></g></svg>
       </span>
       <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
@@ -3031,6 +3058,8 @@ class Component extends DCLogic {
           { kind: 'drink', t: 1270 }, { kind: 'drink', t: 1310 }, { kind: 'drink', t: 1350 }, { kind: 'water', t: 1370 }, { kind: 'drink', t: 1400 }, { kind: 'drink', t: 1440 }] }
       ] };
     if (props.savedState) Object.assign(this.state, props.savedState);
+    // Phone web version: reminders only show inside the app, so there's no "Allow notifications" step.
+    if (props.web && this.state.notifyAllowed == null) this.state.notifyAllowed = false;
 
     // Scroll wheels (like the iOS time picker). Refs stay stable so re-renders never reset the scroll.
     // Wheel rows are 44px tall so each one is a full-size tap target.
@@ -4399,6 +4428,8 @@ class Component extends DCLogic {
     const q = questions[s.qIdx];
     // Real sign-in (laptop app with Supabase settings) or the pretend one (prototype).
     const AUTH = typeof window !== 'undefined' && window.paceyAuth && window.paceyAuth.enabled ? window.paceyAuth : null;
+    // Phone web version for testers: no sign-up or account anywhere, nights stay on the phone.
+    const WEB = !!this.props.web;
     // Apple sign-in isn't connected yet, so it only shows in the pretend version. Google shows there,
     // and in the laptop app once it's switched on (googleSignIn in pacey.config.json).
     const showGoogle = !AUTH || !!AUTH.google;
@@ -4575,18 +4606,18 @@ class Component extends DCLogic {
       isAccount: s.screen === 'account',
       accountTitleA: s.accountFrom === 'result' ? 'Your plan is' : s.accountFrom === 'settings' ? 'Your' : 'Save your',
       accountTitleB: s.accountFrom === 'result' ? 'ready' : s.accountFrom === 'settings' ? 'account' : 'plan',
-      resultOfferAccount: !s.account && !s.active,
+      resultOfferAccount: !WEB && !s.account && !s.active,
       resultSaved: !!s.account,
       // Sign-up where it matters: after a night, on the Nights tab, and a profile button on Home.
-      showSaveNight: s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
+      showSaveNight: !WEB && s.screen === 'summary' && s.summaryFrom !== 'history' && !s.account && !s.active && (s.signupSkipAt == null || s.nights.length - s.signupSkipAt >= 3),
       skipSaveNight: () => this.setState({ signupSkipAt: s.nights.length }),
       // Never offer sign-up during a night out.
-      showNightsSave: !s.account && !s.active,
-      profileDot: !s.account,
-      profileAria: s.account ? 'Your profile' : 'Create a free account',
+      showNightsSave: !WEB && !s.account && !s.active,
+      profileDot: !WEB && !s.account,
+      profileAria: s.account || WEB ? 'Your profile' : 'Create a free account',
       openSignupSummary: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'summary', emailErr: '', accountNote: '', googleErr: '' }),
       openSignupHistory: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'history', emailErr: '', accountNote: '', googleErr: '' }),
-      openProfile: () => this.setState(s.account ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
+      openProfile: () => this.setState(s.account || WEB ? { screen: 'settings', settingsPage: 'profile' } : { screen: 'account', accountStep: 'choose', accountFrom: 'home', emailErr: '', accountNote: '', googleErr: '' }),
       accountShort: s.account ? (s.account.real ? s.account.label : s.account.label.replace(/^Signed in with /, '')) : '',
       openAccountFromResult: () => this.setState({ screen: 'account', accountStep: 'choose', accountFrom: 'result', emailErr: '', accountNote: '', googleErr: '' }),
       consentMore: !!s.consentMore,
@@ -4674,7 +4705,8 @@ class Component extends DCLogic {
           done({ method: 'email', label: r.user.email || email, id: r.user.id, real: true }, restore);
         }).catch(() => this.setState({ accountBusy: false, emailErr: 'Something went wrong. Try again.' }));
       },
-      hasAccount: !!s.account,
+      hasAccount: !WEB && !!s.account,
+      showAccountCard: !WEB,
       noAccount: !s.account && !s.active,
       accountLabel: s.account ? (s.account.method === 'google' ? 'Signed in with Google' + (s.account.real ? ' · ' + s.account.label : '') : s.account.real ? 'Signed in with email · ' + s.account.label : s.account.label) : 'Not signed in',
       openSignInFromSettings: () => this.setState({ screen: 'account', accountStep: AUTH ? 'email' : 'choose', accountMode: 'signin', accountFrom: 'settings', emailErr: '', accountNote: '', accountErr: '' }),
@@ -4729,7 +4761,7 @@ class Component extends DCLogic {
       tryNextLabel: (s.tryDrinks && s.tryWater) ? 'Continue' : 'Skip practice',
       tryNextBg: (s.tryDrinks && s.tryWater) ? '#6EE7C1' : 'transparent',
       tryNextFg: (s.tryDrinks && s.tryWater) ? '#1A1A1C' : '#9A9AA0',
-      finishTry: () => this.setState({ screen: 'notify', anim: null }),
+      finishTry: () => this.setState(WEB ? { screen: 'home', anim: null, notifyThen: null } : { screen: 'notify', anim: null }),
       // Notification screen
       isNotify: s.screen === 'notify',
       showPlusTip: s.screen === 'drink' && !s.plusTipSeen && s.entries.length === 0,
@@ -5146,6 +5178,15 @@ class Component extends DCLogic {
       callSub: 'Calls ' + emergencyNumber + (country[0] === 'XX' ? '' : ' · ' + country[1]) + (alsoWorks ? ' · ' + alsoWorks + ' also works' : ''),
       sayUnderAge: () => this.setState({ underAge: true }),
       showBanner: !!s.banner,
+      // Web test version: a note shown once on the first visit, and again from Settings.
+      testerNoteOpen: !!this.props.web && (!s.testerSeen || !!s.testerOpen),
+      closeTesterNote: () => this.setState({ testerSeen: true, testerOpen: false }),
+      showTesterLink: !!this.props.web,
+      // Web test version: reminders only show while the page is open.
+      showWebReminderNote: !!this.props.web,
+      openTesterNote: () => this.setState({ testerOpen: true }),
+      // Web version on a real phone: keep the banner below the status bar.
+      bannerTop: this.props.web ? 'calc(10px + env(safe-area-inset-top))' : '10px',
       bannerTitle: s.banner ? s.banner.title : '',
       bannerBody: s.banner ? s.banner.body : '',
       dismissBanner: () => {
@@ -5365,7 +5406,8 @@ class Component extends DCLogic {
       addWater: add('water'),
       continueWithoutAccount: () => cancelGoogle() || this.setState(Object.assign({}, afterAccount, { accountStep: 'choose', accountFrom: null }, s.accountFrom === 'summary' ? { signupSkipAt: s.nights.length } : {})),
       isLock: s.screen === 'lock' && s.active,
-      showIsland: s.active && s.screen !== 'lock' && s.screen !== 'help',
+      // The pretend Dynamic Island is for the laptop app; on a real phone it would sit under the real one.
+      showIsland: !WEB && s.active && s.screen !== 'lock' && s.screen !== 'help',
       islandCompact: !s.islandOpen,
       islandExpanded: !!s.islandOpen,
       closeIsland: () => this.setState({ islandOpen: false }),
@@ -5413,7 +5455,7 @@ class Component extends DCLogic {
       },
       gaugeDash: (Math.min(1, drinks.length / s.plan) * 188.5).toFixed(1) + ' 188.5',
       showDevClock: !!this.props.fastClock && (s.screen === 'home' || s.screen === 'drink' || s.screen === 'history' || s.screen === 'settings'),
-      showLockChip: this.props.devSkip !== false && s.active && !s.islandOpen && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
+      showLockChip: !WEB && this.props.devSkip !== false && s.active && !s.islandOpen && ['home', 'drink', 'history', 'settings'].indexOf(s.screen) !== -1,
       lockPhone: () => this.setState({ lockReturn: s.screen, screen: 'lock', islandOpen: false, typeMenu: false }),
       unlock: () => this.setState({ screen: s.lockReturn || 'drink' }),
       undo: () => this.setState({ entries: s.entries.slice(0, -1) }),
